@@ -2,8 +2,8 @@
 
 const nextConfig = {
 	/* config options here */
-	// reactStrictMode: true,
-	// swcMinify: true,
+	reactStrictMode: true,
+	swcMinify: true,
 	transpilePackages: [
 		"antd",
 		"@ant-design",
@@ -11,7 +11,7 @@ const nextConfig = {
 		"rc-pagination",
 		"rc-picker",
 		"rc-notification",
-		"rc-tooltip",
+		// "rc-tooltip",
 	],
 	compiler: {
 		styledComponents: true,

@@ -1,5 +1,5 @@
-const { createSlice } = require("@reduxjs/toolkit");
-const { HYDRATE } = "next-redux-wrapper";
+import { createSlice } from "@reduxjs/toolkit";
+import { HYDRATE } from "next-redux-wrapper";
 
 const initialState = {
 	isLoggedIn: false,

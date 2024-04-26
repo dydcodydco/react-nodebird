@@ -1,5 +1,5 @@
 import AppLayout from "../components/AppLayout";
-import { Head } from "next/head";
+import Head from "next/head";
 
 const Profile = () => {
 	return (
@@ -7,7 +7,9 @@ const Profile = () => {
 			<Head>
 				<title>내 프로필 | NodeBird</title>
 			</Head>
-			<AppLayout></AppLayout>
+			<AppLayout>
+				<h1>Profile page</h1>
+			</AppLayout>
 		</>
 	);
 };
