@@ -61,7 +61,7 @@ const dummyPost = {
 const postSlice = createSlice({
 	name: "post",
 	initialState,
-	reducer: {
+	reducers: {
 		addPost: (state, action) => {
 			state.mainPosts = [dummyPost, ...state.mainPosts];
 		},

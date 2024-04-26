@@ -6,7 +6,6 @@ import { useCallback } from "react";
 import { useForm, Controller } from "react-hook-form";
 
 import { logIn } from "../reducers/user";
-
 const ButtonWrapper = styled.div`
 	margin-top: 10px;
 `;
