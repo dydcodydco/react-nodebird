@@ -12,7 +12,7 @@ export const initialState = {
 		{
 			id: 1,
 			User: {
-				id: 1,
+				id: 111,
 				nickname: "zzimzzim",
 			},
 			content: "첫 번째 게시글 #해시태그, #익스프레스",
@@ -41,6 +41,7 @@ export const initialState = {
 					content: "리액트 넥스트 고수가 될테다~",
 				},
 			],
+			createdAt: {},
 		},
 	],
 	imagePaths: [],

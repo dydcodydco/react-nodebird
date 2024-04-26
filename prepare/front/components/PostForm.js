@@ -61,15 +61,6 @@ const PostForm = () => {
 			/>
 			<div>
 				<input
-					{...register("file")}
-					type='file'
-					accept='image/*'
-					multiple
-					hidden
-					ref={inputFileRef}
-				/>
-
-				<input
 					{...rest}
 					type='file'
 					ref={(e) => {

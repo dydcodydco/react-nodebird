@@ -3,7 +3,7 @@ import { HYDRATE } from "next-redux-wrapper";
 
 const initialState = {
 	isLoggedIn: false,
-	user: null,
+	me: null,
 	signUpData: {},
 	loginData: {},
 };
@@ -14,11 +14,11 @@ const userSlice = createSlice({
 	reducers: {
 		logIn: (state, action) => {
 			state.isLoggedIn = true;
-			state.user = action.payload;
+			state.me = action.payload;
 		},
 		logOut: (state) => {
 			state.isLoggedIn = false;
-			state.user = null;
+			state.me = null;
 		},
 	},
 	extraReducers: (builder) =>
