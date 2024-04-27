@@ -1,4 +1,4 @@
-import { Card, Popover, Button, Avatar } from "antd";
+import { Card, Popover, Button, Avatar, List } from "antd";
 import {
 	RetweetOutlined,
 	HeartOutlined,
@@ -6,12 +6,14 @@ import {
 	MessageOutlined,
 	EllipsisOutlined,
 } from "@ant-design/icons";
+import { useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
-import PostImages from "../components/PostImages";
-import { useState, useCallback } from "react";
+import PostImages from "./PostImages";
+import CommentForm from "./CommentForm";
 
 const PostCard = ({ post }) => {
+	// console.log(post);
 	const [liked, setLiked] = useState(false);
 	const [commentFormOpend, setCommentFormOpend] = useState(false);
 
@@ -29,7 +31,7 @@ const PostCard = ({ post }) => {
 	return (
 		<div style={{ marginTop: 10 }}>
 			<Card
-				cover={post.Images[0] && <PostImages images={post.images} />}
+				cover={post.Images[0] && <PostImages images={post.Images} />}
 				actions={[
 					// 배열안에 들어가는 것들은 다 key를 넣어줘야 한다.
 					<RetweetOutlined key='retweet' />,
@@ -74,9 +76,26 @@ const PostCard = ({ post }) => {
 					description={post.content}
 				/>
 			</Card>
-			{commentFormOpend && <div>댓글 부분</div>}
-			{/* <CommentForm />
-				<Comments /> */}
+			{commentFormOpend && (
+				<div>
+					{/* 게시글의 아이디 위해서 post 넘겨줌 */}
+					<CommentForm post={post} />
+					<List
+						header={`${post.Comments.length}개의 댓글`}
+						itemLayout='horizontal'
+						dataSource={post.Comments}
+						renderItem={(item) => (
+							<List.Item>
+								<List.Item.Meta
+									title={item.User.nickname}
+									avatar={<Avatar>{item.User.nickname[0]}</Avatar>}
+									description={item.content}
+								/>
+							</List.Item>
+						)}
+					/>
+				</div>
+			)}
 		</div>
 	);
 };

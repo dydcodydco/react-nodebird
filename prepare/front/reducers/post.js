@@ -18,13 +18,13 @@ export const initialState = {
 			content: "첫 번째 게시글 #해시태그, #익스프레스",
 			Images: [
 				{
-					src: "https://loremflickr.com/cache/resized/65535_52819203350_19f807fb31_320_240_nofilter.jpg",
+					src: "https://loremflickr.com/cache/resized/3735_32789051834_239cec50ff_n_320_240_nofilter.jpg",
 				},
 				{
-					src: "https://loremflickr.com/cache/resized/65535_53050165582_cfecbb0f72_320_240_nofilter.jpg",
+					src: "https://loremflickr.com/cache/resized/65535_53082472984_a62a3153b1_n_320_240_nofilter.jpg",
 				},
 				{
-					src: "https://loremflickr.com/cache/resized/65535_53591190399_87fac8279e_320_240_nofilter.jpg",
+					src: "https://loremflickr.com/cache/resized/65535_53079205137_78f14ba882_320_240_nofilter.jpg",
 				},
 			],
 			Comments: [
