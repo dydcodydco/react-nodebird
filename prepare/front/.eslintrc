@@ -1,57 +1,57 @@
-// {
-// 	"parserOptions": {
-// 		"ecmaVersion": "latest", // 최신버전 문법으로 사용하겠다.
-// 		"sourceType": "module", // import export 모듈로 사용하겠다. script소스가 아니라.
-// 		"ecmaFeatures": {
-// 			// 특수한 기능
-// 			"jsx": true // jsx를 사용한다.
-// 		}
-// 	},
-// 	"env": {
-// 		// 환경 // 돌아가게 하려는 관련
-// 		"browser": true,
-// 		"node": true,
-// 		"es6": true
-// 	},
-// 	"extends": ["eslint:recommended", "plugin:react/recommended"], // 남들이 만들어 놓은 규칙 따른 다는 의미, 기본규칙들
-// 	"plugins": ["import", "react-hooks"], // react는 위에서 썼으니까 빼도 됨
-// 	"rules": {
-// 		"react/react-in-jsx-scope": "off"
-// 	}
-// }
-
 {
-	"parser": "@babel/eslint-parser",
 	"parserOptions": {
-		"ecmaVersion": 2020,
-		"sourceType": "module",
+		"ecmaVersion": "latest", // 최신버전 문법으로 사용하겠다.
+		"sourceType": "module", // import export 모듈로 사용하겠다. script소스가 아니라.
 		"ecmaFeatures": {
-			"jsx": true
-		},
-		"babelOptions": {
-			"presets": ["next/babel"]
-		},
-		"requireConfigFile": false
+			// 특수한 기능
+			"jsx": true // jsx를 사용한다.
+		}
 	},
 	"env": {
+		// 환경 // 돌아가게 하려는 관련
 		"browser": true,
 		"node": true,
 		"es6": true
 	},
-	"extends": ["airbnb"],
-	"plugins": ["import", "react-hooks", "jsx-a11y"],
+	"extends": ["eslint:recommended", "plugin:react/recommended"], // 남들이 만들어 놓은 규칙 따른 다는 의미, 기본규칙들
+	"plugins": ["import", "react-hooks"], // react는 위에서 썼으니까 빼도 됨
 	"rules": {
-		"jsx-a11y/label-has-associated-control": "off",
-		"jsx-a11y/anchor-is-valid": "off",
-		"no-console": "off",
-		"no-underscore-dangle": "off",
-		"react/forbid-prop-types": "off",
-		"react/jsx-filename-extension": "off",
-		"react/jsx-one-expression-per-line": "off",
-		"react/jsx-props-no-spreading": "off",
-		"object-curly-newline": "off",
-		"linebreak-style": "off",
-		"no-param-reassign": "off",
-		"max-len": "off"
+		"react/react-in-jsx-scope": "off"
 	}
 }
+
+// {
+// 	"parser": "@babel/eslint-parser",
+// 	"parserOptions": {
+// 		"ecmaVersion": 2020,
+// 		"sourceType": "module",
+// 		"ecmaFeatures": {
+// 			"jsx": true
+// 		},
+// 		"babelOptions": {
+// 			"presets": ["next/babel"]
+// 		},
+// 		"requireConfigFile": false
+// 	},
+// 	"env": {
+// 		"browser": true,
+// 		"node": true,
+// 		"es6": true
+// 	},
+// 	"extends": ["airbnb"],
+// 	"plugins": ["import", "react-hooks", "jsx-a11y"],
+// 	"rules": {
+// 		"jsx-a11y/label-has-associated-control": "off",
+// 		"jsx-a11y/anchor-is-valid": "off",
+// 		"no-console": "off",
+// 		"no-underscore-dangle": "off",
+// 		"react/forbid-prop-types": "off",
+// 		"react/jsx-filename-extension": "off",
+// 		"react/jsx-one-expression-per-line": "off",
+// 		"react/jsx-props-no-spreading": "off",
+// 		"object-curly-newline": "off",
+// 		"linebreak-style": "off",
+// 		"no-param-reassign": "off",
+// 		"max-len": "off"
+// 	}
+// }

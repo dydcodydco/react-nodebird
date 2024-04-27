@@ -1,12 +1,17 @@
 import PropTypes from "prop-types";
 import { useCallback, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
+import ImagesZoom from "./ImagesZoom"; // 폴더를 호출하면 자동으로 index.js 찾음
 
 const PostImages = ({ images }) => {
 	const [showImageZoom, setShowImageZoom] = useState(false);
 
 	const onZoom = useCallback(() => {
 		setShowImageZoom(true);
+	}, []);
+
+	const onClose = useCallback(() => {
+		setShowImageZoom(false);
 	}, []);
 
 	if (images.length === 1) {
@@ -19,6 +24,7 @@ const PostImages = ({ images }) => {
 					alt={images[0].src}
 					onClick={onZoom}
 				/>
+				{showImageZoom && <ImagesZoom images={images} onClose={onClose} />}
 			</>
 		);
 	}
@@ -40,33 +46,37 @@ const PostImages = ({ images }) => {
 					onClick={onZoom}
 					style={{ width: "50%", display: "inline-block" }}
 				/>
+				{showImageZoom && <ImagesZoom images={images} onClose={onClose} />}
 			</>
 		);
 	}
 	return (
-		<div>
-			<img
-				role='presentation' // 스크린리더에서 굳이 클릭할필요를 안알려줘도 될때
-				src={images[0].src}
-				alt={images[0].src}
-				onClick={onZoom}
-				style={{ width: "50%" }}
-			/>
-			<div
-				role='presentation'
-				style={{
-					display: "inline-block",
-					width: "50%",
-					textAlign: "center",
-					verticalAlign: "middle",
-				}}
-			>
-				<PlusOutlined />
-				<br />
-				{images.length - 1}
-				개의 사진 더보기
+		<>
+			<div>
+				<img
+					role='presentation' // 스크린리더에서 굳이 클릭할필요를 안알려줘도 될때
+					src={images[0].src}
+					alt={images[0].src}
+					onClick={onZoom}
+					style={{ width: "50%" }}
+				/>
+				<div
+					role='presentation'
+					style={{
+						display: "inline-block",
+						width: "50%",
+						textAlign: "center",
+						verticalAlign: "middle",
+					}}
+				>
+					<PlusOutlined />
+					<br />
+					{images.length - 1}
+					개의 사진 더보기
+				</div>
 			</div>
-		</div>
+			{showImageZoom && <ImagesZoom images={images} onClose={onClose} />}
+		</>
 	);
 };
 
