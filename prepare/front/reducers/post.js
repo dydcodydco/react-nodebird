@@ -45,7 +45,12 @@ export const initialState = {
 		},
 	],
 	imagePaths: [],
-	postAdded: false,
+	addPostLoading: false,
+	addPostDone: false,
+	addPostError: null,
+	addCommentLoading: false,
+	addCommentDone: false,
+	addCommentError: null,
 };
 
 const dummyPost = {
@@ -63,8 +68,32 @@ const postSlice = createSlice({
 	name: "post",
 	initialState,
 	reducers: {
-		addPost: (state, action) => {
+		addPostRequestAction: (state, action) => {
+			state.addPostLoading = true;
+			state.addPostDone = false;
+			state.addPostError = null;
+		},
+		addPostSuccessAction: (state, action) => {
+			state.addPostLoading = false;
+			state.addPostDone = true;
 			state.mainPosts = [dummyPost, ...state.mainPosts];
+		},
+		addPostFailureAction: (state, action) => {
+			state.addPostLoading = false;
+			state.addPostError = action.error;
+		},
+		addCommentRequestAction: (state, action) => {
+			state.addCommentLoading = true;
+			state.addCommentDone = false;
+			state.addCommentError = null;
+		},
+		addCommentSuccessAction: (state, action) => {
+			state.addCommentLoading = false;
+			state.addCommentDone = true;
+		},
+		addCommentFailureAction: (state, action) => {
+			state.addCommentLoading = false;
+			state.addCommentError = action.error;
 		},
 	},
 	extraReducers: (builder) =>
@@ -76,5 +105,12 @@ const postSlice = createSlice({
 			.addDefaultCase((state) => state),
 });
 
-export const { addPost } = postSlice.actions;
+export const {
+	addPostRequestAction,
+	addPostSuccessAction,
+	addPostFailureAction,
+	addCommentRequestAction,
+	addCommentSuccessAction,
+	addCommentFailureAction,
+} = postSlice.actions;
 export default postSlice.reducer;

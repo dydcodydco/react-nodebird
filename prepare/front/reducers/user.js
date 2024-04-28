@@ -2,54 +2,76 @@ import { createSlice, current } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
 
 const initialState = {
-	isLoggingIn: false, // 로그인 시도중
-	isLoggingOut: false, // 로그아웃 시도중
-	isLoggedIn: false,
+	logInLoading: false, // 로그인 시도중
+	logInDone: false,
+	logInError: null,
+	logOutLoading: false, // 로그아웃 시도중
+	logOutDone: false,
+	logOutError: null,
+	signUpLoading: false, // 회원가입 시도중
+	signUpDone: false,
+	signUpError: null,
 	me: null,
 	signUpData: {},
 	loginData: {},
+};
+
+const dummyUser = (payload) => {
+	return {
+		...payload,
+		nickname: "zzimzzim",
+		id: 1,
+		Posts: [],
+		Followings: [],
+		Followers: [],
+	};
 };
 
 const userSlice = createSlice({
 	name: "user",
 	initialState,
 	reducers: {
-		logIn: (state, action) => {
-			state.isLoggedIn = true;
-			state.me = action.payload;
-		},
-		logOut: (state) => {
-			state.isLoggedIn = false;
-			state.me = null;
-		},
 		loginRequestAction: (state) => {
-			state.isLoggingIn = true;
+			state.logInLoading = true;
+			state.logInError = null;
+			state.logInDone = false;
 		},
 		loginSuccessAction: (state, action) => {
-			console.log("reducer login--------------------------");
-			console.log("state", state);
-			console.log("action", action);
-			// console.log("state", current(state));
-
-			state.isLoggingIn = false;
-			state.isLoggedIn = true;
-			state.me = action.payload;
-			state.me.nickname = "zzimzzim";
+			state.logInLoading = false;
+			state.logInDone = true;
+			state.me = dummyUser(action.payload);
 		},
-		loginFailureAction: (state) => {
-			state.isLoggingIn = false;
-			state.isLoggedIn = false;
+		loginFailureAction: (state, action) => {
+			state.logInLoading = false;
+			state.logInError = action.error;
 		},
 		logoutRequestAction: (state) => {
-			state.isLoggingOut = true;
+			state.logOutLoading = true;
+			state.logOutDone = false;
+			state.logOutError = null;
 		},
 		logoutSuccessAction: (state) => {
-			state.isLoggingOut = false;
-			state.isLoggedIn = false;
+			state.logOutLoading = false;
+			state.logOutDone = true;
 			state.me = null;
 		},
-		logoutFailureAction: (state) => {
-			state.isLoggingOut = false;
+		logoutFailureAction: (state, action) => {
+			state.logOutLoading = false;
+			state.logInError = action.error;
+		},
+		signupRequestAction: (state) => {
+			state.signUpLoading = true;
+			state.signUpError = null;
+			state.signUpDone = false;
+		},
+		signupSuccessAction: (state, action) => {
+			state.signUpLoading = false;
+			state.signUpDone = true;
+			state.me = dummyUser(action.payload);
+		},
+		signupFailureAction: (state, action) => {
+			state.signUpLoading = false;
+			state.signUpError = action.error;
 		},
 	},
 	extraReducers: (builder) =>
@@ -72,6 +94,9 @@ export const {
 	logoutRequestAction,
 	logoutSuccessAction,
 	logoutFailureAction,
+	signupRequestAction,
+	signupSuccessAction,
+	signupFailureAction,
 } = userSlice.actions; // 액션 생성 함수
 
 export default userSlice.reducer; // 리듀서

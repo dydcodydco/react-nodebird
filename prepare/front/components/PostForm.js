@@ -1,7 +1,7 @@
 import { Button, Form, Input } from "antd";
 import { useCallback, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addPost } from "../reducers/post";
+import { addPostRequestAction } from "../reducers/post";
 import { Controller, useForm } from "react-hook-form";
 
 const PostForm = () => {
@@ -17,7 +17,7 @@ const PostForm = () => {
 	const dispatch = useDispatch();
 	const onFinish = useCallback((data) => {
 		console.log(data);
-		dispatch(addPost());
+		dispatch(addPostRequestAction());
 	}, []);
 
 	const onClickImageUpload = useCallback(() => {

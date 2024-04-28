@@ -7,27 +7,27 @@ import {
 	logoutFailureAction,
 	logoutRequestAction,
 	logoutSuccessAction,
+	signupRequestAction,
+	signupSuccessAction,
+	signupFailureAction,
 } from "../reducers/user";
 
 function loginAPI(data) {
 	return axios.post("/api/login", data);
 }
-
 function* login(action) {
 	try {
-		console.log("saga login---------------------------------");
-		console.log("action", action);
 		// const result = yield call(loginAPI, action.data);
+		// yield put(loginSuccessAction(action.payload));
 		yield delay(1000);
 		yield put({
 			type: loginSuccessAction,
 			payload: action.payload,
 		});
-		// yield put(loginSuccessAction(action.payload));
 	} catch (err) {
 		yield put({
 			type: loginFailureAction,
-			// data: err.response.data,
+			error: err.response.data,
 		});
 	}
 }
@@ -35,7 +35,6 @@ function* login(action) {
 function logoutAPI() {
 	return axios.post("/api/logout");
 }
-
 function* logout() {
 	try {
 		// const result = yield call(logoutAPI);
@@ -47,7 +46,22 @@ function* logout() {
 	} catch (err) {
 		yield put({
 			type: logoutFailureAction,
-			data: err.response.data,
+			error: err.response.data,
+		});
+	}
+}
+
+function* signup() {
+	try {
+		yield delay(1000);
+		yield put({
+			type: signupSuccessAction,
+			payload: "",
+		});
+	} catch (err) {
+		yield put({
+			type: signupFailureAction,
+			error: err.response.data,
 		});
 	}
 }
@@ -55,11 +69,13 @@ function* logout() {
 function* watchLogIn() {
 	yield takeLatest(loginRequestAction, login);
 }
-
 function* watchLogOut() {
 	yield takeLatest(logoutRequestAction, logout);
 }
+function* watchSignUp() {
+	yield takeLatest(signupRequestAction, signup);
+}
 
 export default function* userSaga() {
-	yield all([fork(watchLogIn), fork(watchLogOut)]);
+	yield all([fork(watchLogIn), fork(watchLogOut), fork(watchSignUp)]);
 }

@@ -4,6 +4,8 @@ import Head from "next/head";
 import { useCallback } from "react";
 import { useForm, Controller } from "react-hook-form";
 import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
+import { signupRequestAction } from "../reducers/user";
 
 const ButtonWrapper = styled.div`
 	margin-top: 10px;
@@ -14,8 +16,12 @@ const ErrorMessage = styled.p`
 `;
 
 const Signup = () => {
+	const { signUpLoading } = useSelector((state) => state.user);
+	const dispatch = useDispatch();
+
 	const onSubmit = useCallback((data) => {
 		console.log(data);
+		dispatch(signupRequestAction(data));
 	}, []);
 	const {
 		control,
@@ -156,7 +162,7 @@ const Signup = () => {
 					</div>
 
 					<ButtonWrapper>
-						<Button htmlType='submit' type='primary' loading={false}>
+						<Button htmlType='submit' type='primary' loading={signUpLoading}>
 							가입하기
 						</Button>
 					</ButtonWrapper>
