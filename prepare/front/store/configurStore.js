@@ -24,7 +24,6 @@ const makeStore = () => {
 			getDefaultMiddleware().concat(sagaMiddleware),
 		// redux-toolkit 은 devTools 등의 미들웨어들을 기본적으로 제공
 		// 추가 미들웨어나 enhancers가 필요하다면 여기에 포함시킬 수 있습니다.
-		// devTools: true,
 	});
 
 	sagaMiddleware.run(rootSaga);

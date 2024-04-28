@@ -23,15 +23,13 @@ const userSlice = createSlice({
 			state.me = null;
 		},
 		loginRequestAction: (state) => {
-			// console.log("reducer loginRequestAction");
-			// console.log("state", state);
 			state.isLoggingIn = true;
 		},
 		loginSuccessAction: (state, action) => {
-			console.log("reducer login");
+			console.log("reducer login--------------------------");
 			console.log("state", state);
+			console.log("action", action);
 			// console.log("state", current(state));
-			console.log(action);
 
 			state.isLoggingIn = false;
 			state.isLoggedIn = true;

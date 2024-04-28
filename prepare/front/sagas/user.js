@@ -15,11 +15,15 @@ function loginAPI(data) {
 
 function* login(action) {
 	try {
-		// console.log("saga login");
-		// console.log(action);
+		console.log("saga login---------------------------------");
+		console.log("action", action);
 		// const result = yield call(loginAPI, action.data);
 		yield delay(1000);
-		yield put(loginSuccessAction(action.payload));
+		yield put({
+			type: loginSuccessAction,
+			payload: action.payload,
+		});
+		// yield put(loginSuccessAction(action.payload));
 	} catch (err) {
 		yield put({
 			type: loginFailureAction,
@@ -42,7 +46,7 @@ function* logout() {
 		});
 	} catch (err) {
 		yield put({
-			type: "LOG_OUT_FAILURE",
+			type: logoutFailureAction,
 			data: err.response.data,
 		});
 	}

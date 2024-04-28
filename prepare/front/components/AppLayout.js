@@ -13,10 +13,7 @@ const SearchInput = styled(Input.Search)`
 
 const AppLayout = ({ children }) => {
 	const router = useRouter();
-	const { isLoggedIn } = useSelector((state) => {
-		console.log(state);
-		return state.user;
-	}); // 둘중 하나 취향차이
+	const { isLoggedIn } = useSelector((state) => state.user); // 둘중 하나 취향차이
 	// const isLoggedIn = useSelector((state) => state.user.isLoggedIn); // 둘중 하나 취향차이
 	// useSelector: 스토어의 상태값을 반환
 	return (
