@@ -21,7 +21,7 @@ const makeStore = () => {
 	const store = configureStore({
 		reducer, // 리듀서 모듈들이 합쳐진 루트 리듀서
 		middleware: (getDefaultMiddleware) =>
-			getDefaultMiddleware().concat(sagaMiddleware),
+			getDefaultMiddleware().concat([sagaMiddleware, loggerMiddleware]),
 		// redux-toolkit 은 devTools 등의 미들웨어들을 기본적으로 제공
 		// 추가 미들웨어나 enhancers가 필요하다면 여기에 포함시킬 수 있습니다.
 	});

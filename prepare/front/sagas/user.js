@@ -18,12 +18,12 @@ function loginAPI(data) {
 function* login(action) {
 	try {
 		// const result = yield call(loginAPI, action.data);
-		// yield put(loginSuccessAction(action.payload));
 		yield delay(1000);
 		yield put({
 			type: loginSuccessAction,
 			payload: action.payload,
 		});
+		// yield put(loginSuccessAction(action.payload));
 	} catch (err) {
 		yield put({
 			type: loginFailureAction,
