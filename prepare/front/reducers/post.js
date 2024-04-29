@@ -22,6 +22,10 @@ export const initialState = {
 	// 대문자 = 다른 정보들과 합쳐서 주는 정보 / 서버에서 주는 정보로 고유한 Id를 가지고 있다.
 	mainPosts: [],
 	imagePaths: [],
+	hasMorePosts: true,
+	loadPostsLoading: false,
+	loadPostsDone: false,
+	loadPostsError: null,
 	addPostLoading: false,
 	addPostDone: false,
 	addPostError: null,
@@ -61,7 +65,7 @@ export const generateDummyPosts = (number) =>
 		count: number,
 	});
 // 초기 상태에 더미 게시물 추가
-initialState.mainPosts = [...generateDummyPosts(10)];
+// initialState.mainPosts = [...generateDummyPosts(10)];
 
 const dummyPost = ({ id, content }) => {
 	return {
@@ -89,6 +93,22 @@ const postSlice = createSlice({
 	name: "post",
 	initialState,
 	reducers: {
+		loadPostsRequestAction: (state, action) => {
+			state.loadPostsLoading = true;
+			state.loadPostsDone = false;
+			state.loadPostsError = null;
+		},
+		loadPostsSuccessAction: (state, action) => {
+			state.loadPostsLoading = false;
+			state.loadPostsDone = true;
+			state.mainPosts = [...state.mainPosts, ...action.payload];
+			state.hasMorePosts = state.mainPosts.length < 50;
+			// state.mainPosts.unshift(action.payload);
+		},
+		loadPostsFailureAction: (state, action) => {
+			state.loadPostsLoading = false;
+			state.loadPostsError = action.error;
+		},
 		addPostRequestAction: (state, action) => {
 			state.addPostLoading = true;
 			state.addPostDone = false;
@@ -144,6 +164,9 @@ const postSlice = createSlice({
 });
 
 export const {
+	loadPostsRequestAction,
+	loadPostsSuccessAction,
+	loadPostsFailureAction,
 	addPostRequestAction,
 	addPostSuccessAction,
 	addPostFailureAction,
