@@ -14,6 +14,12 @@ const initialState = {
 	changeNicknameLoading: false, // 닉네임 변경 시도중
 	changeNicknameDone: false,
 	changeNicknameError: null,
+	followLoading: false, // 로그인 시도중
+	followDone: false,
+	followError: null,
+	unFollowLoading: false, // 로그인 시도중
+	unFollowDone: false,
+	unFollowError: null,
 	me: null,
 	signUpData: {},
 	loginData: {},
@@ -34,6 +40,34 @@ const userSlice = createSlice({
 	name: "user",
 	initialState,
 	reducers: {
+		followRequestAction: (state) => {
+			state.followLoading = true;
+			state.followError = null;
+			state.followDone = false;
+		},
+		followSuccessAction: (state, action) => {
+			state.followLoading = false;
+			state.followDone = true;
+			state.me.Followings.push(action.payload);
+		},
+		followFailureAction: (state, action) => {
+			state.followLoading = false;
+			state.followError = action.error;
+		},
+		unFollowRequestAction: (state) => {
+			state.unFollowLoading = true;
+			state.unFollowError = null;
+			state.unFollowDone = false;
+		},
+		unFollowSuccessAction: (state, action) => {
+			state.unFollowLoading = false;
+			state.unFollowDone = true;
+			state.me.Followings = state.me.Followings.filter((d) => d.id !== action.payload);
+		},
+		unFollowFailureAction: (state, action) => {
+			state.unFollowLoading = false;
+			state.unFollowError = action.error;
+		},
 		loginRequestAction: (state) => {
 			state.logInLoading = true;
 			state.logInError = null;
@@ -110,8 +144,12 @@ const userSlice = createSlice({
 // redux toolkit에서는 immer라이브러리가 처리해줌.
 
 export const {
-	logIn,
-	logOut,
+	unFollowRequestAction,
+	unFollowSuccessAction,
+	unFollowiailureAction,
+	followRequestAction,
+	followSuccessAction,
+	followFailureAction,
 	loginRequestAction,
 	loginSuccessAction,
 	loginFailureAction,

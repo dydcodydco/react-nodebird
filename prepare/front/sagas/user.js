@@ -10,6 +10,12 @@ import {
 	signupRequestAction,
 	signupSuccessAction,
 	signupFailureAction,
+	followRequestAction,
+	followSuccessAction,
+	followFailureAction,
+	unFollowRequestAction,
+	unFollowSuccessAction,
+	unFollowFailureAction,
 } from "../reducers/user";
 
 function loginAPI(data) {
@@ -41,13 +47,42 @@ function* logout() {
 	}
 }
 
-function* signup() {
+function signUpAPI() {
+	return axios.post("/api/logout");
+}
+function* signup(action) {
 	try {
 		console.log("signup saga");
 		yield delay(1000);
 		yield put(signupSuccessAction({ payload: "" }));
 	} catch (err) {
 		yield put(signupFailureAction({ error: err.response.data }));
+	}
+}
+
+function followAPI() {
+	return axios.post("/api/logout");
+}
+function* follow(action) {
+	try {
+		console.log("follow saga");
+		yield delay(1000);
+		yield put(followSuccessAction(action.payload));
+	} catch (err) {
+		yield put(followFailureAction({ error: err.response.data }));
+	}
+}
+
+function unFollowAPI() {
+	return axios.post("/api/logout");
+}
+function* unFollow(action) {
+	try {
+		console.log("unFollow saga");
+		yield delay(1000);
+		yield put(unFollowSuccessAction(action.payload));
+	} catch (err) {
+		yield put(unFollowFailureAction({ error: err.response.data }));
 	}
 }
 
@@ -60,7 +95,13 @@ function* watchLogOut() {
 function* watchSignUp() {
 	yield takeLatest(signupRequestAction, signup);
 }
+function* watchFollow() {
+	yield takeLatest(followRequestAction, follow);
+}
+function* watchUnFollow() {
+	yield takeLatest(unFollowRequestAction, unFollow);
+}
 
 export default function* userSaga() {
-	yield all([fork(watchLogIn), fork(watchLogOut), fork(watchSignUp)]);
+	yield all([fork(watchLogIn), fork(watchLogOut), fork(watchSignUp), fork(watchFollow), fork(watchUnFollow)]);
 }
