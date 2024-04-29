@@ -23,10 +23,10 @@ const dummyUser = (payload) => {
 	return {
 		...payload,
 		nickname: "zzimzzim",
-		id: 1,
-		Posts: [],
-		Followings: [],
-		Followers: [],
+		id: "1",
+		Posts: [{ id: "1" }],
+		Followings: [{ nickname: "더미1" }, { nickname: "더미2" }, { nickname: "더미3" }],
+		Followers: [{ nickname: "더미1" }, { nickname: "더미2" }, { nickname: "더미3" }],
 	};
 };
 
@@ -84,12 +84,18 @@ const userSlice = createSlice({
 		changeNicknameSuccessAction: (state, action) => {
 			state.changeNicknameLoading = false;
 			state.changeNicknameDone = true;
-			console.log("changeNicknameSuccessAction", action.payload);
-			state.me = dummyUser(action.payload);
+			// console.log("changeNicknameSuccessAction", action.payload);
+			state.me.nickname = action.payload;
 		},
 		changeNicknameFailureAction: (state, action) => {
 			state.changeNicknameLoading = false;
 			state.changeNicknameError = action.error;
+		},
+		addPostToMe: (state, action) => {
+			state.me.Posts.unshift({ id: action.payload });
+		},
+		removePostOfMe: (state, action) => {
+			state.me.Posts = state.me.Posts.filter((v) => v.id !== action.payload);
 		},
 	},
 	extraReducers: (builder) =>
@@ -115,6 +121,8 @@ export const {
 	signupRequestAction,
 	signupSuccessAction,
 	signupFailureAction,
+	addPostToMe,
+	removePostOfMe,
 } = userSlice.actions; // 액션 생성 함수
 
 export default userSlice.reducer; // 리듀서

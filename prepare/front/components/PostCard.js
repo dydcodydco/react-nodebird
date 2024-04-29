@@ -1,27 +1,32 @@
 import { Card, Popover, Button, Avatar, List } from "antd";
 import { RetweetOutlined, HeartOutlined, HeartTwoTone, MessageOutlined, EllipsisOutlined } from "@ant-design/icons";
 import { useState, useCallback } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
+import { removePostRequestAction } from "../reducers/post";
 
 import PostImages from "./PostImages";
 import CommentForm from "./CommentForm";
 import PostCardContent from "./PostCardContent";
 
 const PostCard = ({ post }) => {
-	const [liked, setLiked] = useState(false);
-	const [commentFormOpend, setCommentFormOpend] = useState(false);
-
 	// const { me: {id} } = useSelector((state) => state.user);
 	// const id = me && me.id;
 	// const id = me?.id; // 옵셔널 체이닝 연산자
 	const id = useSelector((state) => state.user.me?.id);
+	const { removePostLoading } = useSelector((state) => state.post);
+	const dispatch = useDispatch();
+	const [liked, setLiked] = useState(false);
+	const [commentFormOpend, setCommentFormOpend] = useState(false);
 
 	const onToggleLike = useCallback(() => {
 		setLiked((prevLiked) => !prevLiked);
 	}, []);
 	const onToggleComment = useCallback(() => {
 		setCommentFormOpend((prev) => !prev);
+	}, []);
+	const onRemovePost = useCallback(() => {
+		dispatch(removePostRequestAction({ id: post.id }));
 	}, []);
 	return (
 		<div style={{ marginTop: 10 }}>
@@ -41,7 +46,7 @@ const PostCard = ({ post }) => {
 										<Button type='primary' key='modify'>
 											수정
 										</Button>
-										<Button type='danger' key={"delete"}>
+										<Button type='danger' key={"delete"} onClick={onRemovePost} loading={removePostLoading}>
 											삭제
 										</Button>
 									</>

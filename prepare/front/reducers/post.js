@@ -8,40 +8,43 @@ export const initialState = {
 	// 어떤 정보와 다른 정보가 관계가 있으면 합쳐주는게 그게 대문자가 된다.
 	// 설정으로 소문자 가능하긴함.
 	// 소문자 = 게시글 자체 속성
-	// 대문자 = 다른 정보들과 합쳐서 주는 정보
+	// 대문자 = 다른 정보들과 합쳐서 주는 정보 / 서버에서 주는 정보로 고유한 Id를 가지고 있다.
 	mainPosts: [
 		{
 			id: "1",
 			User: {
-				id: 1,
+				id: "1",
 				nickname: "zzimzzim",
 			},
 			content: "첫 번째 게시글 #해시태그, #익스프레스",
 			Images: [
 				{
+					id: shortId.generate(),
 					src: "https://loremflickr.com/cache/resized/65535_53669042936_630c778818_320_240_nofilter.jpg",
 				},
 				{
+					id: shortId.generate(),
 					src: "https://loremflickr.com/cache/resized/65535_52982053835_12fc661207_320_240_nofilter.jpg",
 				},
 				{
+					id: shortId.generate(),
 					src: "https://loremflickr.com/cache/resized/65535_52905479084_303bf25ec0_320_240_nofilter.jpg",
 				},
 			],
 			Comments: [
 				{
+					id: shortId.generate(),
 					User: {
 						nickname: "찜찜",
 					},
 					content: "얼른 사고싶어요~",
-					id: "1",
 				},
 				{
+					id: shortId.generate(),
 					User: {
 						nickname: "hero",
 					},
 					content: "리액트 넥스트 고수가 될테다~",
-					id: "2",
 				},
 			],
 			createdAt: {},
@@ -51,17 +54,20 @@ export const initialState = {
 	addPostLoading: false,
 	addPostDone: false,
 	addPostError: null,
+	removePostLoading: false,
+	removePostDone: false,
+	removePostError: null,
 	addCommentLoading: false,
 	addCommentDone: false,
 	addCommentError: null,
 };
 
-const dummyPost = (payload) => {
+const dummyPost = ({ id, content }) => {
 	return {
-		id: shortId.generate(),
-		content: payload.text,
+		id,
+		content,
 		User: {
-			id: 1,
+			id: "1",
 			nickname: "WlaWla",
 		},
 		Images: [],
@@ -73,7 +79,7 @@ const dummyComment = (content) => ({
 	id: shortId.generate(),
 	content: content,
 	User: {
-		id: 1,
+		id: "1",
 		nickname: "WlaWla",
 	},
 });
@@ -90,11 +96,25 @@ const postSlice = createSlice({
 		addPostSuccessAction: (state, action) => {
 			state.addPostLoading = false;
 			state.addPostDone = true;
-			state.mainPosts = [dummyPost(action.payload), ...state.mainPosts];
+			state.mainPosts.unshift(dummyPost(action.payload));
 		},
 		addPostFailureAction: (state, action) => {
 			state.addPostLoading = false;
 			state.addPostError = action.error;
+		},
+		removePostRequestAction: (state, action) => {
+			state.removePostLoading = true;
+			state.removePostDone = false;
+			state.removePostError = null;
+		},
+		removePostSuccessAction: (state, action) => {
+			state.removePostLoading = false;
+			state.removePostDone = true;
+			state.mainPosts = state.mainPosts.filter((d) => d.id !== action.payload);
+		},
+		removePostFailureAction: (state, action) => {
+			state.removePostLoading = false;
+			state.removePostError = action.error;
 		},
 		addCommentRequestAction: (state, action) => {
 			state.addCommentLoading = true;
@@ -102,9 +122,9 @@ const postSlice = createSlice({
 			state.addCommentError = null;
 		},
 		addCommentSuccessAction: (state, action) => {
-			const { content, userId, postId } = action.payload;
+			const { content, postId } = action.payload;
 			const post = state.mainPosts.find((d) => d.id === postId);
-			post.Comments = [dummyComment(content), ...post.Comments];
+			post.Comments.unshift(dummyComment(content));
 			state.addCommentLoading = false;
 			state.addCommentDone = true;
 		},
@@ -122,5 +142,15 @@ const postSlice = createSlice({
 			.addDefaultCase((state) => state),
 });
 
-export const { addPostRequestAction, addPostSuccessAction, addPostFailureAction, addCommentRequestAction, addCommentSuccessAction, addCommentFailureAction } = postSlice.actions;
+export const {
+	addPostRequestAction,
+	addPostSuccessAction,
+	addPostFailureAction,
+	removePostRequestAction,
+	removePostSuccessAction,
+	removePostFailureAction,
+	addCommentRequestAction,
+	addCommentSuccessAction,
+	addCommentFailureAction,
+} = postSlice.actions;
 export default postSlice.reducer;

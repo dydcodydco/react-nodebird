@@ -20,16 +20,10 @@ function* login(action) {
 		// const result = yield call(loginAPI, action.data);
 		console.log("login saga", action);
 		yield delay(1000);
-		yield put({
-			type: loginSuccessAction,
-			payload: action.payload,
-		});
+		yield put(loginSuccessAction(action.payload));
 		// yield put(loginSuccessAction(action.payload));
 	} catch (err) {
-		yield put({
-			type: loginFailureAction,
-			error: err.response.data,
-		});
+		yield put(loginFailureAction({ error: err.response.data }));
 	}
 }
 
@@ -41,15 +35,9 @@ function* logout() {
 		// const result = yield call(logoutAPI);
 		console.log("logout saga");
 		yield delay(1000);
-		yield put({
-			type: logoutSuccessAction,
-			// data: result.data,
-		});
+		yield put(logoutSuccessAction());
 	} catch (err) {
-		yield put({
-			type: logoutFailureAction,
-			error: err.response.data,
-		});
+		yield put(logoutFailureAction({ error: err.response.data }));
 	}
 }
 
@@ -57,15 +45,9 @@ function* signup() {
 	try {
 		console.log("signup saga");
 		yield delay(1000);
-		yield put({
-			type: signupSuccessAction,
-			payload: "",
-		});
+		yield put(signupSuccessAction({ payload: "" }));
 	} catch (err) {
-		yield put({
-			type: signupFailureAction,
-			error: err.response.data,
-		});
+		yield put(signupFailureAction({ error: err.response.data }));
 	}
 }
 

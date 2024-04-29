@@ -42,7 +42,7 @@ const CommentForm = ({ post }) => {
 						</>
 					)}
 				/>
-				<Button type='primary' htmlType='submit' loading={addCommentLoading}>
+				<Button type='primary' htmlType='submit' loading={addCommentLoading} style={{ position: "absolute", right: 0, bottom: -40, zIndex: 1 }}>
 					댓글달기
 				</Button>
 			</Form.Item>

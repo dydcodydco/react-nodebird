@@ -21,6 +21,7 @@
 	], // 남들이 만들어 놓은 규칙 따른 다는 의미, 기본규칙들
 	"plugins": ["import", "react-hooks"], // react는 위에서 썼으니까 빼도 됨
 	"rules": {
+		"react/react-in-jsx-scope": "off",
 		"jsx-a11y/label-has-associated-control": "off",
 		"jsx-a11y/anchor-is-valid": "off",
 		"no-console": "off",
