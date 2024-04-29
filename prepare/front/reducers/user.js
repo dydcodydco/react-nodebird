@@ -11,6 +11,9 @@ const initialState = {
 	signUpLoading: false, // 회원가입 시도중
 	signUpDone: false,
 	signUpError: null,
+	changeNicknameLoading: false, // 닉네임 변경 시도중
+	changeNicknameDone: false,
+	changeNicknameError: null,
 	me: null,
 	signUpData: {},
 	loginData: {},
@@ -72,6 +75,21 @@ const userSlice = createSlice({
 		signupFailureAction: (state, action) => {
 			state.signUpLoading = false;
 			state.signUpError = action.error;
+		},
+		changeNicknameRequestAction: (state) => {
+			state.changeNicknameLoading = true;
+			state.changeNicknameError = null;
+			state.changeNicknameDone = false;
+		},
+		changeNicknameSuccessAction: (state, action) => {
+			state.changeNicknameLoading = false;
+			state.changeNicknameDone = true;
+			console.log("changeNicknameSuccessAction", action.payload);
+			state.me = dummyUser(action.payload);
+		},
+		changeNicknameFailureAction: (state, action) => {
+			state.changeNicknameLoading = false;
+			state.changeNicknameError = action.error;
 		},
 	},
 	extraReducers: (builder) =>

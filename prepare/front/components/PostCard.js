@@ -1,11 +1,5 @@
 import { Card, Popover, Button, Avatar, List } from "antd";
-import {
-	RetweetOutlined,
-	HeartOutlined,
-	HeartTwoTone,
-	MessageOutlined,
-	EllipsisOutlined,
-} from "@ant-design/icons";
+import { RetweetOutlined, HeartOutlined, HeartTwoTone, MessageOutlined, EllipsisOutlined } from "@ant-design/icons";
 import { useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
@@ -36,15 +30,7 @@ const PostCard = ({ post }) => {
 				actions={[
 					// 배열안에 들어가는 것들은 다 key를 넣어줘야 한다.
 					<RetweetOutlined key='retweet' />,
-					liked ? (
-						<HeartTwoTone
-							key='heart'
-							twoToneColor={"#eb2f96"}
-							onClick={onToggleLike}
-						/>
-					) : (
-						<HeartOutlined key='heart' onClick={onToggleLike} />
-					),
+					liked ? <HeartTwoTone key='heart' twoToneColor={"#eb2f96"} onClick={onToggleLike} /> : <HeartOutlined key='heart' onClick={onToggleLike} />,
 					<MessageOutlined key={"comment"} onClick={onToggleComment} />,
 					<Popover
 						key={"more"}
@@ -71,11 +57,7 @@ const PostCard = ({ post }) => {
 					</Popover>,
 				]}
 			>
-				<Card.Meta
-					avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
-					title={post.User.nickname}
-					description={<PostCardContent postData={post.content} />}
-				/>
+				<Card.Meta avatar={<Avatar>{post.User.nickname[0]}</Avatar>} title={post.User.nickname} description={<PostCardContent postData={post.content} />} />
 			</Card>
 			{commentFormOpend && (
 				<div>
@@ -86,12 +68,8 @@ const PostCard = ({ post }) => {
 						itemLayout='horizontal'
 						dataSource={post.Comments}
 						renderItem={(item) => (
-							<List.Item>
-								<List.Item.Meta
-									title={item.User.nickname}
-									avatar={<Avatar>{item.User.nickname[0]}</Avatar>}
-									description={item.content}
-								/>
+							<List.Item key={item.id}>
+								<List.Item.Meta title={item.User.nickname} avatar={<Avatar>{item.User.nickname[0]}</Avatar>} description={item.content} />
 							</List.Item>
 						)}
 					/>
@@ -103,7 +81,7 @@ const PostCard = ({ post }) => {
 
 PostCard.propTypes = {
 	post: PropTypes.shape({
-		id: PropTypes.number,
+		id: PropTypes.string,
 		User: PropTypes.object,
 		content: PropTypes.string,
 		createdAt: PropTypes.object,

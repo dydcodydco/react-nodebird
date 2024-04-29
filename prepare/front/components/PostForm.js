@@ -5,7 +5,13 @@ import { addPostRequestAction } from "../reducers/post";
 import { Controller, useForm } from "react-hook-form";
 
 const PostForm = () => {
-	const { register, control, handleSubmit, reset, formState: { errors } } = useForm();
+	const {
+		register,
+		control,
+		handleSubmit,
+		reset,
+		formState: { errors },
+	} = useForm();
 	const { imagePaths, addPostDone } = useSelector((state) => state.post);
 	const dispatch = useDispatch();
 
@@ -16,7 +22,8 @@ const PostForm = () => {
 	}, [addPostDone]);
 
 	const onSubmit = useCallback((data) => {
-		dispatch(addPostRequestAction({ text: data.content, images: data.images, }));
+		dispatch(addPostRequestAction({ text: data.content }));
+		// dispatch(addPostRequestAction({ text: data.content, images: data.images, }));
 	}, []);
 
 	const inputFileRef = useRef(null);
@@ -31,9 +38,7 @@ const PostForm = () => {
 		const file = e.target.files?.[0];
 		if (file) {
 			const binaryData = [file];
-			const urlImage = URL.createObjectURL(
-				new Blob(binaryData, { type: "image" })
-			);
+			const urlImage = URL.createObjectURL(new Blob(binaryData, { type: "image" }));
 		}
 	};
 	return (

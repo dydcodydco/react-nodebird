@@ -1,5 +1,6 @@
 import { HYDRATE } from "next-redux-wrapper";
 import { createSlice } from "@reduxjs/toolkit";
+import shortId from "shortid";
 
 export const initialState = {
 	// 왜 id같이 소문자가 있고, User처럼 대문자가 있는걸까?
@@ -10,9 +11,9 @@ export const initialState = {
 	// 대문자 = 다른 정보들과 합쳐서 주는 정보
 	mainPosts: [
 		{
-			id: 1,
+			id: "1",
 			User: {
-				id: 111,
+				id: 1,
 				nickname: "zzimzzim",
 			},
 			content: "첫 번째 게시글 #해시태그, #익스프레스",
@@ -33,12 +34,14 @@ export const initialState = {
 						nickname: "찜찜",
 					},
 					content: "얼른 사고싶어요~",
+					id: "1",
 				},
 				{
 					User: {
 						nickname: "hero",
 					},
 					content: "리액트 넥스트 고수가 될테다~",
+					id: "2",
 				},
 			],
 			createdAt: {},
@@ -53,16 +56,27 @@ export const initialState = {
 	addCommentError: null,
 };
 
-const dummyPost = {
-	id: 2,
-	content: "더미데이터 입니다.",
+const dummyPost = (payload) => {
+	return {
+		id: shortId.generate(),
+		content: payload.text,
+		User: {
+			id: 1,
+			nickname: "WlaWla",
+		},
+		Images: [],
+		Comments: [],
+	};
+};
+
+const dummyComment = (content) => ({
+	id: shortId.generate(),
+	content: content,
 	User: {
 		id: 1,
 		nickname: "WlaWla",
 	},
-	Images: [],
-	Comments: [],
-};
+});
 
 const postSlice = createSlice({
 	name: "post",
@@ -76,7 +90,7 @@ const postSlice = createSlice({
 		addPostSuccessAction: (state, action) => {
 			state.addPostLoading = false;
 			state.addPostDone = true;
-			state.mainPosts = [dummyPost, ...state.mainPosts];
+			state.mainPosts = [dummyPost(action.payload), ...state.mainPosts];
 		},
 		addPostFailureAction: (state, action) => {
 			state.addPostLoading = false;
@@ -88,6 +102,9 @@ const postSlice = createSlice({
 			state.addCommentError = null;
 		},
 		addCommentSuccessAction: (state, action) => {
+			const { content, userId, postId } = action.payload;
+			const post = state.mainPosts.find((d) => d.id === postId);
+			post.Comments = [dummyComment(content), ...post.Comments];
 			state.addCommentLoading = false;
 			state.addCommentDone = true;
 		},
@@ -105,12 +122,5 @@ const postSlice = createSlice({
 			.addDefaultCase((state) => state),
 });
 
-export const {
-	addPostRequestAction,
-	addPostSuccessAction,
-	addPostFailureAction,
-	addCommentRequestAction,
-	addCommentSuccessAction,
-	addCommentFailureAction,
-} = postSlice.actions;
+export const { addPostRequestAction, addPostSuccessAction, addPostFailureAction, addCommentRequestAction, addCommentSuccessAction, addCommentFailureAction } = postSlice.actions;
 export default postSlice.reducer;

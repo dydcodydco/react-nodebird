@@ -6,7 +6,12 @@ import { useCallback, useEffect } from "react";
 import { addCommentRequestAction } from "../reducers/post";
 
 const CommentForm = ({ post }) => {
-	const { handleSubmit, control, reset, formState: { errors }, } = useForm();
+	const {
+		handleSubmit,
+		control,
+		reset,
+		formState: { errors },
+	} = useForm();
 	const { addCommentDone, addCommentLoading } = useSelector((state) => state.post);
 	const id = useSelector((state) => state.user.me?.id);
 	const dispatch = useDispatch();
@@ -17,7 +22,7 @@ const CommentForm = ({ post }) => {
 
 	const onSubmit = useCallback(
 		(data) => {
-			dispatch(addCommentRequestAction({ postId: post.id, userId: id, contentText: data.contentText }));
+			dispatch(addCommentRequestAction({ postId: post.id, userId: id, content: data.contentText }));
 		},
 		[id]
 	);
@@ -47,7 +52,7 @@ const CommentForm = ({ post }) => {
 
 CommentForm.propTypes = {
 	post: PropTypes.shape({
-		id: PropTypes.number,
+		id: PropTypes.string,
 		User: PropTypes.object,
 		content: PropTypes.string,
 		createdAt: PropTypes.object,

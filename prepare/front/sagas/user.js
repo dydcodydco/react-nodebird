@@ -18,6 +18,7 @@ function loginAPI(data) {
 function* login(action) {
 	try {
 		// const result = yield call(loginAPI, action.data);
+		console.log("login saga", action);
 		yield delay(1000);
 		yield put({
 			type: loginSuccessAction,
@@ -38,6 +39,7 @@ function logoutAPI() {
 function* logout() {
 	try {
 		// const result = yield call(logoutAPI);
+		console.log("logout saga");
 		yield delay(1000);
 		yield put({
 			type: logoutSuccessAction,
@@ -53,6 +55,7 @@ function* logout() {
 
 function* signup() {
 	try {
+		console.log("signup saga");
 		yield delay(1000);
 		yield put({
 			type: signupSuccessAction,
