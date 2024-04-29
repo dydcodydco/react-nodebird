@@ -1,29 +1,31 @@
 import PropTypes from "prop-types";
 import { Form, Input, Button } from "antd";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useForm, Controller } from "react-hook-form";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
+import { addCommentRequestAction } from "../reducers/post";
 
 const CommentForm = ({ post }) => {
-	const {
-		handleSubmit,
-		control,
-		formState: { errors },
-	} = useForm();
-	const id = useSelector((state) => {
-		return state.user.me?.id;
-	}, []);
+	const { handleSubmit, control, reset, formState: { errors }, } = useForm();
+	const { addCommentDone, addCommentLoading } = useSelector((state) => state.post);
+	const id = useSelector((state) => state.user.me?.id);
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		if (addCommentDone) reset();
+	}, [addCommentDone]);
+
 	const onSubmit = useCallback(
 		(data) => {
-			console.log("userId=", id, "postId=", post.id, data);
+			dispatch(addCommentRequestAction({ postId: post.id, userId: id, contentText: data.contentText }));
 		},
-		[id, post]
+		[id]
 	);
 	return (
 		<Form onFinish={handleSubmit(onSubmit)}>
 			<Form.Item>
 				<Controller
-					name='commentInput'
+					name='contentText'
 					control={control}
 					rules={{
 						required: "댓글을 입력해주세요.",
@@ -31,11 +33,11 @@ const CommentForm = ({ post }) => {
 					render={({ field }) => (
 						<>
 							<Input.TextArea {...field} placeholder='댓글을 입력해주세요.' />
-							{errors.commentInput && <p>{errors.commentInput.message}</p>}
+							{errors.contentText && <p>{errors.contentText.message}</p>}
 						</>
 					)}
 				/>
-				<Button type='primary' htmlType='submit'>
+				<Button type='primary' htmlType='submit' loading={addCommentLoading}>
 					댓글달기
 				</Button>
 			</Form.Item>

@@ -15,37 +15,30 @@ const FormWrapper = styled(Form)`
 `;
 
 const LoginForm = () => {
-	const {
-		control,
-		handleSubmit,
-		formState: { errors },
-	} = useForm();
+	const { control, handleSubmit, formState: { errors } } = useForm();
 
-	const { isLoggingIn } = useSelector((state) => state.user);
+	const { logInLoading } = useSelector((state) => state.user);
 	const dispatch = useDispatch();
 	const onFinish = useCallback((data) => {
-		dispatch(loginRequestAction({ id: data.userId, password: data.password }));
+		dispatch(loginRequestAction({ email: data.email, password: data.password }));
 	}, []);
 
 	return (
 		<FormWrapper onFinish={handleSubmit(onFinish)}>
 			<div>
-				<label htmlFor='userId'>아이디</label>
+				<label htmlFor='email'>이메일</label>
 				<br />
 				<Controller
-					name='userId'
+					name='email'
 					control={control}
 					rules={{
-						required: "아이디를 입력해주세요.",
-						minLength: {
-							value: 3,
-							message: "아이디는 3자 이상입니다.",
-						},
+						required: "이메일를 입력해주세요.",
+						minLength: { value: 3, message: "이메일은 3자 이상입니다." },
 					}}
 					render={({ field }) => (
 						<>
-							<Input {...field} id='userId' placeholder='아이디' />
-							{errors.userId && <p>{errors.userId.message}</p>}
+							<Input {...field} id='email' type='email' placeholder='이메일' />
+							{errors.email && <p>{errors.email.message}</p>}
 						</>
 					)}
 				/>
@@ -72,7 +65,7 @@ const LoginForm = () => {
 				/>
 			</div>
 			<ButtonWrapper>
-				<Button htmlType='submit' type='primary' loading={isLoggingIn}>
+				<Button htmlType='submit' type='primary' loading={logInLoading}>
 					로그인
 				</Button>
 				<Link href='/signup'>

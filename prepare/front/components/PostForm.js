@@ -1,31 +1,31 @@
 import { Button, Form, Input } from "antd";
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { addPostRequestAction } from "../reducers/post";
 import { Controller, useForm } from "react-hook-form";
 
 const PostForm = () => {
-	const inputFileRef = useRef(null);
-	const {
-		register,
-		control,
-		handleSubmit,
-		formState: { errors },
-	} = useForm();
-
-	const { imagePaths } = useSelector((state) => state.post);
+	const { register, control, handleSubmit, reset, formState: { errors } } = useForm();
+	const { imagePaths, addPostDone } = useSelector((state) => state.post);
 	const dispatch = useDispatch();
-	const onFinish = useCallback((data) => {
-		console.log(data);
-		dispatch(addPostRequestAction());
+
+	useEffect(() => {
+		if (addPostDone) {
+			reset();
+		}
+	}, [addPostDone]);
+
+	const onSubmit = useCallback((data) => {
+		dispatch(addPostRequestAction({ text: data.content, images: data.images, }));
 	}, []);
 
+	const inputFileRef = useRef(null);
 	const onClickImageUpload = useCallback(() => {
 		inputFileRef.current.click();
 	}, [inputFileRef.current]);
 
 	// ref를 register에서 따로 꺼내기
-	const { ref: registerRef, ...rest } = register("imageInput");
+	const { ref: registerRef, ...rest } = register("images");
 	const fileUploadHandler = (e) => {
 		// 업로드한 파일 가져오기
 		const file = e.target.files?.[0];
@@ -37,11 +37,7 @@ const PostForm = () => {
 		}
 	};
 	return (
-		<Form
-			style={{ margin: "10px 0 20px" }}
-			encType='multipart/form-data'
-			onFinish={handleSubmit(onFinish)}
-		>
+		<Form style={{ margin: "10px 0 20px" }} encType='multipart/form-data' onFinish={handleSubmit(onSubmit)}>
 			<Controller
 				name='content'
 				control={control}
@@ -50,11 +46,7 @@ const PostForm = () => {
 				}}
 				render={({ field }) => (
 					<>
-						<Input.TextArea
-							{...field}
-							maxLength={140}
-							placeholder='어떤 신기한 일이 있었나요?'
-						/>
+						<Input.TextArea {...field} maxLength={140} placeholder='어떤 신기한 일이 있었나요?' />
 						{errors.content && <p>{errors.content.message}</p>}
 					</>
 				)}
@@ -68,7 +60,7 @@ const PostForm = () => {
 						registerRef(e);
 						inputFileRef.current = e;
 					}}
-					name='imageInput'
+					name='images'
 					onChange={fileUploadHandler}
 				/>
 

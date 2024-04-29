@@ -1,8 +1,9 @@
 import { Form, Input, Button, Checkbox } from "antd";
-import AppLayout from "../components/AppLayout";
 import Head from "next/head";
 import { useCallback } from "react";
 import { useForm, Controller } from "react-hook-form";
+
+import AppLayout from "../components/AppLayout";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { signupRequestAction } from "../reducers/user";
@@ -16,6 +17,7 @@ const ErrorMessage = styled.p`
 `;
 
 const Signup = () => {
+	const { control, handleSubmit, formState: { errors } } = useForm();
 	const { signUpLoading } = useSelector((state) => state.user);
 	const dispatch = useDispatch();
 
@@ -23,11 +25,6 @@ const Signup = () => {
 		console.log(data);
 		dispatch(signupRequestAction(data));
 	}, []);
-	const {
-		control,
-		handleSubmit,
-		formState: { errors },
-	} = useForm();
 	return (
 		<>
 			<AppLayout>
@@ -36,23 +33,28 @@ const Signup = () => {
 				</Head>
 				<Form onFinish={handleSubmit(onSubmit)}>
 					<div>
-						<label htmlFor='signUserId'>아이디</label>
+						<label htmlFor='email'>아이디</label>
 						<br />
 						<Controller
-							name='userId'
+							name='email'
 							control={control}
 							rules={{
-								required: "아이디를 입력해주세요.",
+								required: "이메일를 입력해주세요.",
 								minLength: {
 									value: 3,
-									message: "아이디는 3자 이상입니다.",
+									message: "이메일은 3자 이상입니다.",
 								},
 							}}
 							render={({ field }) => (
 								<>
-									<Input {...field} id='signUserId' placeholder='아이디' />
-									{errors.userId && (
-										<ErrorMessage>{errors.userId.message}</ErrorMessage>
+									<Input
+										{...field}
+										id='email'
+										type='email'
+										placeholder='이메일'
+									/>
+									{errors.email && (
+										<ErrorMessage>{errors.email.message}</ErrorMessage>
 									)}
 								</>
 							)}

@@ -1,4 +1,5 @@
 {
+	"parser": "babel-eslint", // 바벨이 해석해서 최신문법으로 해도 에러나지 않게
 	"parserOptions": {
 		"ecmaVersion": "latest", // 최신버전 문법으로 사용하겠다.
 		"sourceType": "module", // import export 모듈로 사용하겠다. script소스가 아니라.
@@ -13,10 +14,25 @@
 		"node": true,
 		"es6": true
 	},
-	"extends": ["eslint:recommended", "plugin:react/recommended"], // 남들이 만들어 놓은 규칙 따른 다는 의미, 기본규칙들
+	"extends": [
+		"airbnb" // 얘네는 강한 규제
+		//"eslint:recommended", 얘네는 좀 약함
+		//"plugin:react/recommended"
+	], // 남들이 만들어 놓은 규칙 따른 다는 의미, 기본규칙들
 	"plugins": ["import", "react-hooks"], // react는 위에서 썼으니까 빼도 됨
 	"rules": {
-		"react/react-in-jsx-scope": "off"
+		"jsx-a11y/label-has-associated-control": "off",
+		"jsx-a11y/anchor-is-valid": "off",
+		"no-console": "off",
+		"no-underscore-dangle": "off",
+		"react/forbid-prop-types": "off",
+		"react/jsx-filename-extension": "off",
+		"react/jsx-one-expression-per-line": "off",
+		"react/jsx-props-no-spreading": "off",
+		"object-curly-newline": "off",
+		"linebreak-style": "off",
+		"no-param-reassign": "off",
+		"max-len": [{ "code": 200 }]
 	}
 }
 

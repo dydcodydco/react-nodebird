@@ -15,7 +15,6 @@ import CommentForm from "./CommentForm";
 import PostCardContent from "./PostCardContent";
 
 const PostCard = ({ post }) => {
-	// console.log(post);
 	const [liked, setLiked] = useState(false);
 	const [commentFormOpend, setCommentFormOpend] = useState(false);
 
