@@ -1,6 +1,17 @@
 import { HYDRATE } from "next-redux-wrapper";
 import { createSlice } from "@reduxjs/toolkit";
 import shortId from "shortid";
+import produce from "immer";
+// import { fakerKO as faker } from "@faker-js/faker";
+import { faker } from "@faker-js/faker";
+
+// 리듀서란? 이전 상태를 state로 받고, action을 통해 다음 상태로 만들어내는 함수(불변성 지키는게 포인트)
+// immer의 produce사용하면 불변성을 지키지 않아도 immer가 자동으로 해준다.
+const reducer = (state = initialState, action) => {
+	// state가 draft로 바뀐다. 그리고 우리는 draft를 사용한다.
+	// 이 draft를 변형시키면 immer가 알아서 불변성을 지켜 다음 상태로 업데이트 해준다.
+	return produce(state, (draft) => {});
+};
 
 export const initialState = {
 	// 왜 id같이 소문자가 있고, User처럼 대문자가 있는걸까?
@@ -9,47 +20,7 @@ export const initialState = {
 	// 설정으로 소문자 가능하긴함.
 	// 소문자 = 게시글 자체 속성
 	// 대문자 = 다른 정보들과 합쳐서 주는 정보 / 서버에서 주는 정보로 고유한 Id를 가지고 있다.
-	mainPosts: [
-		{
-			id: "1",
-			User: {
-				id: "1",
-				nickname: "zzimzzim",
-			},
-			content: "첫 번째 게시글 #해시태그, #익스프레스",
-			Images: [
-				{
-					id: shortId.generate(),
-					src: "https://loremflickr.com/cache/resized/65535_53669042936_630c778818_320_240_nofilter.jpg",
-				},
-				{
-					id: shortId.generate(),
-					src: "https://loremflickr.com/cache/resized/65535_52982053835_12fc661207_320_240_nofilter.jpg",
-				},
-				{
-					id: shortId.generate(),
-					src: "https://loremflickr.com/cache/resized/65535_52905479084_303bf25ec0_320_240_nofilter.jpg",
-				},
-			],
-			Comments: [
-				{
-					id: shortId.generate(),
-					User: {
-						nickname: "찜찜",
-					},
-					content: "얼른 사고싶어요~",
-				},
-				{
-					id: shortId.generate(),
-					User: {
-						nickname: "hero",
-					},
-					content: "리액트 넥스트 고수가 될테다~",
-				},
-			],
-			createdAt: {},
-		},
-	],
+	mainPosts: [],
 	imagePaths: [],
 	addPostLoading: false,
 	addPostDone: false,
@@ -61,6 +32,36 @@ export const initialState = {
 	addCommentDone: false,
 	addCommentError: null,
 };
+
+// 단일 게시글 생성 함수
+faker.seed(123);
+const createDummyPost = () => {
+	return {
+		id: shortId.generate(),
+		User: {
+			id: shortId.generate(),
+			nickname: faker.person.fullName(),
+		},
+		content: faker.lorem.paragraph(),
+		Images: [{ src: faker.image.urlLoremFlickr() }],
+		Comments: [
+			{
+				User: {
+					id: shortId.generate(),
+					nickname: faker.person.fullName(),
+				},
+				content: faker.lorem.sentence(),
+			},
+		],
+	};
+};
+// 여러 게시글 생성
+export const generateDummyPosts = (number) =>
+	faker.helpers.multiple(createDummyPost, {
+		count: number,
+	});
+// 초기 상태에 더미 게시물 추가
+initialState.mainPosts = [...generateDummyPosts(10)];
 
 const dummyPost = ({ id, content }) => {
 	return {
