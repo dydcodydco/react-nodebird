@@ -1,14 +1,26 @@
-const http = require("http");
-// req = 요청, res = 응답
-// 소스 바꾸면 껐다 켜야한다.
-const server = http.createServer((req, res) => {
-	console.log(req.url, req.method);
-	res.write("aaaaaaaaaa1");
-	res.write("aaaaaaaaaa2");
-	res.write("aaaaaaaaaa3");
-	res.write("aaaaaaaaaa4");
-	res.end("Hello node"); // end는 마지막에만
+// node에서는 import / export 안쓰고 require / module.exports 사용
+const express = require("express");
+const postRouter = require("./routes/post");
+
+const app = express();
+
+// get이 method 부분, '/'이 url 부분
+app.get("/", (req, res) => {
+	res.send("hello express");
 });
-server.listen(3065, () => {
+
+// 데이터는 보통 res.json()
+app.get("/posts", (req, res) => {
+	res.json([
+		{ id: 1, content: "hello1" },
+		{ id: 2, content: "hello2" },
+		{ id: 3, content: "hello3" },
+	]);
+});
+
+// api의 앞쪽 중복되는 부분을 prefix(접두어)로 뽑아내서 첫번째 인자에 넣을 수 있다. ('/post')
+app.use("/post", postRouter);
+
+app.listen(3065, () => {
 	console.log("서버 실행 중");
 });
