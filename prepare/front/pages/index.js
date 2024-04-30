@@ -16,6 +16,9 @@ const Home = () => {
 
 	useEffect(() => {
 		const onScroll = () => {
+			// window.scrollY : 스크롤 얼마나 내렸는지
+			// document.documentElement.clientHeight: 화면 보이는 길이
+			// document.documentelement.scrollHeight: 화면 스크롤의 총 길이
 			// console.log(window.scrollY, document.documentElement.clientHeight, document.documentElement.scrollHeight);
 			if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
 				if (hasMorePosts && !loadPostsLoading) {
