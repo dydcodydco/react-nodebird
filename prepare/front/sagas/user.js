@@ -52,7 +52,8 @@ function signUpAPI(data) {
 }
 function* signup(action) {
 	try {
-		const result = yield call(signUpAPI, action.paylaod);
+		console.log(action.payload);
+		const result = yield call(signUpAPI, action.payload);
 		console.log(result);
 		yield put(signupSuccessAction(action.payload));
 	} catch (err) {

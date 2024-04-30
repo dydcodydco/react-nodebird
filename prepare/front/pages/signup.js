@@ -1,12 +1,13 @@
 import { Form, Input, Button, Checkbox } from "antd";
 import Head from "next/head";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 
 import AppLayout from "../components/AppLayout";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { signupRequestAction } from "../reducers/user";
+import { useRouter } from "next/router";
 
 const ButtonWrapper = styled.div`
 	margin-top: 10px;
@@ -17,9 +18,26 @@ const ErrorMessage = styled.p`
 `;
 
 const Signup = () => {
-	const { control, handleSubmit, formState: { errors } } = useForm();
-	const { signUpLoading } = useSelector((state) => state.user);
+	const {
+		control,
+		handleSubmit,
+		formState: { errors },
+	} = useForm();
+	const { signUpLoading, signUpDone, signUpError } = useSelector((state) => state.user);
 	const dispatch = useDispatch();
+	const router = useRouter();
+
+	useEffect(() => {
+		if (signUpDone) {
+			router.push("/");
+		}
+	}, [signUpDone]);
+
+	useEffect(() => {
+		if (signUpError) {
+			alert(signUpError);
+		}
+	}, [signUpError]);
 
 	const onSubmit = useCallback((data) => {
 		console.log(data);
@@ -47,15 +65,8 @@ const Signup = () => {
 							}}
 							render={({ field }) => (
 								<>
-									<Input
-										{...field}
-										id='email'
-										type='email'
-										placeholder='이메일'
-									/>
-									{errors.email && (
-										<ErrorMessage>{errors.email.message}</ErrorMessage>
-									)}
+									<Input {...field} id='email' type='email' placeholder='이메일' />
+									{errors.email && <ErrorMessage>{errors.email.message}</ErrorMessage>}
 								</>
 							)}
 						/>
@@ -77,9 +88,7 @@ const Signup = () => {
 							render={({ field }) => (
 								<>
 									<Input {...field} id='nickname' placeholder='닉네임' />
-									{errors.nickname && (
-										<ErrorMessage>{errors.nickname.message}</ErrorMessage>
-									)}
+									{errors.nickname && <ErrorMessage>{errors.nickname.message}</ErrorMessage>}
 								</>
 							)}
 						/>
@@ -100,14 +109,8 @@ const Signup = () => {
 							}}
 							render={({ field }) => (
 								<>
-									<Input.Password
-										id='signPassword'
-										{...field}
-										placeholder='비밀번호'
-									/>
-									{errors.password && (
-										<ErrorMessage>{errors.password.message}</ErrorMessage>
-									)}
+									<Input.Password id='signPassword' {...field} placeholder='비밀번호' />
+									{errors.password && <ErrorMessage>{errors.password.message}</ErrorMessage>}
 								</>
 							)}
 						/>
@@ -122,25 +125,14 @@ const Signup = () => {
 							rules={{
 								required: "비밀번호를 확인해주세요.",
 								validate: (value, formValues) => {
-									return (
-										value === formValues.password ||
-										"비밀번호가 일치하지 않습니다."
-									);
+									return value === formValues.password || "비밀번호가 일치하지 않습니다.";
 								},
 							}}
 							render={({ field }) => {
 								return (
 									<>
-										<Input.Password
-											id='passwordCheck'
-											{...field}
-											placeholder='비밀번호'
-										/>
-										{errors.passwordCheck && (
-											<ErrorMessage>
-												{errors.passwordCheck.message}
-											</ErrorMessage>
-										)}
+										<Input.Password id='passwordCheck' {...field} placeholder='비밀번호' />
+										{errors.passwordCheck && <ErrorMessage>{errors.passwordCheck.message}</ErrorMessage>}
 									</>
 								);
 							}}

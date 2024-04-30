@@ -17,7 +17,7 @@ router.post("/", async (req, res, next) => {
 			// 요청/응답은 헤더 ( 상태, 용량, 시간, 쿠키 ) 와 바디 ( 데이터 ) 로 구성되어있다.
 			// 실제 데이터는 body, 그에 대한 정보는 header에
 			// 200 - 성공 / 300 - 리다이렉트 / 400 - 클라이언트 에러 / 500 - 서버 에러
-			return res.status(403).send("이미 사용중인 아이디입니다.");
+			return res.status(403).send("이미 사용 중인 아이디입니다.");
 		}
 		// 테이블안에 데이터 넣기
 		// async, await을 붙여줘야 한다.
@@ -28,8 +28,9 @@ router.post("/", async (req, res, next) => {
 			nickname,
 			password: hashedPassword,
 		});
+		// res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 		// 요청에 성공적 응답 200
-		res.status(200).send("ok");
+		res.status(201).send("ok");
 		// res.json();
 	} catch (err) {
 		console.error(err);

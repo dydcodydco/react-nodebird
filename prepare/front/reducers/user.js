@@ -108,7 +108,9 @@ const userSlice = createSlice({
 		},
 		signupFailureAction: (state, action) => {
 			state.signUpLoading = false;
-			state.signUpError = action.error;
+			console.log(action);
+			state.signUpError = action.payload.error;
+			console.log(state.signUpError);
 		},
 		changeNicknameRequestAction: (state) => {
 			state.changeNicknameLoading = true;
