@@ -1,4 +1,5 @@
 // mySQL에서는 테이블, sequelize에서는 model 같은 의미
+// user테이블 마치 엑셀 같은 느낌
 module.exports = (sequelize, DataTypes) => {
 	// define한 User은 모델의 이름.
 	// mySQL에는 자동으로 소문자, 복수가 되어서 users 테이블로 저장됨.
@@ -33,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
 	User.associate = (db) => {
 		// User.hasMany(db.Post) = 유저는 포스트를 많이 가질 수 있다.
 		// 유저가 쓴 Post들의 정보를 유저에 쓰지 않는 이유는
-		// 한 한케 하나의 데이터만 들어가야하는데 많아지면 그럴수 없기 때문이다. (, or 여러정보 안된다)
+		// 한칸에 하나의 데이터만 들어가야하는데 많아지면 그럴수 없기 때문이다. (, or 여러정보 안된다)
 		// 그래서 hasMany가 있는곳에 많이 가지고 있을 데이터를 갖고있는건 원칙적으로 맞지 않다.
 		// hasMany당한 즉 belongsTo를 사용하는 컬럼에서 갖고있어야 한다.
 		db.User.hasMany(db.Post);

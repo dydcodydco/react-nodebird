@@ -2,7 +2,7 @@ const express = require("express");
 
 const router = express.Router();
 
-// POST /post
+// ==> POST /post
 router.post("/", (req, res) => {
 	res.send("작성 완료");
 });
