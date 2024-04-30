@@ -10,6 +10,14 @@ const db = {};
 // 근데 연결만 성공해서는 아무 의미 없고 mySQL에 테이블들을 만들어줘야한다.
 const sequelize = new Sequelize(config.database, config.username, config.password, config);
 
+// 빈 객체 db에 모델 5개 등록
+db.Comment = require("./comment")(sequelize, Sequelize); // comment.js에서 module.exports로 가져온 함수 실행 -> 모델이 sequelize에 등록
+db.Hashtag = require("./hashtag")(sequelize, Sequelize);
+db.Image = require("./image")(sequelize, Sequelize);
+db.Post = require("./post")(sequelize, Sequelize);
+db.User = require("./user")(sequelize, Sequelize);
+
+// 모델이 채워진 db객체를 반복문 돌려서 associate 실행
 Object.keys(db).forEach((modelName) => {
 	if (db[modelName].associate) {
 		db[modelName].associate(db);

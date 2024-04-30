@@ -2,8 +2,16 @@
 const express = require("express");
 const postRouter = require("./routes/post");
 
+// sequelize에서 model 모두 등록
+// express에서 그 sequelize를 등록해야 한다.
+const db = require("./models");
 const app = express();
-
+db.sequelize
+	.sync()
+	.then(() => {
+		console.log("db연결 성공!");
+	})
+	.catch(console.error);
 // get이 method 부분, '/'이 url 부분
 app.get("/", (req, res) => {
 	res.send("hello express");

@@ -12,12 +12,17 @@ module.exports = (sequelize, DataTypes) => {
 				type: DataTypes.TEXT,
 				allowNull: false,
 			},
+			// UserId: {} 이라는 컬럼 만듬
+			// PostId: {} 이라는 컬럼 만듬
 		},
 		{
 			charset: "utf8mb4",
-			collate: "utf8mb4_general_cli", // 한글 저장 + 이모티콘 저장 가능
+			collate: "utf8mb4_general_ci", // 한글 저장 + 이모티콘 저장 가능
 		}
 	);
-	Comment.associate = (db) => {};
+	Comment.associate = (db) => {
+		db.Comment.belongsTo(db.User); // 어떤 사용자에 쓰여진 댓글이다 --> 라는 컬럼 자동으로 생김
+		db.Comment.belongsTo(db.Post); // 어떤 글에 쓰여진 댓글이다 --> 라는 컬럼 자동으로 생김
+	};
 	return Comment;
 };
