@@ -1,4 +1,14 @@
 import { all, fork } from "redux-saga/effects";
+import axios from "axios";
+
+import postSaga from "./post";
+import userSaga from "./user";
+
+axios.defaults.baseURL = "http://localhost:3065";
+
+export default function* rootSaga() {
+	yield all([fork(userSaga), fork(postSaga)]);
+}
 
 // LOG_IN_REQUEST 이벤트가 발생 -> login함수를 실행할때 데이터를 인자로 넣고 실행
 // login은 인자를 (acion) 받고 call의 두번째 인자로 데이터를 넣어줌
@@ -31,10 +41,3 @@ import { all, fork } from "redux-saga/effects";
 // function* watchLogIn() {
 // 	yield takeLatest("LOG_IN_REQUEST", login);
 // }
-
-import postSaga from "./post";
-import userSaga from "./user";
-
-export default function* rootSaga() {
-	yield all([fork(userSaga), fork(postSaga)]);
-}

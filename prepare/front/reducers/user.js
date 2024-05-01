@@ -52,7 +52,7 @@ const userSlice = createSlice({
 		},
 		followFailureAction: (state, action) => {
 			state.followLoading = false;
-			state.followError = action.error;
+			state.followError = action.payload;
 		},
 		unFollowRequestAction: (state) => {
 			state.unFollowLoading = true;
@@ -66,7 +66,7 @@ const userSlice = createSlice({
 		},
 		unFollowFailureAction: (state, action) => {
 			state.unFollowLoading = false;
-			state.unFollowError = action.error;
+			state.unFollowError = action.payload;
 		},
 		loginRequestAction: (state) => {
 			state.logInLoading = true;
@@ -80,7 +80,7 @@ const userSlice = createSlice({
 		},
 		loginFailureAction: (state, action) => {
 			state.logInLoading = false;
-			state.logInError = action.error;
+			state.logInError = action.payload;
 		},
 		logoutRequestAction: (state) => {
 			state.logOutLoading = true;
@@ -94,7 +94,7 @@ const userSlice = createSlice({
 		},
 		logoutFailureAction: (state, action) => {
 			state.logOutLoading = false;
-			state.logInError = action.error;
+			state.logInError = action.payload;
 		},
 		signupRequestAction: (state) => {
 			state.signUpLoading = true;
@@ -108,9 +108,7 @@ const userSlice = createSlice({
 		},
 		signupFailureAction: (state, action) => {
 			state.signUpLoading = false;
-			console.log(action);
-			state.signUpError = action.payload.error;
-			console.log(state.signUpError);
+			state.signUpError = action.payload;
 		},
 		changeNicknameRequestAction: (state) => {
 			state.changeNicknameLoading = true;
@@ -125,7 +123,7 @@ const userSlice = createSlice({
 		},
 		changeNicknameFailureAction: (state, action) => {
 			state.changeNicknameLoading = false;
-			state.changeNicknameError = action.error;
+			state.changeNicknameError = action.payload;
 		},
 		addPostToMe: (state, action) => {
 			state.me.Posts.unshift({ id: action.payload });

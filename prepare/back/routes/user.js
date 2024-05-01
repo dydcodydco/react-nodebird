@@ -1,9 +1,34 @@
 const express = require("express");
 const { User } = require("../models");
 const bcrypt = require("bcrypt");
+const passport = require("passport");
 
 const router = express.Router();
 
+// POST /user/login // 로그인 전략 실행
+router.post("/login", (req, res, next) => {
+	// 미들웨어 확장방법 사용해서 next함수 쓸수있게
+	passport.authenticate("local", (err, user, info) => {
+		if (err) {
+			console.error(err);
+			return next(err);
+		}
+		if (info) {
+			return res.status(403).send(info.reason);
+		}
+		// 진짜 로그인 중
+		return req.login(user, async (loginErr) => {
+			if (loginErr) {
+				console.error(loginErr);
+				return next(loginErr);
+			}
+			return res.join(user);
+		});
+	})(req, res, next);
+});
+
+// --> 접두어(/user + / 이라는 뜻)
+// POST /user/
 router.post("/", async (req, res, next) => {
 	try {
 		const { email, nickname, password } = req.body;

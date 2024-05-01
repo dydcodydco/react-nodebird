@@ -19,22 +19,21 @@ import {
 } from "../reducers/user";
 
 function loginAPI(data) {
-	return axios.post("/api/login", data);
+	return axios.post("/user/login", data);
 }
 function* login(action) {
 	try {
-		// const result = yield call(loginAPI, action.data);
-		console.log("login saga", action);
-		yield delay(1000);
-		yield put(loginSuccessAction(action.payload));
-		// yield put(loginSuccessAction(action.payload));
+		console.log(action.payload);
+		const result = yield call(loginAPI, action.payload);
+		console.log("login", result);
+		yield put(loginSuccessAction(result.payload));
 	} catch (err) {
-		yield put(loginFailureAction({ error: err.response.data }));
+		yield put(loginFailureAction(err.response.data));
 	}
 }
 
 function logoutAPI() {
-	return axios.post("/api/logout");
+	return axios.post("/user/logout");
 }
 function* logout() {
 	try {
@@ -43,26 +42,24 @@ function* logout() {
 		yield delay(1000);
 		yield put(logoutSuccessAction());
 	} catch (err) {
-		yield put(logoutFailureAction({ error: err.response.data }));
+		yield put(logoutFailureAction(err.response.data));
 	}
 }
 
 function signUpAPI(data) {
-	return axios.post("http://localhost:3065/user", data);
+	return axios.post("/user", data);
 }
 function* signup(action) {
 	try {
-		console.log(action.payload);
 		const result = yield call(signUpAPI, action.payload);
-		console.log(result);
 		yield put(signupSuccessAction(action.payload));
 	} catch (err) {
-		yield put(signupFailureAction({ error: err.response.data }));
+		yield put(signupFailureAction(err.response.data));
 	}
 }
 
 function followAPI() {
-	return axios.post("/api/logout");
+	return axios.post("/follow");
 }
 function* follow(action) {
 	try {
@@ -70,12 +67,12 @@ function* follow(action) {
 		yield delay(1000);
 		yield put(followSuccessAction(action.payload));
 	} catch (err) {
-		yield put(followFailureAction({ error: err.response.data }));
+		yield put(followFailureAction(err.response.data));
 	}
 }
 
 function unFollowAPI() {
-	return axios.post("/api/logout");
+	return axios.post("/unfollow");
 }
 function* unFollow(action) {
 	try {
@@ -83,7 +80,7 @@ function* unFollow(action) {
 		yield delay(1000);
 		yield put(unFollowSuccessAction(action.payload));
 	} catch (err) {
-		yield put(unFollowFailureAction({ error: err.response.data }));
+		yield put(unFollowFailureAction(err.response.data));
 	}
 }
 
