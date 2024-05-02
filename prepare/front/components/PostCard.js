@@ -42,7 +42,7 @@ const PostCard = ({ post }) => {
 						key={"more"}
 						content={
 							<Button.Group>
-								{id && post.User.id === id ? (
+								{id && post.User?.id === id ? (
 									<>
 										<Button type='primary' key='modify'>
 											수정
@@ -64,7 +64,7 @@ const PostCard = ({ post }) => {
 				]}
 				extra={id && <Followbutton post={post} />}
 			>
-				<Card.Meta avatar={<Avatar>{post.User.nickname[0]}</Avatar>} title={post.User.nickname} description={<PostCardContent postData={post.content} />} />
+				<Card.Meta avatar={<Avatar>{post.User?.nickname[0]}</Avatar>} title={post.User?.nickname} description={<PostCardContent postData={post.content} />} />
 			</Card>
 			{commentFormOpend && (
 				<div>
@@ -76,7 +76,7 @@ const PostCard = ({ post }) => {
 						dataSource={post.Comments}
 						renderItem={(item) => (
 							<List.Item key={item.id}>
-								<List.Item.Meta title={item.User.nickname} avatar={<Avatar>{item.User.nickname[0]}</Avatar>} description={item.content} />
+								<List.Item.Meta title={item.User?.nickname} avatar={<Avatar>{item.User?.nickname[0]}</Avatar>} description={item.content} />
 							</List.Item>
 						)}
 					/>

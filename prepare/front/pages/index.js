@@ -13,7 +13,7 @@ const Home = () => {
 
 	useEffect(() => {
 		dispatch(loadMyInfoRequestAction());
-		dispatch(loadPostsRequestAction(10));
+		dispatch(loadPostsRequestAction());
 	}, []);
 
 	useEffect(() => {

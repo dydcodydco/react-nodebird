@@ -10,7 +10,7 @@ const { isLoggedIn, isNotLoggedIn } = require("./middlewares");
 const router = express.Router();
 
 // 브라우저에서 새로고침 할때 마다 실행시킬 것
-// GET /user
+// GET /user 유저 정보 불러오기
 router.get("/", async (req, res, next) => {
 	try {
 		if (req.user) {
@@ -50,9 +50,10 @@ router.get("/", async (req, res, next) => {
 	}
 });
 
-// POST /user/login // 로그인 전략 실행
+// POST /user/login 로그인 하기
 router.post("/login", isNotLoggedIn, (req, res, next) => {
 	// 미들웨어 확장방법 사용해서 next함수 쓸수있게
+	// 로그인 전략 실행
 	passport.authenticate("local", (err, user, info) => {
 		if (err) {
 			console.error(err);
@@ -103,7 +104,7 @@ router.post("/login", isNotLoggedIn, (req, res, next) => {
 });
 
 // --> 접두어(/user + / 이라는 뜻)
-// POST /user/
+// POST /user/ 회원가입 하기
 router.post("/", isNotLoggedIn, async (req, res, next) => {
 	try {
 		const { email, nickname, password } = req.body;
@@ -137,8 +138,9 @@ router.post("/", isNotLoggedIn, async (req, res, next) => {
 		// next는 status 500 = 서버에서 처리하다가 에러 처리하는것 이기에
 		next(err); // next로 에러 보내면 에러들이 한방에 처리된다. 익스프레스가 브라우저한테 알려준다.
 	}
-}); // ==> POST /user/
+});
 
+// POST /user/logout 로그아웃
 router.post("/logout", isLoggedIn, (req, res, next) => {
 	// 로그인 한 후 부터는 req에 user정보가 들어가있다. (req.user)
 	req.logOut(() => {

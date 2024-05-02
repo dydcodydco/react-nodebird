@@ -101,9 +101,10 @@ const postSlice = createSlice({
 		loadPostsSuccessAction: (state, action) => {
 			state.loadPostsLoading = false;
 			state.loadPostsDone = true;
-			state.mainPosts = [...state.mainPosts, ...action.payload];
-			state.hasMorePosts = state.mainPosts.length < 50;
-			// state.mainPosts.unshift(action.payload);
+			// state.mainPosts = [...state.mainPosts, ...action.payload];
+			// state.hasMorePosts = state.mainPosts.length < 50;
+			state.mainPosts = state.mainPosts.concat(action.payload);
+			state.hasMorePosts = action.payload.length === 10;
 		},
 		loadPostsFailureAction: (state, action) => {
 			state.loadPostsLoading = false;
@@ -145,7 +146,7 @@ const postSlice = createSlice({
 		addCommentSuccessAction: (state, action) => {
 			const { content, PostId } = action.payload;
 			const post = state.mainPosts.find((d) => d.id === PostId);
-			post.Comments.unshift(content);
+			post.Comments.unshift(action.payload);
 			state.addCommentLoading = false;
 			state.addCommentDone = true;
 		},

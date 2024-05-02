@@ -4,7 +4,7 @@ const { isLoggedIn } = require("./middlewares");
 
 const router = express.Router();
 
-// ==> POST /post
+// ==> POST /post 글 작성
 router.post("/", isLoggedIn, async (req, res, next) => {
 	try {
 		const post = await Post.create({
@@ -15,13 +15,20 @@ router.post("/", isLoggedIn, async (req, res, next) => {
 			where: { id: post.id },
 			include: [
 				{
+					model: User,
+					attributes: ["id", "nickname"],
+				},
+				{
 					model: Image,
 				},
 				{
 					model: Comment,
-				},
-				{
-					model: User,
+					include: [
+						{
+							model: User,
+							attributes: ["id", "nickname"],
+						},
+					],
 				},
 			],
 		});
@@ -32,29 +39,38 @@ router.post("/", isLoggedIn, async (req, res, next) => {
 	}
 });
 
-// POST /post/1/comment
+// POST /post/1/comment 댓글 작성
 router.post("/:postId/comment", isLoggedIn, async (req, res, next) => {
 	try {
 		// 서버에서는 존재여부등 꼼꼼하게 검사하는게 좋다.
-		const post = Post.findOne({
+		const post = await Post.findOne({
 			where: { id: req.params.postId },
 		});
 		if (!post) {
 			return res.status(403).send("존재하지 않는 게시글입니다.");
 		}
 		const comment = await Comment.create({
-			content: req.body.contents,
-			PostId: req.params.postId, // req.body.postId 에서도 접근 가능
+			content: req.body.content,
+			PostId: parseInt(req.params.postId, 10), // req.body.postId 에서도 접근 가능
 			UserId: req.user.id, // 로그인하고나면 req.user에 정보담김 (passport의 deserialize)
 		});
-		res.status(201).json(comment);
+		const fullComment = await Comment.findOne({
+			where: { id: comment.id },
+			include: [
+				{
+					model: User,
+					attributes: ["id", "nickname"],
+				},
+			],
+		});
+		res.status(201).json(fullComment);
 	} catch (error) {
 		console.error(error);
 		next(error);
 	}
 });
 
-// DELETE /post
+// DELETE /post 글 삭제
 router.delete("/", (req, res) => {
 	res.send({ id: 1 });
 });

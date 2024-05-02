@@ -5,8 +5,10 @@ const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const passport = require("passport");
 const dotenv = require("dotenv");
+const morgan = require("morgan");
 
 const postRouter = require("./routes/post");
+const postsRouter = require("./routes/posts");
 const userRouter = require("./routes/user");
 const db = require("./models"); // sequelize에서 model 모두 등록 // express에서 그 sequelize를 등록해야 한다.
 const passportConfig = require("./passport");
@@ -21,6 +23,7 @@ db.sequelize
 	.catch(console.error);
 passportConfig();
 
+app.use(morgan("dev"));
 // app.use(cors()) -> 모든 요청에 다 res.setHeader("Access-Control-Allow-Origin", "*") 설정 넣어주는 것
 app.use(
 	cors({
@@ -51,6 +54,7 @@ app.use(passport.session());
 
 // api의 앞쪽 중복되는 부분을 prefix(접두어)로 뽑아내서 첫번째 인자에 넣을 수 있다. ('/post')
 app.use("/post", postRouter);
+app.use("/posts", postsRouter);
 app.use("/user", userRouter);
 
 app.listen(3065, () => {
