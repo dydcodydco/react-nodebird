@@ -117,7 +117,7 @@ const postSlice = createSlice({
 		addPostSuccessAction: (state, action) => {
 			state.addPostLoading = false;
 			state.addPostDone = true;
-			state.mainPosts.unshift(dummyPost(action.payload));
+			state.mainPosts.unshift(action.payload);
 		},
 		addPostFailureAction: (state, action) => {
 			state.addPostLoading = false;
@@ -143,9 +143,9 @@ const postSlice = createSlice({
 			state.addCommentError = null;
 		},
 		addCommentSuccessAction: (state, action) => {
-			const { content, postId } = action.payload;
-			const post = state.mainPosts.find((d) => d.id === postId);
-			post.Comments.unshift(dummyComment(content));
+			const { content, PostId } = action.payload;
+			const post = state.mainPosts.find((d) => d.id === PostId);
+			post.Comments.unshift(content);
 			state.addCommentLoading = false;
 			state.addCommentDone = true;
 		},
