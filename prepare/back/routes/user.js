@@ -9,6 +9,47 @@ const { isLoggedIn, isNotLoggedIn } = require("./middlewares");
 
 const router = express.Router();
 
+// 브라우저에서 새로고침 할때 마다 실행시킬 것
+// GET /user
+router.get("/", async (req, res, next) => {
+	try {
+		if (req.user) {
+			const fullUserWithoutPassword = await User.findOne({
+				where: { id: req.user.id },
+				// 원하는 정보만 받을 수 있음
+				// attreibute: ['id', 'nickname', 'email'],
+				// 원하지 않는 정보만 빼고 가져올 수 있음
+				attributes: {
+					exclude: ["password"],
+				},
+				include: [
+					{
+						// model: Post는 hasMany라서 복수형이 되어 프론트 me.Posts가 됩니다.
+						model: db.Post,
+						attributes: ["id"], // id만 가져오게
+					},
+					{
+						model: db.User,
+						as: "Followings",
+						attributes: ["id"],
+					},
+					{
+						model: db.User,
+						as: "Followers",
+						attributes: ["id"],
+					},
+				],
+			});
+			res.status(200).json(fullUserWithoutPassword);
+		} else {
+			res.status(200).json(null);
+		}
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
+});
+
 // POST /user/login // 로그인 전략 실행
 router.post("/login", isNotLoggedIn, (req, res, next) => {
 	// 미들웨어 확장방법 사용해서 next함수 쓸수있게
@@ -42,17 +83,17 @@ router.post("/login", isNotLoggedIn, (req, res, next) => {
 					{
 						// model: Post는 hasMany라서 복수형이 되어 프론트 me.Posts가 됩니다.
 						model: db.Post,
-						// attributes: ["id"],
+						attributes: ["id"],
 					},
 					{
 						model: db.User,
 						as: "Followings",
-						// attributes: ["id"],
+						attributes: ["id"],
 					},
 					{
 						model: db.User,
 						as: "Followers",
-						// attributes: ["id"],
+						attributes: ["id"],
 					},
 				],
 			});

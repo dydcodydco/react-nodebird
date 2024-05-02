@@ -23,10 +23,10 @@ function loadPostsApi(data) {
 }
 function* loadPosts(action) {
 	try {
-		// const result = yield call(addPostAPI, action.data);
-		console.log("loadPosts saga", action);
-		yield delay(1000);
-		yield put(loadPostsSuccessAction(generateDummyPosts(10)));
+		// console.log("loadPosts saga", action);
+		// yield delay(1000);
+		const result = yield call(loadPostsApi, action.payload);
+		yield put(loadPostsSuccessAction(result.data));
 	} catch (err) {
 		yield put(loadPostsFailureAction(err.response.data));
 	}

@@ -4,6 +4,7 @@ import PostForm from "../components/PostForm";
 import PostCard from "../components/PostCard";
 import { useEffect } from "react";
 import { loadPostsRequestAction } from "../reducers/post";
+import { loadMyInfoRequestAction } from "../reducers/user";
 
 const Home = () => {
 	const { me } = useSelector((state) => state.user);
@@ -11,6 +12,7 @@ const Home = () => {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
+		dispatch(loadMyInfoRequestAction());
 		dispatch(loadPostsRequestAction(10));
 	}, []);
 

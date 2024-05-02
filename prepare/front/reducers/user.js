@@ -2,6 +2,9 @@ import { createSlice, current } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
 
 const initialState = {
+	loadMyInfoLoading: false, // 유저 정보 가져오기 시도중
+	loadMyInfoDone: false,
+	loadMyInfoError: null,
 	logInLoading: false, // 로그인 시도중
 	logInDone: false,
 	logInError: null,
@@ -14,10 +17,10 @@ const initialState = {
 	changeNicknameLoading: false, // 닉네임 변경 시도중
 	changeNicknameDone: false,
 	changeNicknameError: null,
-	followLoading: false, // 로그인 시도중
+	followLoading: false, // 팔로우 시도중
 	followDone: false,
 	followError: null,
-	unFollowLoading: false, // 로그인 시도중
+	unFollowLoading: false, // 언팔로우 시도중
 	unFollowDone: false,
 	unFollowError: null,
 	me: null,
@@ -40,6 +43,20 @@ const userSlice = createSlice({
 	name: "user",
 	initialState,
 	reducers: {
+		loadMyInfoRequestAction: (state) => {
+			state.loadMyInfoLoading = false;
+			state.loadMyInfoDone = false;
+			state.loadMyInfoError = null;
+		},
+		loadMyInfoSuccessAction: (state, action) => {
+			state.loadMyInfoLoading = false;
+			state.loadMyInfoDone = true;
+			state.me = action.payload;
+		},
+		loadMyInfoFailureAction: (state, action) => {
+			state.loadMyInfoLoading = false;
+			state.loadMyInfoError = action.payload;
+		},
 		followRequestAction: (state) => {
 			state.followLoading = true;
 			state.followError = null;
@@ -144,6 +161,9 @@ const userSlice = createSlice({
 // redux toolkit에서는 immer라이브러리가 처리해줌.
 
 export const {
+	loadMyInfoRequestAction,
+	loadMyInfoSuccessAction,
+	loadMyInfoiailureAction,
 	unFollowRequestAction,
 	unFollowSuccessAction,
 	unFollowiailureAction,
