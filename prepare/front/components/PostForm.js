@@ -28,7 +28,6 @@ const PostForm = () => {
 	}, [addPostError]);
 
 	const onSubmit = useCallback((data) => {
-		console.log("onsubmit", data);
 		dispatch(addPostRequestAction({ content: data.content }));
 		// dispatch(addPostRequestAction({ text: data.content, images: data.images, }));
 	}, []);

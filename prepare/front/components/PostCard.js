@@ -3,7 +3,7 @@ import { RetweetOutlined, HeartOutlined, HeartTwoTone, MessageOutlined, Ellipsis
 import { useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
-import { removePostRequestAction } from "../reducers/post";
+import { removePostRequestAction, likePostRequestAction, unLikePostRequestAction } from "../reducers/post";
 
 import PostImages from "./PostImages";
 import CommentForm from "./CommentForm";
@@ -14,21 +14,26 @@ const PostCard = ({ post }) => {
 	// const { me: {id} } = useSelector((state) => state.user);
 	// const id = me && me.id;
 	// const id = me?.id; // 옵셔널 체이닝 연산자
-	const id = useSelector((state) => state.user.me?.id);
 	const { removePostLoading } = useSelector((state) => state.post);
 	const dispatch = useDispatch();
-	const [liked, setLiked] = useState(false);
 	const [commentFormOpend, setCommentFormOpend] = useState(false);
 
-	const onToggleLike = useCallback(() => {
-		setLiked((prevLiked) => !prevLiked);
+	const onLike = useCallback(() => {
+		dispatch(likePostRequestAction(post.id));
 	}, []);
+	const onUnLike = useCallback(() => {
+		dispatch(unLikePostRequestAction(post.id));
+	}, []);
+
 	const onToggleComment = useCallback(() => {
 		setCommentFormOpend((prev) => !prev);
 	}, []);
 	const onRemovePost = useCallback(() => {
 		dispatch(removePostRequestAction({ id: post.id }));
 	}, []);
+
+	const id = useSelector((state) => state.user.me?.id);
+	const liked = post.Likers.find((d) => d.id === id);
 	return (
 		<div style={{ marginTop: 10 }}>
 			<Card
@@ -36,7 +41,7 @@ const PostCard = ({ post }) => {
 				actions={[
 					// 배열안에 들어가는 것들은 다 key를 넣어줘야 한다.
 					<RetweetOutlined key='retweet' />,
-					liked ? <HeartTwoTone key='heart' twoToneColor={"#eb2f96"} onClick={onToggleLike} /> : <HeartOutlined key='heart' onClick={onToggleLike} />,
+					liked ? <HeartTwoTone key='heart' twoToneColor={"#eb2f96"} onClick={onUnLike} /> : <HeartOutlined key='heart' onClick={onLike} />,
 					<MessageOutlined key={"comment"} onClick={onToggleComment} />,
 					<Popover
 						key={"more"}
@@ -76,7 +81,7 @@ const PostCard = ({ post }) => {
 						dataSource={post.Comments}
 						renderItem={(item) => (
 							<List.Item key={item.id}>
-								<List.Item.Meta title={item.User?.nickname} avatar={<Avatar>{item.User?.nickname[0]}</Avatar>} description={item.content} />
+								<List.Item.Meta title={item.User.nickname} avatar={<Avatar>{item.User.nickname[0]}</Avatar>} description={item.content} />
 							</List.Item>
 						)}
 					/>
@@ -94,6 +99,7 @@ PostCard.propTypes = {
 		createdAt: PropTypes.string,
 		Comments: PropTypes.arrayOf(PropTypes.object),
 		Images: PropTypes.arrayOf(PropTypes.object),
+		Likers: PropTypes.arrayOf(PropTypes.object),
 	}).isRequired,
 };
 

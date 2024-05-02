@@ -19,8 +19,13 @@ router.get("/", async (req, res, next) => {
 			], // 2차원 배열인 이유는 여러기준으로 정렬할 수 있기 때문.
 			include: [
 				{
-					model: User,
+					model: User, // 게시글 작성자
 					attributes: ["id", "nickname"],
+				},
+				{
+					model: User,
+					as: "Likers",
+					attributes: ["id"],
 				},
 				{
 					model: Image,
@@ -29,7 +34,7 @@ router.get("/", async (req, res, next) => {
 					model: Comment,
 					include: [
 						{
-							model: User,
+							model: User, // 댓글 작성자
 							attributes: ["id", "nickname"],
 						},
 					],

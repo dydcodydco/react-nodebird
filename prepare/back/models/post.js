@@ -24,14 +24,15 @@ module.exports = (sequelize, DataTypes) => {
 		// Post.belongsTo(db.User) 이라면 해당 User : 1 이런 칼럼 자동으로 생김
 		// 1번 사용자에 쓰여진 글이다.
 		// 다대다 관계
-		db.Post.belongsTo(db.User);
+		db.Post.belongsTo(db.User); // post.addUser(추가), get.addUser(조회) --> 이건 include도 가능, set.addUser(수정), remove.addUser(제거)
 		// belongsToMany인 관계는 두 테이블 사이에 하나의 테이블이 생기고, 거기에서 데이터들이 짝지어진다.
 		// 이러한 중간테이블은 sequelize가 만들어준다.
-		db.Post.belongsToMany(db.Hashtag, { through: "PostHashtag" });
-		db.Post.hasMany(db.Comment);
-		db.Post.hasMany(db.Image);
-		db.Post.belongsToMany(db.User, { through: "Like", as: "Likers" }); // Post를 좋아요 누른 User들
-		db.Post.belongsTo(db.Post, { as: "Retweet" }); // 리트윗
+		db.Post.belongsToMany(db.Hashtag, { through: "PostHashtag" }); // post.addHashtags, get.Hashtags
+		db.Post.hasMany(db.Comment); // post.addComments, get.AddComments,
+		db.Post.hasMany(db.Image); // post.addImages, get.addImages,
+		// Post를 좋아요 누른 User들
+		db.Post.belongsToMany(db.User, { through: "Like", as: "Likers" }); // post.addLikers, post.removeLikers 생김
+		db.Post.belongsTo(db.Post, { as: "Retweet" }); // 리트윗 post.addRetweet
 	};
 	return Post;
 };

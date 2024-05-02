@@ -35,6 +35,12 @@ export const initialState = {
 	addCommentLoading: false,
 	addCommentDone: false,
 	addCommentError: null,
+	likePostLoading: false,
+	likePostDone: false,
+	likePostError: null,
+	unLikePostLoading: false,
+	unLikePostDone: false,
+	unLikePostError: null,
 };
 
 // 단일 게시글 생성 함수
@@ -93,6 +99,37 @@ const postSlice = createSlice({
 	name: "post",
 	initialState,
 	reducers: {
+		likePostRequestAction: (state, action) => {
+			console.log("likePostRequestAction", action);
+			state.likePostLoading = true;
+			state.likePostDone = false;
+			state.likePostError = null;
+		},
+		likePostSuccessAction: (state, action) => {
+			const post = state.mainPosts.find((v) => v.id === action.payload.PostId);
+			post.Likers.push({ id: action.payload.UserId });
+			state.likePostLoading = false;
+			state.likePostDone = true;
+		},
+		likePostFailureAction: (state, action) => {
+			state.likePostLoading = false;
+			state.likePostError = action.payload;
+		},
+		unLikePostRequestAction: (state, action) => {
+			state.unLikePostLoading = true;
+			state.unLikePostDone = false;
+			state.unLikePostError = null;
+		},
+		unLikePostSuccessAction: (state, action) => {
+			const post = state.mainPosts.find((d) => d.id === action.payload.PostId);
+			post.Likers = post.Likers.filter((d) => d.id !== action.payload.UserId);
+			state.unLikePostLoading = false;
+			state.unLikePostDone = true;
+		},
+		unLikePostFailureAction: (state, action) => {
+			state.unLikePostLoading = false;
+			state.unLikePostError = action.payload;
+		},
 		loadPostsRequestAction: (state, action) => {
 			state.loadPostsLoading = true;
 			state.loadPostsDone = false;
@@ -101,10 +138,10 @@ const postSlice = createSlice({
 		loadPostsSuccessAction: (state, action) => {
 			state.loadPostsLoading = false;
 			state.loadPostsDone = true;
-			// state.mainPosts = [...state.mainPosts, ...action.payload];
-			// state.hasMorePosts = state.mainPosts.length < 50;
-			state.mainPosts = state.mainPosts.concat(action.payload);
+			state.mainPosts = [...state.mainPosts, ...action.payload];
 			state.hasMorePosts = action.payload.length === 10;
+			// state.hasMorePosts = state.mainPosts.length < 50;
+			// state.mainPosts = state.mainPosts.concat(action.payload);
 		},
 		loadPostsFailureAction: (state, action) => {
 			state.loadPostsLoading = false;
@@ -165,6 +202,12 @@ const postSlice = createSlice({
 });
 
 export const {
+	likePostRequestAction,
+	likePostSuccessAction,
+	likePostFailureAction,
+	unLikePostRequestAction,
+	unLikePostSuccessAction,
+	unLikePostFailureAction,
 	loadPostsRequestAction,
 	loadPostsSuccessAction,
 	loadPostsFailureAction,

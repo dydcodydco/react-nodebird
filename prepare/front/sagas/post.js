@@ -13,10 +13,43 @@ import {
 	addCommentRequestAction,
 	addCommentSuccessAction,
 	addCommentFailureAction,
+	likePostRequestAction,
+	likePostSuccessAction,
+	likePostFailureAction,
+	unLikePostRequestAction,
+	unLikePostSuccessAction,
+	unLikePostFailureAction,
 	generateDummyPosts,
 } from "../reducers/post";
 import { addPostToMe, removePostOfMe } from "../reducers/user";
 import shortid from "shortid";
+
+function likePostsApi(data) {
+	return axios.patch(`/post/${data}/like`); // 데이터의 일부분 수정하는거니까 patch
+}
+function* likePost(action) {
+	try {
+		console.log(action.payload);
+		const result = yield call(likePostsApi, action.payload);
+		yield put(likePostSuccessAction(result.data));
+	} catch (err) {
+		console.error(err);
+		yield put(likePostFailureAction(err.response.data));
+	}
+}
+
+function unLikePostsApi(data) {
+	return axios.delete(`/post/${data}/unlike`);
+}
+function* unLikePost(action) {
+	try {
+		const result = yield call(unLikePostsApi, action.payload);
+		yield put(unLikePostSuccessAction(result.data));
+	} catch (err) {
+		console.error(err);
+		yield put(unLikePostFailureAction(err.response.data));
+	}
+}
 
 function loadPostsApi(data) {
 	return axios.get(`/posts`, data);
@@ -48,7 +81,7 @@ function* addPost(action) {
 }
 
 function removePostAPI(data) {
-	return axios.post("/api/post/", data);
+	return axios.post("/post/remove", data);
 }
 function* removePost(action) {
 	try {
@@ -59,12 +92,13 @@ function* removePost(action) {
 		yield put(removePostOfMe(action.payload.id));
 	} catch (err) {
 		console.error(err);
-		yield put(removePostFailureAction({ error: err.response.data }));
+		yield put(removePostFailureAction(err.response.data));
 	}
 }
 
 function addCommentApi(data) {
-	return axios.post(`/post/${data.postId}/comment`, data); // POST /post/1/comment
+	// POST /post/1/comment
+	return axios.post(`/post/${data.postId}/comment`, data);
 }
 function* addComment(action) {
 	try {
@@ -76,6 +110,12 @@ function* addComment(action) {
 	}
 }
 
+function* watchLikePost() {
+	yield takeLatest(likePostRequestAction, likePost);
+}
+function* watchUnLikePost() {
+	yield takeLatest(unLikePostRequestAction, unLikePost);
+}
 function* watchLoadPosts() {
 	yield takeLatest(loadPostsRequestAction, loadPosts);
 }
@@ -90,5 +130,5 @@ function* watchAddComment() {
 }
 
 export default function* postSaga() {
-	yield all([fork(watchLoadPosts), fork(watchAddPost), fork(watchRemovePost), fork(watchAddComment)]);
+	yield all([fork(watchLoadPosts), fork(watchAddPost), fork(watchRemovePost), fork(watchAddComment), fork(watchLikePost), fork(watchUnLikePost)]);
 }
