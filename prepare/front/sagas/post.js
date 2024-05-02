@@ -28,7 +28,7 @@ function* loadPosts(action) {
 		yield delay(1000);
 		yield put(loadPostsSuccessAction(generateDummyPosts(10)));
 	} catch (err) {
-		yield put(loadPostsFailureAction({ error: err.response.data }));
+		yield put(loadPostsFailureAction(err.response.data));
 	}
 }
 
@@ -41,7 +41,7 @@ function* addPost(action) {
 		yield put(addPostSuccessAction(result.data));
 		yield put(addPostToMe(result.data.id));
 	} catch (err) {
-		yield put(addPostFailureAction({ error: err.response.data }));
+		yield put(addPostFailureAction(err.response.data));
 	}
 }
 
@@ -68,7 +68,7 @@ function* addComment(action) {
 		const result = yield call(addPostAPI, action.payload);
 		yield put(addCommentSuccessAction(result.payload));
 	} catch (err) {
-		yield put(addCommentFailureAction({ error: err.response.data }));
+		yield put(addCommentFailureAction(err.response.data));
 	}
 }
 

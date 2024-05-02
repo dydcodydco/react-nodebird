@@ -107,7 +107,7 @@ const postSlice = createSlice({
 		},
 		loadPostsFailureAction: (state, action) => {
 			state.loadPostsLoading = false;
-			state.loadPostsError = action.error;
+			state.loadPostsError = action.payload;
 		},
 		addPostRequestAction: (state, action) => {
 			state.addPostLoading = true;
@@ -121,7 +121,7 @@ const postSlice = createSlice({
 		},
 		addPostFailureAction: (state, action) => {
 			state.addPostLoading = false;
-			state.addPostError = action.error;
+			state.addPostError = action.payload;
 		},
 		removePostRequestAction: (state, action) => {
 			state.removePostLoading = true;
@@ -135,7 +135,7 @@ const postSlice = createSlice({
 		},
 		removePostFailureAction: (state, action) => {
 			state.removePostLoading = false;
-			state.removePostError = action.error;
+			state.removePostError = action.payload;
 		},
 		addCommentRequestAction: (state, action) => {
 			state.addCommentLoading = true;
@@ -151,7 +151,7 @@ const postSlice = createSlice({
 		},
 		addCommentFailureAction: (state, action) => {
 			state.addCommentLoading = false;
-			state.addCommentError = action.error;
+			state.addCommentError = action.payload;
 		},
 	},
 	extraReducers: (builder) =>

@@ -12,7 +12,7 @@ const PostForm = () => {
 		reset,
 		formState: { errors },
 	} = useForm();
-	const { imagePaths, addPostDone } = useSelector((state) => state.post);
+	const { imagePaths, addPostDone, addPostError } = useSelector((state) => state.post);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
@@ -20,6 +20,12 @@ const PostForm = () => {
 			reset();
 		}
 	}, [addPostDone]);
+
+	useEffect(() => {
+		if (addPostError) {
+			alert(addPostError);
+		}
+	}, [addPostError]);
 
 	const onSubmit = useCallback((data) => {
 		console.log("onsubmit", data);
