@@ -24,8 +24,8 @@ passportConfig();
 // app.use(cors()) -> 모든 요청에 다 res.setHeader("Access-Control-Allow-Origin", "*") 설정 넣어주는 것
 app.use(
 	cors({
-		origin: true,
-		credentials: false, // 나중에 true로 바꿈
+		origin: "http://localhost:3000", // true or * // access-control-allow-origin가 true된다. --> 다른 도메인끼리 api 요청
+		credentials: true, // access-control-allow-credential가 true된다. --> 다른 도메인끼리 쿠키 전달
 	})
 );
 // req.body를 사용하기 위해 라우터 연결 이전에 아래 두 미들웨어(express.json, express.urlencoded) 적용해야한다.

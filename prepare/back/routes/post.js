@@ -1,5 +1,5 @@
 const express = require("express");
-const { Post, Comment } = require("../models");
+const { Post, Comment, Image, User } = require("../models");
 const { isLoggedIn } = require("./middlewares");
 
 const router = express.Router();
@@ -11,7 +11,21 @@ router.post("/", isLoggedIn, async (req, res, next) => {
 			content: req.body.content,
 			UserId: req.user.id, // 로그인하고나면 req.user에 정보담김 (passport의 deserialize)
 		});
-		res.state(201).json(post);
+		const fullPost = await Post.findOne({
+			where: { id: post.id },
+			include: [
+				{
+					model: Image,
+				},
+				{
+					model: Comment,
+				},
+				{
+					model: User,
+				},
+			],
+		});
+		res.status(201).json(fullPost);
 	} catch (error) {
 		console.error(error);
 		next(error);
@@ -33,7 +47,7 @@ router.post("/:postId/comment", isLoggedIn, async (req, res, next) => {
 			PostId: req.params.postId, // req.body.postId 에서도 접근 가능
 			UserId: req.user.id, // 로그인하고나면 req.user에 정보담김 (passport의 deserialize)
 		});
-		res.state(201).json(comment);
+		res.status(201).json(comment);
 	} catch (error) {
 		console.error(error);
 		next(error);

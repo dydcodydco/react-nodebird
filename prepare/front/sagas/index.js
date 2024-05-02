@@ -5,6 +5,7 @@ import postSaga from "./post";
 import userSaga from "./user";
 
 axios.defaults.baseURL = "http://localhost:3065";
+axios.defaults.withCredentials = true; // 도메인다른 백엔드 서버와 쿠키 주고받을 수 있다.
 
 export default function* rootSaga() {
 	yield all([fork(userSaga), fork(postSaga)]);
