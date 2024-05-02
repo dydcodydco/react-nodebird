@@ -20,14 +20,14 @@ module.exports = () => {
 					if (!user) {
 						// done은 마치 callback 함수 같은 것 --> /routes/user 에서 호출하면 전달된다
 						// done ( 서버에러, 성공, 클라이언트 에러 (보내는측이 잘못보냄) )
-						return done(null, false, { reason: "존재하지 않는 사용자입니다!" });
+						return done(null, false, { reason: "존재하지 않는 이메일입니다!" });
 					}
 					// db에 있는 유저의 비번과, 사용자가 입력한 비번 비교
 					const result = await bcrypt.compare(password, user.password);
 					if (result) {
 						return done(null, user);
 					}
-					return done(null, false, { reaseon: "비밀번호가 틀렸습니다." });
+					return done(null, false, { reason: "비밀번호가 틀렸습니다." });
 				} catch (error) {
 					console.error(error);
 					return done(error);

@@ -76,7 +76,7 @@ const userSlice = createSlice({
 		loginSuccessAction: (state, action) => {
 			state.logInLoading = false;
 			state.logInDone = true;
-			state.me = dummyUser(action.payload);
+			state.me = action.payload;
 		},
 		loginFailureAction: (state, action) => {
 			state.logInLoading = false;

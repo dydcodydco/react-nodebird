@@ -1,7 +1,9 @@
 const express = require("express");
+// sequelize가 다른 테이블의 정보까지 합쳐서 보내줘서 편함
 const { User } = require("../models");
 const bcrypt = require("bcrypt");
 const passport = require("passport");
+const db = require("../models");
 
 const router = express.Router();
 
@@ -16,13 +18,43 @@ router.post("/login", (req, res, next) => {
 		if (info) {
 			return res.status(403).send(info.reason);
 		}
-		// 진짜 로그인 중
+		// passport 로그인 중
+		// req.login 할때 동시에 실행되는게 /passport/index.js의 serializeUser
 		return req.login(user, async (loginErr) => {
 			if (loginErr) {
 				console.error(loginErr);
 				return next(loginErr);
 			}
-			return res.join(user);
+			// 로그인하게되면 내부적으로 res.setHeader('Cookie', 임의의 문자열) 이렇게 보내준다
+			// 그리고 알아서 세션과 연결해준다 --> 브라우저엔 문자 (쿠키), 서베에서 데이터 보관.
+			// 서버쪽에서 통째로 들고있는건 세션(쿠키와 정보 연결) 이런식으로 보안 위협 최소
+			const fullUserWithoutPassword = await User.findOne({
+				where: { id: user.id },
+				// 원하는 정보만 받을 수 있음
+				// attreibute: ['id', 'nickname', 'email'],
+				// 원하지 않는 정보만 빼고 가져올 수 있음
+				attributes: {
+					exclude: ["password"],
+				},
+				include: [
+					{
+						// model: Post는 hasMany라서 복수형이 되어 프론트 me.Posts가 됩니다.
+						model: db.Post,
+						// attributes: ["id"],
+					},
+					{
+						model: db.User,
+						as: "Followings",
+						// attributes: ["id"],
+					},
+					{
+						model: db.User,
+						as: "Followers",
+						// attributes: ["id"],
+					},
+				],
+			});
+			return res.status(200).json(fullUserWithoutPassword); // 쿠키정보와 사용자정보 프론트로 보내줌
 		});
 	})(req, res, next);
 });
@@ -63,5 +95,12 @@ router.post("/", async (req, res, next) => {
 		next(err); // next로 에러 보내면 에러들이 한방에 처리된다. 익스프레스가 브라우저한테 알려준다.
 	}
 }); // ==> POST /user/
+
+router.post("/logout", (req, res, next) => {
+	// 로그인 한 후 부터는 req에 user정보가 들어가있다. (req.user)
+	req.logOut();
+	req.session.destroy(); // 세션 지우고 쿠키 지우면 로그아웃 끝
+	res.send("ok");
+});
 
 module.exports = router;

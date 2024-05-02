@@ -1,12 +1,17 @@
 // node에서는 import / export 안쓰고 require / module.exports 사용
 const express = require("express");
 const cors = require("cors");
+const session = require("express-session");
+const cookieParser = require("cookie-parser");
+const passport = require("passport");
+const dotenv = require("dotenv");
 
 const postRouter = require("./routes/post");
 const userRouter = require("./routes/user");
 const db = require("./models"); // sequelize에서 model 모두 등록 // express에서 그 sequelize를 등록해야 한다.
 const passportConfig = require("./passport");
 
+dotenv.config();
 const app = express();
 db.sequelize
 	.sync()
@@ -23,12 +28,26 @@ app.use(
 		credentials: false, // 나중에 true로 바꿈
 	})
 );
-// req.body를 사용하기 위해 라우터 연결 이전에 아래 두 코드(미들웨어) 적용해야한다.
+// req.body를 사용하기 위해 라우터 연결 이전에 아래 두 미들웨어(express.json, express.urlencoded) 적용해야한다.
 // use는 express 서버에다가 무언갈 장착한다는 뜻
 // 아래 두 코드가 프론트에서 받은 데이터를 req.body에 넣어주는 역할을 한다.
 // 그래서 req.body실행하는 코드보다 일찍 실행시켜야 한다.
 app.use(express.json()); // json형태의 데이터를 req.body에
 app.use(express.urlencoded({ extended: true })); // form/submit일때 url-encoed방식으로 오는데 이를 req.body에 넣어줌
+// .env 에 있는 정보들이 치환되서 process.env.으로 들어간다.
+app.use(cookieParser(process.env.COOKIE_SECRET));
+app.use(
+	session({
+		saveUninitialized: false,
+		resave: false,
+		// 로그인 후 쿠키에 랜덤한 문자열을 보내줄때 유저를 데이터로 만들어낸 문자.
+		// 그래서 secret이 해킹당하면 데이터 노출 위험이 있다.
+		// 그래서 secret은 꽁꽁 숨겨둬야한다
+		secret: process.env.COOKIE_SECRET,
+	})
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
 // api의 앞쪽 중복되는 부분을 prefix(접두어)로 뽑아내서 첫번째 인자에 넣을 수 있다. ('/post')
 app.use("/post", postRouter);

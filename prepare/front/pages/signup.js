@@ -23,16 +23,25 @@ const Signup = () => {
 		handleSubmit,
 		formState: { errors },
 	} = useForm();
-	const { signUpLoading, signUpDone, signUpError } = useSelector((state) => state.user);
+	const { signUpLoading, signUpDone, signUpError, me } = useSelector((state) => state.user);
 	const dispatch = useDispatch();
 	const router = useRouter();
 
+	// 로그인 성공
+	useEffect(() => {
+		if (me && me.id) {
+			router.replace("/");
+		}
+	}, [me && me.id]);
+
+	// 회원가입 성공
 	useEffect(() => {
 		if (signUpDone) {
-			router.push("/");
+			router.replace("/");
 		}
 	}, [signUpDone]);
 
+	// 회원가입 실패
 	useEffect(() => {
 		if (signUpError) {
 			alert(signUpError);

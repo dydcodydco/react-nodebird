@@ -1,19 +1,11 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
 import Slick from "react-slick";
-import {
-	Overlay,
-	Global,
-	SlickWrapper,
-	Header,
-	CloseBtn,
-	ImageWrapper,
-	Indicator,
-} from "./styles";
+import { Overlay, Global, SlickWrapper, Header, CloseBtn, ImageWrapper, Indicator } from "./styles";
 
 // 컴포넌트가 복잡해지면 폴더만들고 그 안에 index.js 만드는 경우가 더 많아진다.
 const ImagesZoom = ({ images, onClose }) => {
-	console.log(images);
+	// console.log(images);
 	const [currentSlide, setCurrentSlide] = useState(0);
 	return (
 		<Overlay>
@@ -24,14 +16,7 @@ const ImagesZoom = ({ images, onClose }) => {
 			</Header>
 			<SlickWrapper>
 				<div>
-					<Slick
-						initialSlide={0}
-						beforeChange={(slide) => setCurrentSlide(slide)}
-						infinite
-						arrows={false}
-						slidesToShow={1}
-						slidesToScroll={1}
-					>
+					<Slick initialSlide={0} beforeChange={(slide) => setCurrentSlide(slide)} infinite arrows={false} slidesToShow={1} slidesToScroll={1}>
 						{images.map((v) => (
 							<ImageWrapper key={v.src}>
 								<img src={v.src} alt={v.src} />

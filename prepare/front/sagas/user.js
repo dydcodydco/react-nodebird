@@ -23,10 +23,8 @@ function loginAPI(data) {
 }
 function* login(action) {
 	try {
-		console.log(action.payload);
 		const result = yield call(loginAPI, action.payload);
-		console.log("login", result);
-		yield put(loginSuccessAction(result.payload));
+		yield put(loginSuccessAction(result.data));
 	} catch (err) {
 		yield put(loginFailureAction(err.response.data));
 	}
@@ -37,9 +35,7 @@ function logoutAPI() {
 }
 function* logout() {
 	try {
-		// const result = yield call(logoutAPI);
-		console.log("logout saga");
-		yield delay(1000);
+		yield call(logoutAPI);
 		yield put(logoutSuccessAction());
 	} catch (err) {
 		yield put(logoutFailureAction(err.response.data));
