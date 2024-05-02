@@ -1,14 +1,16 @@
 const express = require("express");
 // sequelize가 다른 테이블의 정보까지 합쳐서 보내줘서 편함
-const { User } = require("../models");
 const bcrypt = require("bcrypt");
 const passport = require("passport");
+
+const { User } = require("../models");
 const db = require("../models");
+const { isLoggedIn, isNotLoggedIn } = require("./middlewares");
 
 const router = express.Router();
 
 // POST /user/login // 로그인 전략 실행
-router.post("/login", (req, res, next) => {
+router.post("/login", isNotLoggedIn, (req, res, next) => {
 	// 미들웨어 확장방법 사용해서 next함수 쓸수있게
 	passport.authenticate("local", (err, user, info) => {
 		if (err) {
@@ -61,7 +63,7 @@ router.post("/login", (req, res, next) => {
 
 // --> 접두어(/user + / 이라는 뜻)
 // POST /user/
-router.post("/", async (req, res, next) => {
+router.post("/", isNotLoggedIn, async (req, res, next) => {
 	try {
 		const { email, nickname, password } = req.body;
 		const exUser = await User.findOne({
@@ -96,11 +98,12 @@ router.post("/", async (req, res, next) => {
 	}
 }); // ==> POST /user/
 
-router.post("/logout", (req, res, next) => {
+router.post("/logout", isLoggedIn, (req, res, next) => {
 	// 로그인 한 후 부터는 req에 user정보가 들어가있다. (req.user)
-	req.logOut();
-	req.session.destroy(); // 세션 지우고 쿠키 지우면 로그아웃 끝
-	res.send("ok");
+	req.logOut(() => {
+		req.session.destroy(); // 세션 지우고 쿠키 지우면 로그아웃 끝
+		res.send("ok");
+	});
 });
 
 module.exports = router;
