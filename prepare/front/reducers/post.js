@@ -102,6 +102,9 @@ const postSlice = createSlice({
 	name: "post",
 	initialState,
 	reducers: {
+		removeImageAction: (state, action) => {
+			state.imagePaths = state.imagePaths.filter((d, i) => i !== action.payload);
+		},
 		uploadImagesRequestAction: (state, action) => {
 			state.uploadImagesLoading = true;
 			state.uploadImagesDone = false;
@@ -172,6 +175,7 @@ const postSlice = createSlice({
 			state.addPostLoading = false;
 			state.addPostDone = true;
 			state.mainPosts.unshift(action.payload);
+			state.imagePaths = [];
 		},
 		addPostFailureAction: (state, action) => {
 			state.addPostLoading = false;
@@ -218,6 +222,7 @@ const postSlice = createSlice({
 });
 
 export const {
+	removeImageAction,
 	uploadImagesRequestAction,
 	uploadImagesSuccessAction,
 	uploadImagesFailureAction,

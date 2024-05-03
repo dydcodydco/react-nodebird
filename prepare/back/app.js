@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const passport = require("passport");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
+const path = require("path");
 
 const postRouter = require("./routes/post");
 const postsRouter = require("./routes/posts");
@@ -23,7 +24,7 @@ db.sequelize
 	.catch(console.error);
 passportConfig();
 
-app.use(morgan("dev"));
+app.use(morgan("dev")); // 로그볼 수 있게 해주는 것
 // app.use(cors()) -> 모든 요청에 다 res.setHeader("Access-Control-Allow-Origin", "*") 설정 넣어주는 것
 app.use(
 	cors({
@@ -31,6 +32,8 @@ app.use(
 		credentials: true, // access-control-allow-credential가 true된다. --> 다른 도메인끼리 쿠키 전달
 	})
 );
+// __dirname -> 현재 폴더, 이 폴더 안에 uploads폴더 경로를 합쳐준다. // 운영체제 차이때문에 이렇게 경로를 설정해줌
+app.use("/", express.static(path.join(__dirname, "uploads")));
 // req.body를 사용하기 위해 라우터 연결 이전에 아래 두 미들웨어(express.json, express.urlencoded) 적용해야한다.
 // use는 express 서버에다가 무언갈 장착한다는 뜻
 // 아래 두 코드가 프론트에서 받은 데이터를 req.body에 넣어주는 역할을 한다.

@@ -14,13 +14,42 @@ try {
 	fs.mkdirSync("uploads");
 }
 
+const upload = multer({
+	storage: multer.diskStorage({
+		destination(req, file, done) {
+			done(null, "uploads");
+		},
+		filename(req, file, done) {
+			// 이미지명.png
+			const ext = path.extname(file.originalname); // 확장자 추출 (.png)
+			const basename = path.basename(file.originalname, ext); // 이미지명 추출 (이미지명)
+			done(null, basename + "_" + new Date().getTime() + ext); // 이미지명123452322.png
+		},
+	}),
+	limits: { fileSize: 20 * 1024 * 1024 }, // 20MB
+});
+
 // ==> POST /post 글 작성
-router.post("/", isLoggedIn, async (req, res, next) => {
+// multer은 파일인 경우 req.body.files(여러개)나 rec.body.file(한개)이 된다.
+// 파일이나 이미지가 아닌 텍스트들은 req.body 넣어준다.
+router.post("/", isLoggedIn, upload.none(), async (req, res, next) => {
 	try {
 		const post = await Post.create({
 			content: req.body.content,
 			UserId: req.user.id, // 로그인하고나면 req.user에 정보담김 (passport의 deserialize)
 		});
+		if (req.body.image) {
+			// 이미지 여러개 올리면 [김치찜.png, 갈비찜.png] 배열로
+			if (Array.isArray(req.body.image)) {
+				// db에 파일 주소만 올린다. db에 올리면 캐싱안되서 속도 이점도 없고 무거워만진다 그래서.
+				const images = await Promise.all(req.body.image.map((image) => Image.create({ src: image }))); // promise배열됨
+				await post.addImages(images);
+			} else {
+				// 이미지 하나만 올리면 '김치찜.png' string
+				const image = await Image.create({ src: req.body.image });
+				await post.addImages(image);
+			}
+		}
 		const fullPost = await Post.findOne({
 			where: { id: post.id },
 			include: [
@@ -139,20 +168,6 @@ router.delete("/:postId", isLoggedIn, async (req, res, next) => {
 	}
 });
 
-const upload = multer({
-	storage: multer.diskStorage({
-		destination(req, file, done) {
-			done(null, "uploads");
-		},
-		filename(req, file, done) {
-			// 이미지명.png
-			const ext = path.extname(file.originalname); // 확장자 추출 (.png)
-			const basename = path.basename(file.originalname, ext); // 이미지명 추출 (이미지명)
-			done(null, basename + new Date().getTime() + ext); // 이미지명123452322.png
-		},
-	}),
-	limits: { fileSize: 20 * 1024 * 1024 }, // 20MB
-});
 // POST /post/images
 // 이미지 한장이면 upload.single / 없으면 upload.none / 파일 태그가 두개씩 있을때 fields
 // upload에서 이미지를 처리하고 처리된 이미지를 다음 콜백함수에서 req.files로 받는다.

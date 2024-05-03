@@ -19,7 +19,7 @@ const ImagesZoom = ({ images, onClose }) => {
 					<Slick initialSlide={0} beforeChange={(slide) => setCurrentSlide(slide)} infinite arrows={false} slidesToShow={1} slidesToScroll={1}>
 						{images.map((v) => (
 							<ImageWrapper key={v.src}>
-								<img src={v.src} alt={v.src} />
+								<img src={`http://localhost:3065/${v.src}`} alt={v.src} />
 							</ImageWrapper>
 						))}
 					</Slick>

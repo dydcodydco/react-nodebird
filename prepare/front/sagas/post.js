@@ -22,6 +22,9 @@ import {
 	uploadImagesRequestAction,
 	uploadImagesSuccessAction,
 	uploadImagesFailureAction,
+	removeImageRequestAction,
+	removeImageSuccessAction,
+	removeImageFailureAction,
 	generateDummyPosts,
 } from "../reducers/post";
 import { addPostToMe, removePostOfMe } from "../reducers/user";
