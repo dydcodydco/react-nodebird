@@ -1,6 +1,9 @@
 import { all, fork, delay, put, takeLatest, call } from "redux-saga/effects";
 import axios from "axios";
 import {
+	changeNicknameRequestAction,
+	changeNicknameSuccessAction,
+	changeNicknameiailureAction,
 	loadMyInfoRequestAction,
 	loadMyInfoFailureAction,
 	loadMyInfoSuccessAction,
@@ -20,6 +23,18 @@ import {
 	unFollowSuccessAction,
 	unFollowFailureAction,
 } from "../reducers/user";
+
+function changeNicknameAPI(data) {
+	return axios.patch("/user/nickname", { nickname: data });
+}
+function* changeNickname(action) {
+	try {
+		const result = yield call(changeNicknameAPI, action.payload);
+		yield put(changeNicknameSuccessAction(result.data));
+	} catch (err) {
+		yield put(changeNicknameiailureAction(err.response.data));
+	}
+}
 
 function loadMyInfoAPI() {
 	return axios.get("/user");
@@ -95,6 +110,9 @@ function* unFollow(action) {
 	}
 }
 
+function* watchChangeNickname() {
+	yield takeLatest(changeNicknameRequestAction, changeNickname);
+}
 function* watchLoadMyInfo() {
 	yield takeLatest(loadMyInfoRequestAction, loadMyInfo);
 }
@@ -115,5 +133,5 @@ function* watchUnFollow() {
 }
 
 export default function* userSaga() {
-	yield all([fork(watchLogIn), fork(watchLogOut), fork(watchSignUp), fork(watchFollow), fork(watchUnFollow), fork(watchLoadMyInfo)]);
+	yield all([fork(watchChangeNickname), fork(watchLogIn), fork(watchLogOut), fork(watchSignUp), fork(watchFollow), fork(watchUnFollow), fork(watchLoadMyInfo)]);
 }

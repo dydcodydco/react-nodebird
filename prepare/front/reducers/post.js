@@ -23,22 +23,22 @@ export const initialState = {
 	mainPosts: [],
 	imagePaths: [],
 	hasMorePosts: true,
-	loadPostsLoading: false,
+	loadPostsLoading: false, // 게시글들 불러오는 중
 	loadPostsDone: false,
 	loadPostsError: null,
-	addPostLoading: false,
+	addPostLoading: false, // 게시글 추가 시도중
 	addPostDone: false,
 	addPostError: null,
-	removePostLoading: false,
+	removePostLoading: false, // 게시글 제거 시도중
 	removePostDone: false,
 	removePostError: null,
-	addCommentLoading: false,
+	addCommentLoading: false, // 댓글 추가 시도중
 	addCommentDone: false,
 	addCommentError: null,
-	likePostLoading: false,
+	likePostLoading: false, // 좋아요 시도중
 	likePostDone: false,
 	likePostError: null,
-	unLikePostLoading: false,
+	unLikePostLoading: false, // 좋아요 취소중
 	unLikePostDone: false,
 	unLikePostError: null,
 };
@@ -100,7 +100,6 @@ const postSlice = createSlice({
 	initialState,
 	reducers: {
 		likePostRequestAction: (state, action) => {
-			console.log("likePostRequestAction", action);
 			state.likePostLoading = true;
 			state.likePostDone = false;
 			state.likePostError = null;

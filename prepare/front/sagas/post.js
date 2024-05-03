@@ -81,15 +81,13 @@ function* addPost(action) {
 }
 
 function removePostAPI(data) {
-	return axios.post("/post/remove", data);
+	return axios.delete(`/post/${data}`);
 }
 function* removePost(action) {
 	try {
-		// const result = yield call(addPostAPI, action.data);
-		console.log("removePost saga", action);
-		yield delay(1000);
-		yield put(removePostSuccessAction(action.payload.id));
-		yield put(removePostOfMe(action.payload.id));
+		const result = yield call(removePostAPI, action.payload.id);
+		yield put(removePostSuccessAction(result.data.PostId));
+		yield put(removePostOfMe(result.data.PostId));
 	} catch (err) {
 		console.error(err);
 		yield put(removePostFailureAction(err.response.data));

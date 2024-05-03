@@ -124,14 +124,14 @@ router.post("/", isNotLoggedIn, async (req, res, next) => {
 		// async, await을 붙여줘야 한다.
 		// 암호화된 비번 만들어주기, 2번째 인자에 숫자가 높을수록 보안은 강해진다. 대신 오래걸려서 적절하게.
 		const hashedPassword = await bcrypt.hash(password, 10); // bcrypt도 비동기
-		await User.create({
+		const user = await User.create({
 			email,
 			nickname,
 			password: hashedPassword,
 		});
 		// res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 		// 요청에 성공적 응답 200
-		res.status(201).send("ok");
+		res.status(201).json(user);
 		// res.json();
 	} catch (err) {
 		console.error(err);
@@ -147,6 +147,24 @@ router.post("/logout", isLoggedIn, (req, res, next) => {
 		req.session.destroy(); // 세션 지우고 쿠키 지우면 로그아웃 끝
 		res.send("ok");
 	});
+});
+
+// PATCH /user/nickname 닉네임 수정
+router.patch("/nickname", isLoggedIn, async (req, res, next) => {
+	try {
+		await User.update(
+			{
+				nickname: req.body.nickname,
+			},
+			{
+				where: { id: req.user.id },
+			}
+		);
+		res.status(200).json({ nickname: req.body.nickname });
+	} catch (error) {
+		console.log(error);
+		next(error);
+	}
 });
 
 module.exports = router;

@@ -77,7 +77,7 @@ router.post("/:postId/comment", isLoggedIn, async (req, res, next) => {
 
 // router.patch("/:postId/like", (req, res, next) => {});
 // PATCH /post/1/like
-router.patch("/:postId/like", async (req, res, next) => {
+router.patch("/:postId/like", isLoggedIn, async (req, res, next) => {
 	try {
 		const post = await Post.findOne({
 			where: { id: req.params.postId },
@@ -96,7 +96,7 @@ router.patch("/:postId/like", async (req, res, next) => {
 });
 
 // PATCH /post/1/unlike
-router.delete("/:postId/unlike", async (req, res, next) => {
+router.delete("/:postId/unlike", isLoggedIn, async (req, res, next) => {
 	try {
 		const post = await Post.findOne({
 			where: { id: req.params.postId },
@@ -112,9 +112,21 @@ router.delete("/:postId/unlike", async (req, res, next) => {
 	}
 });
 
-// DELETE /post 글 삭제
-router.delete("/", (req, res) => {
-	res.send({ id: 1 });
+// DELETE /post/1 글 삭제
+router.delete("/:postId", isLoggedIn, async (req, res, next) => {
+	try {
+		// sequelize에서 제거할 때 destroy 사용
+		await Post.destroy({
+			where: {
+				id: req.params.postId,
+				UserId: req.user.id, // 게시글 쓴 사람만 게시글 지울 수 있게
+			},
+		});
+		res.status(200).json({ PostId: parseInt(req.params.postId, 10) });
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
 });
 
 module.exports = router;

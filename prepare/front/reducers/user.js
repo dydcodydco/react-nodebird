@@ -135,8 +135,7 @@ const userSlice = createSlice({
 		changeNicknameSuccessAction: (state, action) => {
 			state.changeNicknameLoading = false;
 			state.changeNicknameDone = true;
-			// console.log("changeNicknameSuccessAction", action.payload);
-			state.me.nickname = action.payload;
+			state.me.nickname = action.payload.nickname;
 		},
 		changeNicknameFailureAction: (state, action) => {
 			state.changeNicknameLoading = false;
@@ -161,6 +160,9 @@ const userSlice = createSlice({
 // redux toolkit에서는 immer라이브러리가 처리해줌.
 
 export const {
+	changeNicknameRequestAction,
+	changeNicknameSuccessAction,
+	changeNicknameiailureAction,
 	loadMyInfoRequestAction,
 	loadMyInfoSuccessAction,
 	loadMyInfoiailureAction,
