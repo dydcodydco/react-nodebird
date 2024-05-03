@@ -1,5 +1,5 @@
 const express = require("express");
-const { Post, Comment, Image, User } = require("../models");
+const { Post, Comment, Image, User, Hashtag } = require("../models");
 const { isLoggedIn } = require("./middlewares");
 const path = require("path");
 const multer = require("multer");
@@ -34,10 +34,17 @@ const upload = multer({
 // 파일이나 이미지가 아닌 텍스트들은 req.body 넣어준다.
 router.post("/", isLoggedIn, upload.none(), async (req, res, next) => {
 	try {
+		const hashtags = req.body.content.match(/(#[^\s#]+)/g);
 		const post = await Post.create({
 			content: req.body.content,
 			UserId: req.user.id, // 로그인하고나면 req.user에 정보담김 (passport의 deserialize)
 		});
+		if (hashtags) {
+			// 등록한 해시태그가 있으면 무시하고, 없는 경우에 create한다 (등록한다) --> findOrCreate
+			const result = await Promise.all(hashtags.map((tag) => Hashtag.findOrCreate({ where: { name: tag.slice(1).toLowerCase() } })));
+			// findOrCreate 의 결과값이 [[ㅁㅁㅁ, true], [해쉬값, true]] 이런 모양이기 때문
+			await post.addHashtags(result.map((v) => v[0]));
+		}
 		if (req.body.image) {
 			// 이미지 여러개 올리면 [김치찜.png, 갈비찜.png] 배열로
 			if (Array.isArray(req.body.image)) {
@@ -175,6 +182,101 @@ router.post("/images", isLoggedIn, upload.array("image"), (req, res, next) => {
 	try {
 		console.log(req.files);
 		res.json(req.files.map((v) => v.filename));
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
+});
+
+// POST /post/1/retweet 리트윗
+router.post("/:postId/retweet", isLoggedIn, async (req, res, next) => {
+	try {
+		// 서버에서는 존재여부등 꼼꼼하게 검사하는게 좋다.
+		const post = await Post.findOne({
+			where: { id: req.params.postId },
+			include: [
+				{
+					model: Post,
+					as: "Retweet",
+				},
+			],
+		});
+		if (!post) {
+			return res.status(403).send("존재하지 않는 게시글입니다.");
+		}
+		// 글쓴이와 리트위하는 대상이 같을때, 누가 내글을 리트윗하고 그걸 다시 내가 리트윗 할때 막음. 즉 내가 내꺼 리트윗시도할때 막아줌
+		if (req.user.id === post.UserId || (post.Retweet && post.Retweet.UserId === req.user.id)) {
+			return res.status(403).send("자신의 글은 리트윗할 수 없습니다.");
+		}
+		// 위 경우의 수가 아닌 리트윗한 글의 id or 글의 id 사용
+		const retweetTargetId = post.RetweetId || post.id;
+		// 이미 내가 리트윗한 글인 경우 막기
+		const exPost = await Post.findOne({
+			where: {
+				UserId: req.user.id,
+				RetweetId: retweetTargetId,
+			},
+		});
+		if (exPost) {
+			return res.status(403).send("이미 리트윗했습니다.");
+		}
+		// 그 외의 경우 리트윗 생성
+		const retweet = await Post.create({
+			UserId: req.user.id,
+			RetweetId: retweetTargetId,
+			content: "retweet",
+		});
+		// 어떤 글을 리트윗한건지 알 수 있는 정보도 추가
+		// include가 너무 복잡해지면 분리해야할 수도 있다. (댓글처럼 분리가능한건 하도록)
+		const retweetWithPrevPost = await Post.findOne({
+			where: { id: retweet.id },
+			include: [
+				{
+					// 원 게시글이 다른 게시글을 리트윗한 경우, 그 리트윗된 게시글의 정보를 가져옵니다.
+					model: Post,
+					as: "Retweet",
+					include: [
+						{
+							// 리트윗된 게시글을 작성한 사용자의 정보
+							model: User,
+							attributes: ["id", "nickname"],
+						},
+						{
+							// 리트윗된 게시글에 포함된 이미지 정보
+							model: Image,
+						},
+					],
+				},
+				{
+					// 원 게시글을 작성한 사용자의 정보
+					model: User,
+					attributes: ["id", "nickname"],
+				},
+				{
+					// 원 게시글에 포함된 이미지 정보
+					model: Image,
+				},
+				{
+					// 게시글에 달린 댓글 정보
+					// 댓글같은 경우에는 나중에 불러와도 되기때문에 라우터를 따로 파주던가
+					// 댓글창 열었을때 불러오던가 하는 수를 수정해야한다.
+					model: Comment,
+					include: [
+						{
+							model: User,
+							attributes: ["id", "nickname"],
+						},
+					],
+				},
+				{
+					// 게시글을 좋아요한 사용자들의 목록
+					model: User,
+					as: "Likers",
+					attributes: ["id"],
+				},
+			],
+		});
+		res.status(201).json(retweetWithPrevPost);
 	} catch (error) {
 		console.error(error);
 		next(error);
