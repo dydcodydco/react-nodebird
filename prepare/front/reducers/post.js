@@ -44,9 +44,6 @@ export const initialState = {
 	uploadImagesLoading: false, // 이미지 업로드 시도중
 	uploadImagesDone: false,
 	uploadImagesError: null,
-	retweetLoading: false, // 리트윗 시도중
-	retweetDone: false,
-	retweetError: null,
 };
 
 // 단일 게시글 생성 함수
@@ -105,20 +102,6 @@ const postSlice = createSlice({
 	name: "post",
 	initialState,
 	reducers: {
-		retweetRequestAction: (state, action) => {
-			state.retweetLoading = true;
-			state.retweetDone = false;
-			state.retweetError = null;
-		},
-		retweetSuccessAction: (state, action) => {
-			state.mainPosts.unshift(action.payload);
-			state.retweetLoading = false;
-			state.retweetDone = true;
-		},
-		retweetFailureAction: (state, action) => {
-			state.retweetLoading = false;
-			state.retweetError = action.payload;
-		},
 		removeImageAction: (state, action) => {
 			state.imagePaths = state.imagePaths.filter((d, i) => i !== action.payload);
 		},
@@ -239,9 +222,6 @@ const postSlice = createSlice({
 });
 
 export const {
-	retweetRequestAction,
-	retweetSuccessAction,
-	retweetFailureAction,
 	removeImageAction,
 	uploadImagesRequestAction,
 	uploadImagesSuccessAction,

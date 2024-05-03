@@ -26,25 +26,9 @@ import {
 	removeImageSuccessAction,
 	removeImageFailureAction,
 	generateDummyPosts,
-	retweetRequestAction,
-	retweetSuccessAction,
-	retweetFailureAction,
 } from "../reducers/post";
 import { addPostToMe, removePostOfMe } from "../reducers/user";
 import shortid from "shortid";
-
-function retweetpi(data) {
-	return axios.post(`/post/${data}/retweet`);
-}
-function* retweet(action) {
-	try {
-		const result = yield call(retweetpi, action.payload);
-		yield put(retweetSuccessAction(result.data));
-	} catch (err) {
-		console.error(err);
-		yield put(retweetFailureAction(err.response.data));
-	}
-}
 
 function uploadImagesApi(data) {
 	return axios.post(`/post/images`, data); // formData는 받은 그대로
@@ -143,9 +127,6 @@ function* addComment(action) {
 	}
 }
 
-function* watchRetweet() {
-	yield takeLatest(retweetRequestAction, retweet);
-}
 function* watchUploadImages() {
 	yield takeLatest(uploadImagesRequestAction, uploadImages);
 }
@@ -169,14 +150,5 @@ function* watchAddComment() {
 }
 
 export default function* postSaga() {
-	yield all([
-		fork(watchRetweet),
-		fork(watchUploadImages),
-		fork(watchLoadPosts),
-		fork(watchAddPost),
-		fork(watchRemovePost),
-		fork(watchAddComment),
-		fork(watchLikePost),
-		fork(watchUnLikePost),
-	]);
+	yield all([fork(watchUploadImages), fork(watchLoadPosts), fork(watchAddPost), fork(watchRemovePost), fork(watchAddComment), fork(watchLikePost), fork(watchUnLikePost)]);
 }
