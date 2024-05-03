@@ -2,6 +2,15 @@ import { createSlice, current } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
 
 const initialState = {
+	removeFollowerLoading: false, // 팔로워 제거 시도중
+	removeFollowerDone: false,
+	removeFollowerError: null,
+	loadFollowersLoading: false, // 팔로워 리스트 가져오기 시도중
+	loadFollowersDone: false,
+	loadFollowersError: null,
+	loadFollowingsLoading: false, // 팔로윙 리스트 가져오기 시도중
+	loadFollowingsDone: false,
+	loadFollowingsError: null,
 	loadMyInfoLoading: false, // 유저 정보 가져오기 시도중
 	loadMyInfoDone: false,
 	loadMyInfoError: null,
@@ -43,6 +52,48 @@ const userSlice = createSlice({
 	name: "user",
 	initialState,
 	reducers: {
+		removeFollowerRequestAction: (state) => {
+			state.removeFollowerLoading = true;
+			state.removeFollowerError = null;
+			state.removeFollowerDone = false;
+		},
+		removeFollowerSuccessAction: (state, action) => {
+			state.removeFollowerLoading = false;
+			state.removeFollowerDone = true;
+			state.me.Followers = state.me.Followers.filter((d) => d.id !== action.payload.UserId);
+		},
+		removeFollowerFailureAction: (state, action) => {
+			state.removeFollowerLoading = false;
+			state.removeFollowerError = action.payload;
+		},
+		loadFollowersRequestAction: (state) => {
+			state.loadFollowersLoading = false;
+			state.loadFollowersDone = false;
+			state.loadFollowersError = null;
+		},
+		loadFollowersSuccessAction: (state, action) => {
+			state.loadFollowersLoading = false;
+			state.loadFollowersDone = true;
+			state.me.Followers = action.payload;
+		},
+		loadFollowersFailureAction: (state, action) => {
+			state.loadFollowersLoading = false;
+			state.loadFollowersError = action.payload;
+		},
+		loadFollowingsRequestAction: (state) => {
+			state.loadFollowingsLoading = false;
+			state.loadFollowingsDone = false;
+			state.loadFollowingsError = null;
+		},
+		loadFollowingsSuccessAction: (state, action) => {
+			state.loadFollowingsLoading = false;
+			state.loadFollowingsDone = true;
+			state.me.Followings = action.payload;
+		},
+		loadFollowingsFailureAction: (state, action) => {
+			state.loadFollowingsLoading = false;
+			state.loadFollowingsError = action.payload;
+		},
 		loadMyInfoRequestAction: (state) => {
 			state.loadMyInfoLoading = false;
 			state.loadMyInfoDone = false;
@@ -65,7 +116,7 @@ const userSlice = createSlice({
 		followSuccessAction: (state, action) => {
 			state.followLoading = false;
 			state.followDone = true;
-			state.me.Followings.push(action.payload);
+			state.me.Followings.push({ id: action.payload.UserId });
 		},
 		followFailureAction: (state, action) => {
 			state.followLoading = false;
@@ -79,7 +130,7 @@ const userSlice = createSlice({
 		unFollowSuccessAction: (state, action) => {
 			state.unFollowLoading = false;
 			state.unFollowDone = true;
-			state.me.Followings = state.me.Followings.filter((d) => d.id !== action.payload);
+			state.me.Followings = state.me.Followings.filter((d) => d.id !== action.payload.UserId);
 		},
 		unFollowFailureAction: (state, action) => {
 			state.unFollowLoading = false;
@@ -160,6 +211,15 @@ const userSlice = createSlice({
 // redux toolkit에서는 immer라이브러리가 처리해줌.
 
 export const {
+	removeFollowerRequestAction,
+	removeFollowerSuccessAction,
+	removeFollowerFailureAction,
+	loadFollowersRequestAction,
+	loadFollowersSuccessAction,
+	loadFollowersFailureAction,
+	loadFollowingsRequestAction,
+	loadFollowingsSuccessAction,
+	loadFollowingsFailureAction,
 	changeNicknameRequestAction,
 	changeNicknameSuccessAction,
 	changeNicknameiailureAction,
@@ -168,7 +228,7 @@ export const {
 	loadMyInfoiailureAction,
 	unFollowRequestAction,
 	unFollowSuccessAction,
-	unFollowiailureAction,
+	unFollowFailureAction,
 	followRequestAction,
 	followSuccessAction,
 	followFailureAction,

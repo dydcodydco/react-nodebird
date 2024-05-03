@@ -1,6 +1,7 @@
 import Head from "next/head";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
+import { loadFollowersRequestAction, loadFollowingsRequestAction, loadMyInfoRequestAction } from "../reducers/user";
 
 import AppLayout from "../components/AppLayout";
 import NicknameEditForm from "../components/NicknameEditForm";
@@ -9,7 +10,16 @@ import { useRouter } from "next/router";
 
 const Profile = () => {
 	const router = useRouter();
+	const dispatch = useDispatch();
 	const { me } = useSelector((state) => state.user);
+
+	useEffect(() => {
+		if (!me) {
+			dispatch(loadMyInfoRequestAction());
+		}
+		dispatch(loadFollowersRequestAction());
+		dispatch(loadFollowingsRequestAction());
+	}, []);
 
 	useEffect(() => {
 		if (!(me && me.id)) {

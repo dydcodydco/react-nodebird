@@ -167,4 +167,91 @@ router.patch("/nickname", isLoggedIn, async (req, res, next) => {
 	}
 });
 
+// PATCH /user/1/follow
+router.patch("/:userId/follow", isLoggedIn, async (req, res, next) => {
+	try {
+		// 유저를 검사해서
+		const user = await User.findOne({
+			where: { id: req.params.userId },
+		});
+		if (!user) {
+			res.status(403).send("없는 사람을 팔로우하시려고 하시네요?");
+		}
+		// 그 유저에게 follower 추가
+		await user.addFollowers(req.user.id);
+		res.status(200).json({ UserId: parseInt(req.params.userId) });
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
+});
+
+// DELETE /user/1/follow 내가 팔로한사람 (팔로잉) 취소 --> 언팔
+router.delete("/:userId/follow", async (req, res, next) => {
+	try {
+		// 팔로할 유저를 검사해서
+		const user = await User.findOne({
+			where: { id: req.params.userId },
+		});
+		if (!user) {
+			res.status(403).send("없는 사람을 언팔로우하시려고 하시네요?");
+		}
+		// 그 유저에게서 follower 제거
+		await user.removeFollowers(req.user.id);
+		res.status(200).json({ UserId: parseInt(req.params.userId, 10) });
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
+});
+
+// DELETE /user/follow/1 나를 팔로한사람 (팔로워) 제거 --> 그 사람이 나를 언팔
+router.delete("/follower/:userId", async (req, res, next) => {
+	try {
+		// 팔로할 유저를 검사해서
+		const user = await User.findOne({
+			where: { id: req.params.userId },
+		});
+		if (!user) {
+			res.status(403).send("없는 사람을 언팔로우하시려고 하시네요?");
+		}
+		// 그 유저에게서 follower 제거
+		await user.removeFollowings(req.user.id);
+		res.status(200).json({ UserId: parseInt(req.params.userId, 10) });
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
+});
+
+// GET /user/followers 팔로워즈 불러오기
+router.get("/followers", async (req, res, next) => {
+	try {
+		// 나를 먼저 찾고
+		const user = await User.findOne({
+			where: { id: req.user.id },
+		});
+		// 내 팔로워즈 get 하기
+		const followers = await user.getFollowers();
+		res.status(200).json(followers);
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
+});
+
+// GET /user/followings 팔로잉즈 불러오기
+router.get("/followings", async (req, res, next) => {
+	try {
+		const user = await User.findOne({
+			where: { id: req.user.id },
+		});
+		const followings = await user.getFollowings();
+		res.status(200).json(followings);
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
+});
+
 module.exports = router;
