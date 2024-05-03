@@ -36,7 +36,7 @@ app.use(
 // 아래 두 코드가 프론트에서 받은 데이터를 req.body에 넣어주는 역할을 한다.
 // 그래서 req.body실행하는 코드보다 일찍 실행시켜야 한다.
 app.use(express.json()); // json형태의 데이터를 req.body에
-app.use(express.urlencoded({ extended: true })); // form/submit일때 url-encoed방식으로 오는데 이를 req.body에 넣어줌
+app.use(express.urlencoded({ extended: true })); // form/submit일때 url-encoed방식으로 오는데 이를 req.body에 넣어줌 (multipart가 아닌 form형식)
 // .env 에 있는 정보들이 치환되서 process.env.으로 들어간다.
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(

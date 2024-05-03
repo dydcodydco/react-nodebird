@@ -1,7 +1,7 @@
 import { Button, Form, Input } from "antd";
 import { useCallback, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addPostRequestAction } from "../reducers/post";
+import { addPostRequestAction, uploadImagesRequestAction } from "../reducers/post";
 import { Controller, useForm } from "react-hook-form";
 
 const PostForm = () => {
@@ -32,21 +32,32 @@ const PostForm = () => {
 		// dispatch(addPostRequestAction({ text: data.content, images: data.images, }));
 	}, []);
 
-	const inputFileRef = useRef(null);
+	const imageInput = useRef(null);
 	const onClickImageUpload = useCallback(() => {
-		inputFileRef.current.click();
-	}, [inputFileRef.current]);
+		imageInput.current.click();
+	}, [imageInput.current]);
 
 	// ref를 register에서 따로 꺼내기
-	const { ref: registerRef, ...rest } = register("images");
-	const fileUploadHandler = (e) => {
+	// const { ref: registerRef, ...rest } = register("image");
+	const onChangeImages = useCallback((e) => {
 		// 업로드한 파일 가져오기
-		const file = e.target.files?.[0];
-		if (file) {
-			const binaryData = [file];
-			const urlImage = URL.createObjectURL(new Blob(binaryData, { type: "image" }));
-		}
-	};
+		// const file = e.target.files?.[0];
+		// if (file) {
+		// 	const binaryData = [file];
+		// 	const urlImage = URL.createObjectURL(new Blob(binaryData, { type: "image" }));
+		// }
+
+		// multipart형식으로 서버에 보내려면 formData로 보내야한다.
+		// multipart로 보내야 multer가 처리할 수 있다.
+		console.log(e.target.files);
+		const imageFormData = new FormData();
+		// e.target.files는 유사배열, 배열모양을 띄는 객체
+		[].forEach.call(e.target.files, (d) => {
+			imageFormData.append("image", d);
+		});
+
+		dispatch(uploadImagesRequestAction(imageFormData));
+	});
 	return (
 		<Form style={{ margin: "10px 0 20px" }} encType='multipart/form-data' onFinish={handleSubmit(onSubmit)}>
 			<Controller
@@ -63,17 +74,7 @@ const PostForm = () => {
 				)}
 			/>
 			<div>
-				<input
-					{...rest}
-					type='file'
-					ref={(e) => {
-						// registerRef를 통해 react-hook-form이 이 input의 ref를 추적할 수 있다
-						registerRef(e);
-						inputFileRef.current = e;
-					}}
-					name='images'
-					onChange={fileUploadHandler}
-				/>
+				<input type='file' name='image' multiple ref={imageInput} onChange={onChangeImages} />
 
 				<Button onClick={onClickImageUpload}>이미지 업로드</Button>
 				<Button type='primary' style={{ float: "right" }} htmlType='submit'>

@@ -19,10 +19,26 @@ import {
 	unLikePostRequestAction,
 	unLikePostSuccessAction,
 	unLikePostFailureAction,
+	uploadImagesRequestAction,
+	uploadImagesSuccessAction,
+	uploadImagesFailureAction,
 	generateDummyPosts,
 } from "../reducers/post";
 import { addPostToMe, removePostOfMe } from "../reducers/user";
 import shortid from "shortid";
+
+function uploadImagesApi(data) {
+	return axios.post(`/post/images`, data); // formData는 받은 그대로
+}
+function* uploadImages(action) {
+	try {
+		const result = yield call(uploadImagesApi, action.payload);
+		yield put(uploadImagesSuccessAction(result.data));
+	} catch (err) {
+		console.error(err);
+		yield put(uploadImagesFailureAction(err.response.data));
+	}
+}
 
 function likePostsApi(data) {
 	return axios.patch(`/post/${data}/like`); // 데이터의 일부분 수정하는거니까 patch
@@ -108,6 +124,9 @@ function* addComment(action) {
 	}
 }
 
+function* watchUploadImages() {
+	yield takeLatest(uploadImagesRequestAction, uploadImages);
+}
 function* watchLikePost() {
 	yield takeLatest(likePostRequestAction, likePost);
 }
@@ -128,5 +147,5 @@ function* watchAddComment() {
 }
 
 export default function* postSaga() {
-	yield all([fork(watchLoadPosts), fork(watchAddPost), fork(watchRemovePost), fork(watchAddComment), fork(watchLikePost), fork(watchUnLikePost)]);
+	yield all([fork(watchUploadImages), fork(watchLoadPosts), fork(watchAddPost), fork(watchRemovePost), fork(watchAddComment), fork(watchLikePost), fork(watchUnLikePost)]);
 }

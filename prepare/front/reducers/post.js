@@ -41,6 +41,9 @@ export const initialState = {
 	unLikePostLoading: false, // 좋아요 취소중
 	unLikePostDone: false,
 	unLikePostError: null,
+	uploadImagesLoading: false, // 이미지 업로드 시도중
+	uploadImagesDone: false,
+	uploadImagesError: null,
 };
 
 // 단일 게시글 생성 함수
@@ -99,6 +102,20 @@ const postSlice = createSlice({
 	name: "post",
 	initialState,
 	reducers: {
+		uploadImagesRequestAction: (state, action) => {
+			state.uploadImagesLoading = true;
+			state.uploadImagesDone = false;
+			state.uploadImagesError = null;
+		},
+		uploadImagesSuccessAction: (state, action) => {
+			state.imagePaths = action.payload;
+			state.uploadImagesLoading = false;
+			state.uploadImagesDone = true;
+		},
+		uploadImagesFailureAction: (state, action) => {
+			state.uploadImagesLoading = false;
+			state.uploadImagesError = action.payload;
+		},
 		likePostRequestAction: (state, action) => {
 			state.likePostLoading = true;
 			state.likePostDone = false;
@@ -201,6 +218,9 @@ const postSlice = createSlice({
 });
 
 export const {
+	uploadImagesRequestAction,
+	uploadImagesSuccessAction,
+	uploadImagesFailureAction,
 	likePostRequestAction,
 	likePostSuccessAction,
 	likePostFailureAction,

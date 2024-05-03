@@ -1,8 +1,18 @@
 const express = require("express");
 const { Post, Comment, Image, User } = require("../models");
 const { isLoggedIn } = require("./middlewares");
+const path = require("path");
+const multer = require("multer");
+const fs = require("fs"); // file system
 
 const router = express.Router();
+
+try {
+	fs.accessSync("uploads");
+} catch (error) {
+	console.log("uploads 폴더가 없으므로 생성합니다.-----------------------------------");
+	fs.mkdirSync("uploads");
+}
 
 // ==> POST /post 글 작성
 router.post("/", isLoggedIn, async (req, res, next) => {
@@ -123,6 +133,33 @@ router.delete("/:postId", isLoggedIn, async (req, res, next) => {
 			},
 		});
 		res.status(200).json({ PostId: parseInt(req.params.postId, 10) });
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
+});
+
+const upload = multer({
+	storage: multer.diskStorage({
+		destination(req, file, done) {
+			done(null, "uploads");
+		},
+		filename(req, file, done) {
+			// 이미지명.png
+			const ext = path.extname(file.originalname); // 확장자 추출 (.png)
+			const basename = path.basename(file.originalname, ext); // 이미지명 추출 (이미지명)
+			done(null, basename + new Date().getTime() + ext); // 이미지명123452322.png
+		},
+	}),
+	limits: { fileSize: 20 * 1024 * 1024 }, // 20MB
+});
+// POST /post/images
+// 이미지 한장이면 upload.single / 없으면 upload.none / 파일 태그가 두개씩 있을때 fields
+// upload에서 이미지를 처리하고 처리된 이미지를 다음 콜백함수에서 req.files로 받는다.
+router.post("/images", isLoggedIn, upload.array("image"), (req, res, next) => {
+	try {
+		console.log(req.files);
+		res.json(req.files.map((v) => v.filename));
 	} catch (error) {
 		console.error(error);
 		next(error);
