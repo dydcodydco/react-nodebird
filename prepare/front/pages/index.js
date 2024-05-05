@@ -30,7 +30,8 @@ const Home = () => {
 			// console.log(window.scrollY, document.documentElement.clientHeight, document.documentElement.scrollHeight);
 			if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
 				if (hasMorePosts && !loadPostsLoading) {
-					dispatch(loadPostsRequestAction(10));
+					const lastId = mainPosts[mainPosts.length - 1]?.id;
+					dispatch(loadPostsRequestAction({ lastId, limit: 10 }));
 				}
 			}
 		};
@@ -39,7 +40,7 @@ const Home = () => {
 		return () => {
 			window.removeEventListener("scroll", onScroll);
 		};
-	}, [hasMorePosts, loadPostsLoading]);
+	}, [hasMorePosts, loadPostsLoading, mainPosts]);
 
 	return (
 		<AppLayout>

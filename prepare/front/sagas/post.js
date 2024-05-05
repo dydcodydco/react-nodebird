@@ -22,9 +22,6 @@ import {
 	uploadImagesRequestAction,
 	uploadImagesSuccessAction,
 	uploadImagesFailureAction,
-	removeImageRequestAction,
-	removeImageSuccessAction,
-	removeImageFailureAction,
 	generateDummyPosts,
 	retweetRequestAction,
 	retweetSuccessAction,
@@ -86,8 +83,19 @@ function* unLikePost(action) {
 	}
 }
 
-function loadPostsApi(data) {
-	return axios.get(`/posts`, data);
+function loadPostsApi(payload) {
+	// post, put, patch 이런애들은 캐싱이 안되는데 get은 캐싱된다.
+	// get은 주소를 캐싱하면 데이터도 같이 캐싱된다.
+	let queryObj = {};
+	if (payload?.lastId) {
+		queryObj.lastId = payload.lastId;
+	}
+	if (payload?.limit) {
+		queryObj.limit = payload.limit;
+	}
+
+	const queryStr = new URLSearchParams(queryObj).toString();
+	return axios.get(`/posts${queryStr ? "?" + queryStr : ""}`);
 }
 function* loadPosts(action) {
 	try {

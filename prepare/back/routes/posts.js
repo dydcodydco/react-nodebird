@@ -1,4 +1,5 @@
 const express = require("express");
+const { Op } = require("sequelize"); // operator
 
 const router = express.Router();
 const { Post, User, Image, Comment } = require("../models");
@@ -6,8 +7,16 @@ const { Post, User, Image, Comment } = require("../models");
 // GET /posts 여러 게시글 가져오기
 router.get("/", async (req, res, next) => {
 	try {
+		const where = {};
+		// 초기 로딩이 아닐때
+		if (parseInt(req.query.lastId, 10)) {
+			// 검색하려는 데이터 id가 lastId보다 작은
+			where.id = { [Op.lt]: parseInt(req.query.lastId, 10) };
+			// 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 ,1
+		}
 		const posts = await Post.findAll({
-			limit: 10, // 몇개를 가져와라
+			where,
+			limit: parseInt(req.query?.limit, 10) || 10, // 몇개를 가져와라
 			// lastId: 10, // 1-10만큼 가져와라
 			// offset: 10 --> 11 - 20, offset: 100 --> 101 - 110
 			// 근데 실무에선 잘 안쓴다... 왜냐하면 비효율적이라서.
