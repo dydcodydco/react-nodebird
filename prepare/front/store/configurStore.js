@@ -30,8 +30,8 @@ const makeStore = () => {
 		// 추가 미들웨어나 enhancers가 필요하다면 여기에 포함시킬 수 있습니다.
 		preloadedState: serverState, // SSR
 	});
-
-	store.sagaTask = sagaMiddleware.run(rootSaga);
+	sagaMiddleware.run(rootSaga);
+	// store.sagaTask = sagaMiddleware.run(rootSaga);
 	return store;
 };
 

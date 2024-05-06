@@ -34,8 +34,7 @@ const initialState = {
 	unFollowDone: false,
 	unFollowError: null,
 	me: null,
-	signUpData: {},
-	loginData: {},
+	userInfo: null,
 };
 
 const dummyUser = (payload) => {
