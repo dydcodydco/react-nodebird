@@ -1,11 +1,15 @@
 {
-	"parser": "babel-eslint", // 바벨이 해석해서 최신문법으로 해도 에러나지 않게
+	"parser": "@@babel/eslint-parser", // 바벨이 해석해서 최신문법으로 해도 에러나지 않게
 	"parserOptions": {
 		"ecmaVersion": "latest", // 최신버전 문법으로 사용하겠다.
 		"sourceType": "module", // import export 모듈로 사용하겠다. script소스가 아니라.
 		"ecmaFeatures": {
 			// 특수한 기능
 			"jsx": true // jsx를 사용한다.
+		},
+		"requireConfigFile": false,
+		"babelOptions": {
+			"presets": ["@babel/preset-react", "@babel/preset-env"]
 		}
 	},
 	"env": {
@@ -33,7 +37,7 @@
 		"object-curly-newline": "off",
 		"linebreak-style": "off",
 		"no-param-reassign": "off",
-		"max-len": [{ "code": 140 }]
+		"max-len": 1
 	}
 }
 

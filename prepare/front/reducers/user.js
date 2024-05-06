@@ -1,5 +1,6 @@
-import { createSlice, current } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
 const initialState = {
 	removeFollowerLoading: false, // 팔로워 제거 시도중
@@ -48,6 +49,25 @@ const dummyUser = (payload) => {
 	};
 };
 
+// export const logIn = createAsyncThunk("user/logIn", async (data) => {
+// 	const response = await axios.post("/user/login", data);
+// 	return response.data;
+// });
+export const loadMyInfo = createAsyncThunk("user/loadMyInfo", async () => {
+	const response = await axios.get("/user");
+	// console.log("--------------------loadMyInfo ", response);
+	// console.log("=>(user.js:65) response", response.data);
+	return response.data || null;
+});
+export const logout = createAsyncThunk("user/logout", async () => {
+	const response = await axios.post("/user/logout");
+	return response.data;
+});
+// export const loadUser = createAsyncThunk("user/loadUser", async (data) => {
+// 	const response = await axios.get(`/user/${data}`);
+// 	return response.data;
+// });
+
 const userSlice = createSlice({
 	name: "user",
 	initialState,
@@ -94,20 +114,20 @@ const userSlice = createSlice({
 			state.loadFollowingsLoading = false;
 			state.loadFollowingsError = action.payload;
 		},
-		loadMyInfoRequestAction: (state) => {
-			state.loadMyInfoLoading = false;
-			state.loadMyInfoDone = false;
-			state.loadMyInfoError = null;
-		},
-		loadMyInfoSuccessAction: (state, action) => {
-			state.loadMyInfoLoading = false;
-			state.loadMyInfoDone = true;
-			state.me = action.payload;
-		},
-		loadMyInfoFailureAction: (state, action) => {
-			state.loadMyInfoLoading = false;
-			state.loadMyInfoError = action.payload;
-		},
+		// loadMyInfoRequestAction: (state) => {
+		// 	state.loadMyInfoLoading = false;
+		// 	state.loadMyInfoDone = false;
+		// 	state.loadMyInfoError = null;
+		// },
+		// loadMyInfoSuccessAction: (state, action) => {
+		// 	state.loadMyInfoLoading = false;
+		// 	state.loadMyInfoDone = true;
+		// 	state.me = action.payload;
+		// },
+		// loadMyInfoFailureAction: (state, action) => {
+		// 	state.loadMyInfoLoading = false;
+		// 	state.loadMyInfoError = action.payload;
+		// },
 		followRequestAction: (state) => {
 			state.followLoading = true;
 			state.followError = null;
@@ -205,6 +225,51 @@ const userSlice = createSlice({
 				...state,
 				...action.payload.user,
 			}))
+			.addCase(loadMyInfo.pending, (draft) => {
+				console.log("pending");
+				draft.loadMyInfoLoading = true;
+				draft.loadMyInfoError = null;
+				draft.loadMyInfoDone = false;
+			})
+			.addCase(loadMyInfo.fulfilled, (draft, action) => {
+				console.log("payload", action.payload);
+				draft.loadMyInfoLoading = false;
+				draft.me = action.payload || null;
+				draft.loadMyInfoDone = true;
+			})
+			.addCase(loadMyInfo.rejected, (draft, action) => {
+				console.log("rejected");
+				draft.loadMyInfoLoading = false;
+				draft.loadMyInfoError = action.error;
+			})
+			// .addCase(logIn.pending, (state) => {
+			// 	state.logInLoading = true;
+			// 	state.logInError = null;
+			// 	state.logInDone = false;
+			// })
+			// .addCase(logIn.fulfilled, (state, action) => {
+			// 	state.logInLoading = false;
+			// 	state.me = action.payload;
+			// 	state.logInDone = true;
+			// })
+			// .addCase(logIn.rejected, (state, action) => {
+			// 	state.logInLoading = false;
+			// 	state.logInError = action.error.message;
+			// })
+			// .addCase(logout.pending, (draft) => {
+			// 	draft.logOutLoading = true;
+			// 	draft.logOutError = null;
+			// 	draft.logOutDone = false;
+			// })
+			// .addCase(logout.fulfilled, (draft) => {
+			// 	draft.logOutLoading = false;
+			// 	draft.logOutDone = true;
+			// 	draft.me = null;
+			// })
+			// .addCase(logout.rejected, (draft, action) => {
+			// 	draft.logOutLoading = false;
+			// 	draft.logOutError = action.error;
+			// })
 			.addDefaultCase((state) => state),
 }); // 최신 방식
 // 기존에는 불변성 유지를 위해서 개발자가 새객체로 리턴해줘야했는데

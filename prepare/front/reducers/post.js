@@ -1,7 +1,9 @@
 import { HYDRATE } from "next-redux-wrapper";
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import shortId from "shortid";
 import produce from "immer";
+import _ from "lodash";
+import axios from "axios";
 // import { fakerKO as faker } from "@faker-js/faker";
 import { faker } from "@faker-js/faker";
 
@@ -101,6 +103,22 @@ const dummyComment = (content) => ({
 	},
 });
 
+const loadPostsThrottle = async (payload) => {
+	let queryObj = {};
+	if (payload?.lastId) {
+		queryObj.lastId = payload.lastId;
+	}
+	if (payload?.limit) {
+		queryObj.limit = payload.limit;
+	}
+
+	const queryStr = new URLSearchParams(queryObj).toString();
+	const url = `/posts${queryStr ? "?" + queryStr : ""}`;
+	const response = axios.get(url);
+	return response;
+};
+export const loadPosts = createAsyncThunk("post/loadPosts", _.throttle(loadPostsThrottle, 5000));
+
 const postSlice = createSlice({
 	name: "post",
 	initialState,
@@ -166,23 +184,24 @@ const postSlice = createSlice({
 			state.unLikePostLoading = false;
 			state.unLikePostError = action.payload;
 		},
-		loadPostsRequestAction: (state, action) => {
-			state.loadPostsLoading = true;
-			state.loadPostsDone = false;
-			state.loadPostsError = null;
-		},
-		loadPostsSuccessAction: (state, action) => {
-			state.loadPostsLoading = false;
-			state.loadPostsDone = true;
-			state.mainPosts = [...state.mainPosts, ...action.payload];
-			state.hasMorePosts = action.payload.length === 10;
-			// state.hasMorePosts = state.mainPosts.length < 50;
-			// state.mainPosts = state.mainPosts.concat(action.payload);
-		},
-		loadPostsFailureAction: (state, action) => {
-			state.loadPostsLoading = false;
-			state.loadPostsError = action.payload;
-		},
+		// loadPostsRequestAction: (state, action) => {
+		// 	console.log("-------------------요청-------------------");
+		// 	state.loadPostsLoading = true;
+		// 	state.loadPostsDone = false;
+		// 	state.loadPostsError = null;
+		// },
+		// loadPostsSuccessAction: (state, action) => {
+		// 	console.log("-------------------성공-------------------");
+		// 	state.loadPostsLoading = false;
+		// 	state.loadPostsDone = true;
+		// 	state.mainPosts = [...state.mainPosts, ...action.payload];
+		// 	state.hasMorePosts = action.payload.length === 10;
+		// },
+		// loadPostsFailureAction: (state, action) => {
+		// 	console.log("-------------------실패-------------------");
+		// 	state.loadPostsLoading = false;
+		// 	state.loadPostsError = action.payload;
+		// },
 		addPostRequestAction: (state, action) => {
 			state.addPostLoading = true;
 			state.addPostDone = false;
@@ -231,10 +250,29 @@ const postSlice = createSlice({
 	},
 	extraReducers: (builder) =>
 		builder
-			.addCase(HYDRATE, (state, action) => ({
-				...state,
-				...action.payload.post,
-			}))
+			.addCase(HYDRATE, (state, action) => {
+				// console.log("HYDRATE", action);
+				return {
+					...state,
+					...action.payload.post,
+				};
+			})
+			.addCase(loadPosts.pending, (state, action) => {
+				state.loadPostsLoading = true;
+				state.loadPostsDone = false;
+				state.loadPostsError = null;
+			})
+			.addCase(loadPosts.fulfilled, (state, action) => {
+				state.loadPostsLoading = false;
+				state.loadPostsDone = true;
+				// console.log(action.payload);
+				state.mainPosts = [...state.mainPosts, ...action.payload.data];
+				state.hasMorePosts = action.payload.data?.length === 10;
+			})
+			.addCase(loadPosts.rejected, (state, action) => {
+				state.loadPostsLoading = false;
+				state.loadPostsError = action.error;
+			})
 			.addDefaultCase((state) => state),
 });
 

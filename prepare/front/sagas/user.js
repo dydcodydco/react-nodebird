@@ -62,6 +62,7 @@ function loginAPI(data) {
 }
 function* login(action) {
 	try {
+		// console.log(action, "-----------------------------------------login");
 		const result = yield call(loginAPI, action.payload);
 		yield put(loginSuccessAction(result.data));
 	} catch (err) {
@@ -195,6 +196,6 @@ export default function* userSaga() {
 		fork(watchSignUp),
 		fork(watchFollow),
 		fork(watchUnFollow),
-		fork(watchLoadMyInfo),
+		// fork(watchLoadMyInfo),
 	]);
 }

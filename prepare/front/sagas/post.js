@@ -180,7 +180,7 @@ export default function* postSaga() {
 	yield all([
 		fork(watchRetweet),
 		fork(watchUploadImages),
-		fork(watchLoadPosts),
+		// fork(watchLoadPosts),
 		fork(watchAddPost),
 		fork(watchRemovePost),
 		fork(watchAddComment),
