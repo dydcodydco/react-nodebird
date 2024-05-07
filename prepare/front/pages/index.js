@@ -61,7 +61,7 @@ const Home = () => {
 // 화면을 그리기전에 서버에서 먼저 실행하는 함수
 // 이 부분이 실행된 결과를 HYDRATE로 보내준다.
 export const getServerSideProps = wrapper.getServerSideProps((store) => async ({ req }) => {
-	console.log("getServerSideProps start");
+	console.log("getServerSideProps start--------------------------");
 	console.log(req.headers);
 	const cookie = req ? req.headers.cookie : "";
 	axios.defaults.headers.Cookie = "";
@@ -72,7 +72,7 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async ({
 	}
 	await store.dispatch(loadPosts());
 	await store.dispatch(loadMyInfo());
-	console.log("getServerSideProps end");
+	console.log("getServerSideProps end--------------------------");
 
 	// store.dispatch(loadPosts());
 	// store.dispatch(loadMyInfoRequestAction());

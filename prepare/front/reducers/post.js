@@ -23,8 +23,12 @@ export const initialState = {
 	// 소문자 = 게시글 자체 속성
 	// 대문자 = 다른 정보들과 합쳐서 주는 정보 / 서버에서 주는 정보로 고유한 Id를 가지고 있다.
 	mainPosts: [],
+	singlePost: null,
 	imagePaths: [],
 	hasMorePosts: true,
+	loadPostLoading: false, // 게시글 하나 불러오는중
+	loadPostDone: false,
+	loadPostError: null,
 	loadPostsLoading: false, // 게시글들 불러오는 중
 	loadPostsDone: false,
 	loadPostsError: null,
@@ -101,6 +105,11 @@ const dummyComment = (content) => ({
 		id: "1",
 		nickname: "WlaWla",
 	},
+});
+
+export const loadPost = createAsyncThunk("post/loadPost", async (id) => {
+	const response = await axios.get(`/post/${id}`);
+	return response.data;
 });
 
 const loadPostsThrottle = async (payload) => {
@@ -256,6 +265,20 @@ const postSlice = createSlice({
 					...state,
 					...action.payload.post,
 				};
+			})
+			.addCase(loadPost.pending, (state, action) => {
+				state.loadPostLoading = true;
+				state.loadPostDone = false;
+				state.loadPostError = null;
+			})
+			.addCase(loadPost.fulfilled, (state, action) => {
+				state.loadPostLoading = false;
+				state.loadPostDone = true;
+				state.singlePost = action.payload;
+			})
+			.addCase(loadPost.rejected, (state, action) => {
+				state.loadPostLoading = false;
+				state.loadPostError = action.error;
 			})
 			.addCase(loadPosts.pending, (state, action) => {
 				state.loadPostsLoading = true;

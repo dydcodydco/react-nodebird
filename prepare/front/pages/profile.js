@@ -43,7 +43,7 @@ const Profile = () => {
 };
 
 export const getServerSideProps = wrapper.getServerSideProps((store) => async ({ req }) => {
-	console.log("getServerSideProps start");
+	console.log("getServerSideProps start--------------------------");
 	console.log(req.headers);
 	const cookie = req ? req.headers.cookie : "";
 	axios.defaults.headers.Cookie = "";
@@ -51,6 +51,6 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async ({
 		axios.defaults.headers.Cookie = cookie;
 	}
 	await store.dispatch(loadMyInfo());
-	console.log("getServerSideProps end");
+	console.log("getServerSideProps end--------------------------");
 });
 export default Profile;

@@ -46,7 +46,9 @@ const About = () => {
 };
 
 export const getStaticProps = wrapper.getStaticProps((store) => async ({ req }) => {
+	console.log("getStaticProps start--------------------------");
 	await store.dispatch(loadUser(8));
+	console.log("getStaticProps end--------------------------");
 });
 
 export default About;

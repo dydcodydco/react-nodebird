@@ -283,4 +283,73 @@ router.post("/:postId/retweet", isLoggedIn, async (req, res, next) => {
 	}
 });
 
+// GET /post/1 게시글 하나 불러오기
+router.get("/:postId", async (req, res, next) => {
+	try {
+		// 서버에서는 존재여부등 꼼꼼하게 검사하는게 좋다.
+		const post = await Post.findOne({
+			where: { id: req.params.postId },
+		});
+		console.log("--------------------------back post", post);
+		if (!post) {
+			console.log("--------------------------back post 존재하지 않는 게시글입니다");
+			return res.status(404).send("존재하지 않는 게시글입니다.");
+		}
+		const fullPost = await Post.findOne({
+			where: { id: post.id },
+			include: [
+				{
+					// 원 게시글이 다른 게시글을 리트윗한 경우, 그 리트윗된 게시글의 정보를 가져옵니다.
+					model: Post,
+					as: "Retweet",
+					include: [
+						{
+							// 리트윗된 게시글을 작성한 사용자의 정보
+							model: User,
+							attributes: ["id", "nickname"],
+						},
+						{
+							// 리트윗된 게시글에 포함된 이미지 정보
+							model: Image,
+						},
+					],
+				},
+				{
+					// 원 게시글을 작성한 사용자의 정보
+					model: User,
+					attributes: ["id", "nickname"],
+				},
+
+				{
+					// 게시글을 좋아요한 사용자들의 목록
+					model: User,
+					as: "Likers",
+					attributes: ["id", "nickname"],
+				},
+				{
+					// 원 게시글에 포함된 이미지 정보
+					model: Image,
+				},
+				{
+					// 게시글에 달린 댓글 정보
+					// 댓글같은 경우에는 나중에 불러와도 되기때문에 라우터를 따로 파주던가
+					// 댓글창 열었을때 불러오던가 하는 수를 수정해야한다.
+					model: Comment,
+					include: [
+						{
+							model: User,
+							attributes: ["id", "nickname"],
+						},
+					],
+				},
+			],
+		});
+		res.status(201).json(fullPost);
+	} catch (error) {
+		console.log("--------------------------back post error", error);
+		console.error(error);
+		next(error);
+	}
+});
+
 module.exports = router;
