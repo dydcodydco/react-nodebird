@@ -1,13 +1,14 @@
 import Head from "next/head";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { loadFollowersRequestAction, loadFollowingsRequestAction, loadMyInfo } from "../reducers/user";
-import wrapper from "../store/configurStore";
+import { useRouter } from "next/router";
+import axios from "axios";
 
+import { loadFollowersRequestAction, loadFollowingsRequestAction, loadMyInfo } from "../reducers/user";
 import AppLayout from "../components/AppLayout";
 import NicknameEditForm from "../components/NicknameEditForm";
 import FollowList from "../components/FollowList";
-import { useRouter } from "next/router";
+import wrapper from "../store/configurStore";
 
 const Profile = () => {
 	const router = useRouter();
