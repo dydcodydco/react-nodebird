@@ -3,13 +3,16 @@ import { RetweetOutlined, HeartOutlined, HeartTwoTone, MessageOutlined, Ellipsis
 import { useState, useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
-import { removePostRequestAction, likePostRequestAction, unLikePostRequestAction, retweetRequestAction } from "../reducers/post";
+import Link from "next/link";
+import dayjs from "dayjs";
 
+import { removePostRequestAction, likePostRequestAction, unLikePostRequestAction, retweetRequestAction } from "../reducers/post";
 import PostImages from "./PostImages";
 import CommentForm from "./CommentForm";
 import PostCardContent from "./PostCardContent";
 import Followbutton from "./FollowButton";
-import Link from "next/link";
+
+dayjs.locale("ko");
 
 const PostCard = ({ post }) => {
 	// const { me: {id} } = useSelector((state) => state.user);
@@ -87,6 +90,7 @@ const PostCard = ({ post }) => {
 			>
 				{post.RetweetId && post.Retweet ? (
 					<Card cover={post.Retweet.Images[0] && <PostImages images={post.Retweet.Images} />}>
+						<div style={{ float: "right" }}>{dayjs(post.createdAt).format("YYYY.MM.DD")}</div>
 						<Card.Meta
 							avatar={
 								<Link href={`/user/${post.Retweet.User.id}`}>
@@ -98,15 +102,18 @@ const PostCard = ({ post }) => {
 						/>
 					</Card>
 				) : (
-					<Card.Meta
-						avatar={
-							<Link href={`/user/${post.User.id}`}>
-								<Avatar>{post.User?.nickname[0]}</Avatar>
-							</Link>
-						}
-						title={post.User?.nickname}
-						description={<PostCardContent postData={post.content} />}
-					/>
+					<>
+						<div style={{ float: "right" }}>{dayjs(post.createdAt).format("YYYY.MM.DD")}</div>
+						<Card.Meta
+							avatar={
+								<Link href={`/user/${post.User.id}`}>
+									<Avatar>{post.User?.nickname[0]}</Avatar>
+								</Link>
+							}
+							title={post.User?.nickname}
+							description={<PostCardContent postData={post.content} />}
+						/>
+					</>
 				)}
 			</Card>
 			{commentFormOpend && (
