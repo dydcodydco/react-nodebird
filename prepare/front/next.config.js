@@ -1,10 +1,11 @@
-// next.config.js
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+	enabled: process.env.ANALYZE === "true",
+});
 
-const nextConfig = {
-	/* config options here */
-	// reactStrictMode: true,
-	swcMinify: true,
-	transpilePackages: ["antd", "@ant-design", "rc-util", "rc-pagination", "rc-picker", "rc-notification", "rc-tooltip"],
+module.exports = withBundleAnalyzer({
+	images: {
+		domains: ["react-nodebird.s3.ap-northeast-2.amazonaws.com", "react-nodebird-s3.s3.amazonaws.com"],
+	},
 	compress: true,
 	compiler: {
 		styledComponents: {
@@ -12,6 +13,13 @@ const nextConfig = {
 			displayName: true,
 		},
 	},
-};
-
-module.exports = nextConfig;
+	webpack(config, { webpack }) {
+		const prod = process.env.NODE_ENV === "production";
+		return {
+			...config,
+			mode: prod ? "production" : "development",
+			devtool: prod ? "hidden-source-map" : "inline-source-map",
+			plugins: [...config.plugins],
+		};
+	},
+});
