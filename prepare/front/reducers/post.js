@@ -106,13 +106,7 @@ const dummyComment = (content) => ({
 		nickname: "WlaWla",
 	},
 });
-
-export const loadPost = createAsyncThunk("post/loadPost", async (id) => {
-	const response = await axios.get(`/post/${id}`);
-	return response.data;
-});
-
-const loadPostsThrottle = async (payload) => {
+const setQuerystring = (payload) => {
 	let queryObj = {};
 	if (payload?.lastId) {
 		queryObj.lastId = payload.lastId;
@@ -121,12 +115,37 @@ const loadPostsThrottle = async (payload) => {
 		queryObj.limit = payload.limit;
 	}
 
-	const queryStr = new URLSearchParams(queryObj).toString();
+	return new URLSearchParams(queryObj).toString();
+};
+
+export const loadPost = createAsyncThunk("post/loadPost", async (id) => {
+	const response = await axios.get(`/post/${id}`);
+	return response.data;
+});
+
+const loadPostsThrottle = async (payload) => {
+	const queryStr = setQuerystring(payload);
 	const url = `/posts${queryStr ? "?" + queryStr : ""}`;
-	const response = axios.get(url);
+	const response = await axios.get(url);
 	return response;
 };
 export const loadPosts = createAsyncThunk("post/loadPosts", _.throttle(loadPostsThrottle, 5000));
+
+const loadUserPostsThrottle = async (payload) => {
+	const queryStr = setQuerystring(payload);
+	const url = `/user/${payload.id}/posts${queryStr ? "?" + queryStr : ""}`;
+	const response = await axios.get(url);
+	return response;
+};
+export const loadUserPosts = createAsyncThunk("post/loadUserPosts", _.throttle(loadUserPostsThrottle, 5000));
+
+const loadHashtagPostsThrottle = async (payload) => {
+	const queryStr = setQuerystring(payload);
+	const url = `/hashtag/${encodeURIComponent(payload.tag)}${queryStr ? "?" + queryStr : ""}`;
+	const response = await axios.get(url);
+	return response;
+};
+export const loadHashtagPosts = createAsyncThunk("post/loadHashtagPosts", _.throttle(loadHashtagPostsThrottle, 5000));
 
 const postSlice = createSlice({
 	name: "post",
@@ -279,6 +298,41 @@ const postSlice = createSlice({
 			.addCase(loadPost.rejected, (state, action) => {
 				state.loadPostLoading = false;
 				state.loadPostError = action.error;
+			})
+
+			.addCase(loadUserPosts.pending, (state, action) => {
+				state.loadPostsLoading = true;
+				state.loadPostsDone = false;
+				state.loadPostsError = null;
+			})
+			.addCase(loadUserPosts.fulfilled, (state, action) => {
+				state.loadPostsLoading = false;
+				state.loadPostsDone = true;
+				// console.log(action.payload);
+				state.mainPosts = [...state.mainPosts, ...action.payload.data];
+				state.hasMorePosts = action.payload.data?.length === 10;
+			})
+			.addCase(loadUserPosts.rejected, (state, action) => {
+				state.loadPostsLoading = false;
+				state.loadPostsError = action.error;
+			})
+			.addCase(loadHashtagPosts.pending, (state, action) => {
+				console.log("-----------------------------------------------------요청 ", state.loadPostsLoading);
+				state.loadPostsLoading = true;
+				state.loadPostsDone = false;
+				state.loadPostsError = null;
+			})
+			.addCase(loadHashtagPosts.fulfilled, (state, action) => {
+				console.log("-----------------------------------------------------성공 ", state.loadPostsLoading);
+				state.loadPostsLoading = false;
+				state.loadPostsDone = true;
+				// console.log(action.payload);
+				state.mainPosts = [...state.mainPosts, ...action.payload.data];
+				state.hasMorePosts = action.payload.data?.length === 10;
+			})
+			.addCase(loadHashtagPosts.rejected, (state, action) => {
+				state.loadPostsLoading = false;
+				state.loadPostsError = action.error;
 			})
 			.addCase(loadPosts.pending, (state, action) => {
 				state.loadPostsLoading = true;

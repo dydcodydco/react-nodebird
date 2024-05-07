@@ -11,6 +11,7 @@ const path = require("path");
 const postRouter = require("./routes/post");
 const postsRouter = require("./routes/posts");
 const userRouter = require("./routes/user");
+const hashtahRouter = require("./routes/hashtag");
 const db = require("./models"); // sequelize에서 model 모두 등록 // express에서 그 sequelize를 등록해야 한다.
 const passportConfig = require("./passport");
 
@@ -59,6 +60,7 @@ app.use(passport.session());
 app.use("/post", postRouter);
 app.use("/posts", postsRouter);
 app.use("/user", userRouter);
+app.use("/hashtag", hashtahRouter);
 
 app.listen(3065, () => {
 	console.log("서버 실행 중");

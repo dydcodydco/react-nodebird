@@ -69,9 +69,7 @@ router.post("/", isLoggedIn, upload.none(), async (req, res, next) => {
 					as: "Likers",
 					attributes: ["id"],
 				},
-				{
-					model: Image,
-				},
+				{ model: Image },
 				{
 					model: Comment,
 					include: [

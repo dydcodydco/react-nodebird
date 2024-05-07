@@ -9,7 +9,7 @@ const loggerMiddleware =
 	({ dispatch, getState }) =>
 	(next) =>
 	(action) => {
-		console.log(action, "------------------------------------------loggerMiddleware");
+		// console.log(action, "------------------------------------------loggerMiddleware");
 		return next(action);
 	};
 
