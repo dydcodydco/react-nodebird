@@ -199,6 +199,7 @@ router.post("/:postId/retweet", isLoggedIn, async (req, res, next) => {
 				},
 			],
 		});
+		res.setHeader("Content-Type", "text/plain; charset=utf-8");
 		if (!post) {
 			return res.status(403).send("존재하지 않는 게시글입니다.");
 		}

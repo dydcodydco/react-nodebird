@@ -9,6 +9,7 @@ import PostImages from "./PostImages";
 import CommentForm from "./CommentForm";
 import PostCardContent from "./PostCardContent";
 import Followbutton from "./FollowButton";
+import Link from "next/link";
 
 const PostCard = ({ post }) => {
 	// const { me: {id} } = useSelector((state) => state.user);
@@ -87,13 +88,25 @@ const PostCard = ({ post }) => {
 				{post.RetweetId && post.Retweet ? (
 					<Card cover={post.Retweet.Images[0] && <PostImages images={post.Retweet.Images} />}>
 						<Card.Meta
-							avatar={<Avatar>{post.Retweet.User?.nickname[0]}</Avatar>}
+							avatar={
+								<Link href={`/user/${post.Retweet.User.id}`}>
+									<Avatar>{post.Retweet.User?.nickname[0]}</Avatar>
+								</Link>
+							}
 							title={post.Retweet.User?.nickname}
 							description={<PostCardContent postData={post.Retweet.content} />}
 						/>
 					</Card>
 				) : (
-					<Card.Meta avatar={<Avatar>{post.User?.nickname[0]}</Avatar>} title={post.User?.nickname} description={<PostCardContent postData={post.content} />} />
+					<Card.Meta
+						avatar={
+							<Link href={`/user/${post.User.id}`}>
+								<Avatar>{post.User?.nickname[0]}</Avatar>
+							</Link>
+						}
+						title={post.User?.nickname}
+						description={<PostCardContent postData={post.content} />}
+					/>
 				)}
 			</Card>
 			{commentFormOpend && (
@@ -106,7 +119,15 @@ const PostCard = ({ post }) => {
 						dataSource={post.Comments}
 						renderItem={(item) => (
 							<List.Item key={item.id}>
-								<List.Item.Meta title={item.User.nickname} avatar={<Avatar>{item.User.nickname[0]}</Avatar>} description={item.content} />
+								<List.Item.Meta
+									title={item.User.nickname}
+									avatar={
+										<Link href={`/user/${item.User.id}`}>
+											<Avatar>{item.User.nickname[0]}</Avatar>
+										</Link>
+									}
+									description={item.content}
+								/>
 							</List.Item>
 						)}
 					/>
