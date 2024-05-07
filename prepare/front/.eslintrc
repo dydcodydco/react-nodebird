@@ -1,5 +1,5 @@
 {
-	"parser": "@@babel/eslint-parser", // 바벨이 해석해서 최신문법으로 해도 에러나지 않게
+	"parser": "@babel/eslint-parser", // 바벨이 해석해서 최신문법으로 해도 에러나지 않게
 	"parserOptions": {
 		"ecmaVersion": "latest", // 최신버전 문법으로 사용하겠다.
 		"sourceType": "module", // import export 모듈로 사용하겠다. script소스가 아니라.
@@ -9,7 +9,7 @@
 		},
 		"requireConfigFile": false,
 		"babelOptions": {
-			"presets": ["next/babel", "@babel/preset-react", "@babel/preset-env"]
+			"presets": ["next/babel"]
 		}
 	},
 	"env": {
@@ -19,11 +19,12 @@
 		"es6": true
 	},
 	"extends": [
-		"airbnb" // 얘네는 강한 규제
+		"airbnb", // 얘네는 강한 규제
+		"next/core-web-vitals"
 		//"eslint:recommended", 얘네는 좀 약함
 		//"plugin:react/recommended"
 	], // 남들이 만들어 놓은 규칙 따른 다는 의미, 기본규칙들
-	"plugins": ["import", "react-hooks"], // react는 위에서 썼으니까 빼도 됨
+	"plugins": ["import", "react-hooks", "jsx-a11y"], // react는 위에서 썼으니까 빼도 됨
 	"rules": {
 		"react/react-in-jsx-scope": "off",
 		"jsx-a11y/label-has-associated-control": "off",
@@ -37,7 +38,7 @@
 		"object-curly-newline": "off",
 		"linebreak-style": "off",
 		"no-param-reassign": "off",
-		"max-len": 1
+		"max-len": "off"
 	}
 }
 
