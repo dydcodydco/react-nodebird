@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { useSelector } from "react-redux";
 import UserProfile from "./UserProfile";
 import LoginForm from "./LoginForm";
+import { useCallback, useState } from "react";
 
 const SearchInput = styled(Input.Search)`
 	vertical-align: middle;
@@ -16,6 +17,13 @@ const AppLayout = ({ children }) => {
 	const { me } = useSelector((state) => state.user); // 둘중 하나 취향차이
 	// const isLoggedIn = useSelector((state) => state.user.isLoggedIn); // 둘중 하나 취향차이
 	// useSelector: 스토어의 상태값을 반환
+	const [searchInput, setSearchInput] = useState("");
+	const onChangeSearchInput = useCallback((e) => {
+		setSearchInput(e.target.value);
+	}, []);
+	const onSearch = useCallback(() => {
+		router.push(`/hashtag/${encodeURIComponent(searchInput)}`);
+	}, [searchInput]);
 	return (
 		<div>
 			<Menu
@@ -26,7 +34,7 @@ const AppLayout = ({ children }) => {
 					{ label: <Link href='/'>노드버드</Link>, key: "/" },
 					{ label: <Link href='/profile'>프로필</Link>, key: "/profile" },
 					{
-						label: <SearchInput enterButton />,
+						label: <SearchInput enterButton value={searchInput} onChange={onChangeSearchInput} onSearch={onSearch} />,
 						key: "/search",
 					},
 					{ label: <Link href='/signup'>회원가입</Link>, key: "/signup" },
@@ -40,11 +48,7 @@ const AppLayout = ({ children }) => {
 					{children}
 				</Col>
 				<Col xs={24} md={6}>
-					<a
-						href='https://y-chyachya.tistory.com/'
-						target='_blank'
-						rel='noreferrer noopener'
-					>
+					<a href='https://y-chyachya.tistory.com/' target='_blank' rel='noreferrer noopener'>
 						blog by ZzimZzim
 					</a>
 				</Col>
