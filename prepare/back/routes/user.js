@@ -50,6 +50,53 @@ router.get("/", async (req, res, next) => {
 	}
 });
 
+// GET /user/1 유저 정보 불러오기
+router.get("/:userId", async (req, res, next) => {
+	try {
+		const fullUserWithoutPassword = await User.findOne({
+			where: { id: req.params.userId },
+			// 원하는 정보만 받을 수 있음
+			// attreibute: ['id', 'nickname', 'email'],
+			// 원하지 않는 정보만 빼고 가져올 수 있음
+			attributes: {
+				exclude: ["password"],
+			},
+			include: [
+				{
+					// model: Post는 hasMany라서 복수형이 되어 프론트 me.Posts가 됩니다.
+					model: db.Post,
+					attributes: ["id"], // id만 가져오게
+				},
+				{
+					model: db.User,
+					as: "Followings",
+					attributes: ["id"],
+				},
+				{
+					model: db.User,
+					as: "Followers",
+					attributes: ["id"],
+				},
+			],
+		});
+		if (fullUserWithoutPassword) {
+			// 우리가 쓸 수 있는 데이터로 바꿔준 후 .toJSON();
+			const data = fullUserWithoutPassword.toJSON();
+			// 다른 사람의 정보는 보안에 위협이 될 수 있기에 id같은 정보말고 갯수만 내려주게
+			// ( 개인정보 침해 예방 )
+			data.Posts = data.Posts.length;
+			data.Followings = data.Followings.length;
+			data.Followers = data.Followers.length;
+			res.status(200).json(data);
+		} else {
+			res.status(404).json("존재하지 않는 사용자 입니다.");
+		}
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
+});
+
 // POST /user/login 로그인 하기
 router.post("/login", isNotLoggedIn, (req, res, next) => {
 	// 미들웨어 확장방법 사용해서 next함수 쓸수있게

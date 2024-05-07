@@ -2,11 +2,13 @@ import { Form, Input, Button, Checkbox } from "antd";
 import Head from "next/head";
 import { useCallback, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
+import axios from "axios";
+import wrapper from "../store/configurStore";
 
 import AppLayout from "../components/AppLayout";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { signupRequestAction } from "../reducers/user";
+import { signupRequestAction, loadMyInfo } from "../reducers/user";
 import { useRouter } from "next/router";
 
 const ButtonWrapper = styled.div`
@@ -175,4 +177,15 @@ const Signup = () => {
 	);
 };
 
+export const getServerSideProps = wrapper.getServerSideProps((store) => async ({ req }) => {
+	console.log("getServerSideProps start");
+	console.log(req.headers);
+	const cookie = req ? req.headers.cookie : "";
+	axios.defaults.headers.Cookie = "";
+	if (req && cookie) {
+		axios.defaults.headers.Cookie = cookie;
+	}
+	await store.dispatch(loadMyInfo());
+	console.log("getServerSideProps end");
+});
 export default Signup;

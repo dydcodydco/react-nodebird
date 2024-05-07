@@ -1,7 +1,8 @@
 import Head from "next/head";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { loadFollowersRequestAction, loadFollowingsRequestAction, loadMyInfoRequestAction } from "../reducers/user";
+import { loadFollowersRequestAction, loadFollowingsRequestAction, loadMyInfo } from "../reducers/user";
+import wrapper from "../store/configurStore";
 
 import AppLayout from "../components/AppLayout";
 import NicknameEditForm from "../components/NicknameEditForm";
@@ -14,9 +15,6 @@ const Profile = () => {
 	const { me } = useSelector((state) => state.user);
 
 	useEffect(() => {
-		if (!me) {
-			dispatch(loadMyInfoRequestAction());
-		}
 		dispatch(loadFollowersRequestAction());
 		dispatch(loadFollowingsRequestAction());
 	}, []);
@@ -44,4 +42,15 @@ const Profile = () => {
 	);
 };
 
+export const getServerSideProps = wrapper.getServerSideProps((store) => async ({ req }) => {
+	console.log("getServerSideProps start");
+	console.log(req.headers);
+	const cookie = req ? req.headers.cookie : "";
+	axios.defaults.headers.Cookie = "";
+	if (req && cookie) {
+		axios.defaults.headers.Cookie = cookie;
+	}
+	await store.dispatch(loadMyInfo());
+	console.log("getServerSideProps end");
+});
 export default Profile;

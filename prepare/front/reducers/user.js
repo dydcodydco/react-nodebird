@@ -3,6 +3,9 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
+	loadUserLoading: false, // 유저 정보 가져오기 시도중
+	loadUserDone: false,
+	loadUserError: null,
 	removeFollowerLoading: false, // 팔로워 제거 시도중
 	removeFollowerDone: false,
 	removeFollowerError: null,
@@ -62,10 +65,10 @@ export const logout = createAsyncThunk("user/logout", async () => {
 	const response = await axios.post("/user/logout");
 	return response.data;
 });
-// export const loadUser = createAsyncThunk("user/loadUser", async (data) => {
-// 	const response = await axios.get(`/user/${data}`);
-// 	return response.data;
-// });
+export const loadUser = createAsyncThunk("user/loadUser", async (data) => {
+	const response = await axios.get(`/user/${data}`);
+	return response.data;
+});
 
 const userSlice = createSlice({
 	name: "user",
@@ -240,6 +243,20 @@ const userSlice = createSlice({
 				console.log("rejected");
 				draft.loadMyInfoLoading = false;
 				draft.loadMyInfoError = action.error;
+			})
+			.addCase(loadUser.pending, (draft) => {
+				draft.loadUserLoading = true;
+				draft.loadUserError = null;
+				draft.loadUserDone = false;
+			})
+			.addCase(loadUser.fulfilled, (draft, action) => {
+				draft.loadUserLoading = false;
+				draft.userInfo = action.payload;
+				draft.loadUserDone = true;
+			})
+			.addCase(loadUser.rejected, (draft, action) => {
+				draft.loadUserLoading = false;
+				draft.loadUserError = action.error;
 			})
 			// .addCase(logIn.pending, (state) => {
 			// 	state.logInLoading = true;
