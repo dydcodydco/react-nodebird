@@ -19,9 +19,7 @@
 		"es6": true
 	},
 	"extends": [
-		"airbnb", // 얘네는 강한 규제
-		"next/babel",
-		"next/core-web-vitals"
+		"airbnb" // 얘네는 강한 규제
 		//"eslint:recommended", 얘네는 좀 약함
 		//"plugin:react/recommended"
 	], // 남들이 만들어 놓은 규칙 따른 다는 의미, 기본규칙들
