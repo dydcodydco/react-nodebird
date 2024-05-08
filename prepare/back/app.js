@@ -7,6 +7,8 @@ const passport = require("passport");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
 const path = require("path");
+const hpp = require("hpp");
+const helmet = require("helmet");
 
 const postRouter = require("./routes/post");
 const postsRouter = require("./routes/posts");
@@ -25,11 +27,19 @@ db.sequelize
 	.catch(console.error);
 passportConfig();
 
-app.use(morgan("dev")); // 로그볼 수 있게 해주는 것
+// 운영용 빌드
+if (process.env.NOD_ENV === "production") {
+	app.use(morgan("combined")); // 로그볼 수 있게 해주는 것
+	// 보안에 도움되는 패키지들
+	app.use(hpp());
+	app.use(helmet());
+} else {
+	app.use(morgan("dev")); // 로그볼 수 있게 해주는 것
+}
 // app.use(cors()) -> 모든 요청에 다 res.setHeader("Access-Control-Allow-Origin", "*") 설정 넣어주는 것
 app.use(
 	cors({
-		origin: "http://localhost:3000", // true or * // access-control-allow-origin가 true된다. --> 다른 도메인끼리 api 요청
+		origin: ["http://localhost:3000", "nodebird.com"], // true or * // access-control-allow-origin가 true된다. --> 다른 도메인끼리 api 요청
 		credentials: true, // access-control-allow-credential가 true된다. --> 다른 도메인끼리 쿠키 전달
 	})
 );
