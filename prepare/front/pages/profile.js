@@ -10,6 +10,7 @@ import AppLayout from "../components/AppLayout";
 import NicknameEditForm from "../components/NicknameEditForm";
 import FollowList from "../components/FollowList";
 import wrapper from "../store/configurStore";
+import { backUrl } from "../config/config";
 
 const fetcher = (url) => axios.get(url, { widthCredentials: true }).then((result) => result.data);
 
@@ -20,8 +21,8 @@ const Profile = () => {
 	const [followersLimit, setFollowersLimit] = useState(3);
 	const [followingsimit, setFollowingsLimit] = useState(3);
 
-	const { data: followersData, error: followerError } = useSWR(`http://localhost:3065/user/followers?limit=${followersLimit}`, fetcher);
-	const { data: followingsData, error: followingError } = useSWR(`http://localhost:3065/user/followings?limit=${followingsimit}`, fetcher);
+	const { data: followersData, error: followerError } = useSWR(`${backUrl}/user/followers?limit=${followersLimit}`, fetcher);
+	const { data: followingsData, error: followingError } = useSWR(`${backUrl}/user/followings?limit=${followingsimit}`, fetcher);
 
 	useEffect(() => {
 		// dispatch(loadFollowersRequestAction());
