@@ -1,12 +1,12 @@
-import PropTypes from "prop-types";
-import Link from "next/link";
-import { Menu, Input, Row, Col } from "antd";
-import { useRouter } from "next/router";
-import styled from "styled-components";
-import { useSelector } from "react-redux";
-import UserProfile from "./UserProfile";
-import LoginForm from "./LoginForm";
-import { useCallback, useState } from "react";
+import PropTypes from 'prop-types';
+import Link from 'next/link';
+import { Menu, Input, Row, Col } from 'antd';
+import { useRouter } from 'next/router';
+import styled from 'styled-components';
+import { useSelector } from 'react-redux';
+import UserProfile from './UserProfile';
+import LoginForm from './LoginForm';
+import { useCallback, useState } from 'react';
 
 const SearchInput = styled(Input.Search)`
 	vertical-align: middle;
@@ -17,7 +17,7 @@ const AppLayout = ({ children }) => {
 	const { me } = useSelector((state) => state.user); // 둘중 하나 취향차이
 	// const isLoggedIn = useSelector((state) => state.user.isLoggedIn); // 둘중 하나 취향차이
 	// useSelector: 스토어의 상태값을 반환
-	const [searchInput, setSearchInput] = useState("");
+	const [searchInput, setSearchInput] = useState('');
 	const onChangeSearchInput = useCallback((e) => {
 		setSearchInput(e.target.value);
 	}, []);
@@ -31,13 +31,13 @@ const AppLayout = ({ children }) => {
 				theme='light'
 				mode='horizontal'
 				items={[
-					{ label: <Link href='/'>노드버드</Link>, key: "/" },
-					{ label: <Link href='/profile'>프로필</Link>, key: "/profile" },
+					{ label: <Link href='/'>노드버드</Link>, key: '/' },
+					{ label: <Link href='/profile'>프로필</Link>, key: '/profile' },
 					{
 						label: <SearchInput enterButton value={searchInput} onChange={onChangeSearchInput} onSearch={onSearch} />,
-						key: "/search",
+						key: '/search',
 					},
-					{ label: <Link href='/signup'>회원가입</Link>, key: "/signup" },
+					{ label: <Link href='/signup'>회원가입</Link>, key: '/signup' },
 				]}
 			/>
 			<Row gutter={10}>

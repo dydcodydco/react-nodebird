@@ -1,11 +1,11 @@
-import { Form, Button, Input } from "antd";
-import Link from "next/link";
-import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
-import { useCallback, useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { Form, Button, Input } from 'antd';
+import Link from 'next/link';
+import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
+import { useCallback, useEffect } from 'react';
+import { useForm, Controller } from 'react-hook-form';
 
-import { loginRequestAction } from "../reducers/user";
+import { loginRequestAction } from '../reducers/user';
 
 const ButtonWrapper = styled.div`
 	margin-top: 10px;
@@ -42,8 +42,8 @@ const LoginForm = () => {
 					name='email'
 					control={control}
 					rules={{
-						required: "이메일를 입력해주세요.",
-						minLength: { value: 3, message: "이메일은 3자 이상입니다." },
+						required: '이메일를 입력해주세요.',
+						minLength: { value: 3, message: '이메일은 3자 이상입니다.' },
 					}}
 					render={({ field }) => (
 						<>
@@ -60,10 +60,10 @@ const LoginForm = () => {
 					name='password'
 					control={control}
 					rules={{
-						required: "비밀번호를 입력해주세요.",
+						required: '비밀번호를 입력해주세요.',
 						minLength: {
 							value: 3,
-							message: "비밀번호는 3자 이상입니다.",
+							message: '비밀번호는 3자 이상입니다.',
 						},
 					}}
 					render={({ field }) => (

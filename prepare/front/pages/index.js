@@ -1,12 +1,12 @@
-import { useDispatch, useSelector } from "react-redux";
-import AppLayout from "../components/AppLayout";
-import PostForm from "../components/PostForm";
-import PostCard from "../components/PostCard";
-import { useEffect } from "react";
-import { loadPosts, loadPostsError } from "../reducers/post";
-import { loadMyInfo } from "../reducers/user";
-import wrapper from "../store/configurStore";
-import axios from "axios";
+import { useDispatch, useSelector } from 'react-redux';
+import AppLayout from '../components/AppLayout';
+import PostForm from '../components/PostForm';
+import PostCard from '../components/PostCard';
+import { useEffect } from 'react';
+import { loadPosts, loadPostsError } from '../reducers/post';
+import { loadMyInfo } from '../reducers/user';
+import wrapper from '../store/configurStore';
+import axios from 'axios';
 
 // 프론트, 브라우저 같이 실행
 const Home = () => {
@@ -39,9 +39,9 @@ const Home = () => {
 			}
 		};
 
-		window.addEventListener("scroll", onScroll);
+		window.addEventListener('scroll', onScroll);
 		return () => {
-			window.removeEventListener("scroll", onScroll);
+			window.removeEventListener('scroll', onScroll);
 		};
 	}, [hasMorePosts, loadPostsLoading, mainPosts.length]);
 
@@ -61,10 +61,10 @@ const Home = () => {
 // 화면을 그리기전에 서버에서 먼저 실행하는 함수
 // 이 부분이 실행된 결과를 HYDRATE로 보내준다.
 export const getServerSideProps = wrapper.getServerSideProps((store) => async ({ req }) => {
-	console.log("getServerSideProps start--------------------------");
+	console.log('getServerSideProps start--------------------------');
 	console.log(req.headers);
-	const cookie = req ? req.headers.cookie : "";
-	axios.defaults.headers.Cookie = "";
+	const cookie = req ? req.headers.cookie : '';
+	axios.defaults.headers.Cookie = '';
 	// 쿠키가 브라우저에 있는경우만 넣어서 실행
 	// (주의, 아래 조건이 없다면 다른 사람으로 로그인 될 수도 있음)
 	if (req && cookie) {
@@ -72,7 +72,7 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => async ({
 	}
 	await store.dispatch(loadPosts());
 	await store.dispatch(loadMyInfo());
-	console.log("getServerSideProps end--------------------------");
+	console.log('getServerSideProps end--------------------------');
 
 	// store.dispatch(loadPosts());
 	// store.dispatch(loadMyInfoRequestAction());

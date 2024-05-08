@@ -1,16 +1,16 @@
-import Head from "next/head";
-import { useDispatch, useSelector } from "react-redux";
-import { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import axios from "axios";
-import useSWR from "swr";
+import Head from 'next/head';
+import { useDispatch, useSelector } from 'react-redux';
+import { useCallback, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import axios from 'axios';
+import useSWR from 'swr';
 
-import { loadFollowersRequestAction, loadFollowingsRequestAction, loadMyInfo } from "../reducers/user";
-import AppLayout from "../components/AppLayout";
-import NicknameEditForm from "../components/NicknameEditForm";
-import FollowList from "../components/FollowList";
-import wrapper from "../store/configurStore";
-import { backUrl } from "../config/config";
+import { loadFollowersRequestAction, loadFollowingsRequestAction, loadMyInfo } from '../reducers/user';
+import AppLayout from '../components/AppLayout';
+import NicknameEditForm from '../components/NicknameEditForm';
+import FollowList from '../components/FollowList';
+import wrapper from '../store/configurStore';
+import { backUrl } from '../config/config';
 
 const fetcher = (url) => axios.get(url, { widthCredentials: true }).then((result) => result.data);
 
@@ -31,7 +31,7 @@ const Profile = () => {
 
 	useEffect(() => {
 		if (!(me && me.id)) {
-			router.push("/");
+			router.push('/');
 		}
 	}, [me && me.id]);
 
@@ -47,7 +47,7 @@ const Profile = () => {
 	}
 
 	if (followerError || followingError) {
-		console.log("--------------------------error-----------------------------");
+		console.log('--------------------------error-----------------------------');
 		console.error(followerError || followingError);
 		return <div>팔로잉/팔로워 로딩 중 에러 발생...</div>;
 	}
@@ -66,14 +66,14 @@ const Profile = () => {
 };
 
 export const getServerSideProps = wrapper.getServerSideProps((store) => async ({ req }) => {
-	console.log("getServerSideProps start--------------------------");
+	console.log('getServerSideProps start--------------------------');
 	console.log(req.headers);
-	const cookie = req ? req.headers.cookie : "";
-	axios.defaults.headers.Cookie = "";
+	const cookie = req ? req.headers.cookie : '';
+	axios.defaults.headers.Cookie = '';
 	if (req && cookie) {
 		axios.defaults.headers.Cookie = cookie;
 	}
 	await store.dispatch(loadMyInfo());
-	console.log("getServerSideProps end--------------------------");
+	console.log('getServerSideProps end--------------------------');
 });
 export default Profile;

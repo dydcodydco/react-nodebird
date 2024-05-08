@@ -1,7 +1,7 @@
-import PropTypes from "prop-types";
-import Head from "next/head";
-import { Provider } from "react-redux";
-import wrapper from "../store/configurStore";
+import PropTypes from 'prop-types';
+import Head from 'next/head';
+import { Provider } from 'react-redux';
+import wrapper from '../store/configurStore';
 
 const NodeBird = ({ Component, ...rest }) => {
 	const { store, props } = wrapper.useWrappedStore(rest);
@@ -10,10 +10,7 @@ const NodeBird = ({ Component, ...rest }) => {
 		<Provider store={store}>
 			<Head>
 				<meta charSet='utf-8' />
-				<meta
-					name='viewport'
-					content='width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0'
-				/>
+				<meta name='viewport' content='width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0' />
 				<title>NodeBird</title>
 			</Head>
 			<Component {...pageProps} />

@@ -1,8 +1,8 @@
-import PropTypes from "prop-types";
-import { useCallback, useState } from "react";
-import { PlusOutlined } from "@ant-design/icons";
-import ImagesZoom from "./ImagesZoom"; // 폴더를 호출하면 자동으로 index.js 찾음
-import { backUrl } from "../config/config";
+import PropTypes from 'prop-types';
+import { useCallback, useState } from 'react';
+import { PlusOutlined } from '@ant-design/icons';
+import ImagesZoom from './ImagesZoom'; // 폴더를 호출하면 자동으로 index.js 찾음
+import { backUrl } from '../config/config';
 
 const PostImages = ({ images }) => {
 	const [showImageZoom, setShowImageZoom] = useState(false);
@@ -38,14 +38,14 @@ const PostImages = ({ images }) => {
 					src={`${backUrl}/${images[0].src}`}
 					alt={images[0].src}
 					onClick={onZoom}
-					style={{ width: "50%", display: "inline-block" }}
+					style={{ width: '50%', display: 'inline-block' }}
 				/>
 				<img
 					role='presentation' // 스크린리더에서 굳이 클릭할필요를 안알려줘도 될때
 					src={`${backUrl}/${images[1].src}`}
 					alt={images[1].src}
 					onClick={onZoom}
-					style={{ width: "50%", display: "inline-block" }}
+					style={{ width: '50%', display: 'inline-block' }}
 				/>
 				{showImageZoom && <ImagesZoom images={images} onClose={onClose} />}
 			</>
@@ -59,15 +59,15 @@ const PostImages = ({ images }) => {
 					src={`${backUrl}/${images[0].src}`}
 					alt={images[0].src}
 					onClick={onZoom}
-					style={{ width: "50%" }}
+					style={{ width: '50%' }}
 				/>
 				<div
 					role='presentation'
 					style={{
-						display: "inline-block",
-						width: "50%",
-						textAlign: "center",
-						verticalAlign: "middle",
+						display: 'inline-block',
+						width: '50%',
+						textAlign: 'center',
+						verticalAlign: 'middle',
 					}}
 				>
 					<PlusOutlined />

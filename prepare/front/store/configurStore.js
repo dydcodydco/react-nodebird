@@ -1,8 +1,8 @@
-import { createWrapper } from "next-redux-wrapper";
-import { configureStore } from "@reduxjs/toolkit";
-import reducer from "../reducers"; // reducers/index의 rootReducer불러온 것
-import createSagaMiddleware from "redux-saga";
-import rootSaga from "../sagas";
+import { createWrapper } from 'next-redux-wrapper';
+import { configureStore } from '@reduxjs/toolkit';
+import reducer from '../reducers'; // reducers/index의 rootReducer불러온 것
+import createSagaMiddleware from 'redux-saga';
+import rootSaga from '../sagas';
 
 // redux-thunk를 참조해서 만든 미들웨어
 const loggerMiddleware =
@@ -16,7 +16,7 @@ const loggerMiddleware =
 const sagaMiddleware = createSagaMiddleware();
 
 function getServerState() {
-	return typeof document !== "undefined" ? JSON.parse(document.querySelector("#__NEXT_DATA__").textContent)?.props.pageProps.initialState : undefined;
+	return typeof document !== 'undefined' ? JSON.parse(document.querySelector('#__NEXT_DATA__').textContent)?.props.pageProps.initialState : undefined;
 }
 const serverState = getServerState();
 // console.log("serverState", serverState);
@@ -37,7 +37,7 @@ const makeStore = () => {
 
 const wrapper = createWrapper(makeStore, {
 	// createWrapper: wrapper 생성, wrapper 에 store 바인딩
-	debug: process.env.NODE_ENV === "development", // true이면 리덕스에 관한
+	debug: process.env.NODE_ENV === 'development', // true이면 리덕스에 관한
 });
 
 export default wrapper;

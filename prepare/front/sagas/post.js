@@ -1,5 +1,5 @@
-import { all, fork, delay, put, takeLatest, call, throttle } from "redux-saga/effects";
-import axios from "axios";
+import { all, fork, delay, put, takeLatest, call, throttle } from 'redux-saga/effects';
+import axios from 'axios';
 import {
 	loadPostsRequestAction,
 	loadPostsSuccessAction,
@@ -26,9 +26,9 @@ import {
 	retweetRequestAction,
 	retweetSuccessAction,
 	retweetFailureAction,
-} from "../reducers/post";
-import { addPostToMe, removePostOfMe } from "../reducers/user";
-import shortid from "shortid";
+} from '../reducers/post';
+import { addPostToMe, removePostOfMe } from '../reducers/user';
+import shortid from 'shortid';
 
 function retweetpi(data) {
 	return axios.post(`/post/${data}/retweet`);
@@ -95,7 +95,7 @@ function loadPostsApi(payload) {
 	}
 
 	const queryStr = new URLSearchParams(queryObj).toString();
-	return axios.get(`/posts${queryStr ? "?" + queryStr : ""}`);
+	return axios.get(`/posts${queryStr ? '?' + queryStr : ''}`);
 }
 function* loadPosts(action) {
 	try {
@@ -110,7 +110,7 @@ function* loadPosts(action) {
 }
 
 function addPostAPI(data) {
-	return axios.post("/post", data);
+	return axios.post('/post', data);
 }
 function* addPost(action) {
 	try {

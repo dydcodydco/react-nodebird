@@ -1,9 +1,9 @@
-import { Button, Form, Input } from "antd";
-import { useCallback, useEffect, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { addPostRequestAction, uploadImagesRequestAction, removeImageAction } from "../reducers/post";
-import { Controller, useForm } from "react-hook-form";
-import { backUrl } from "../config/config";
+import { Button, Form, Input } from 'antd';
+import { useCallback, useEffect, useRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { addPostRequestAction, uploadImagesRequestAction, removeImageAction } from '../reducers/post';
+import { Controller, useForm } from 'react-hook-form';
+import { backUrl } from '../config/config';
 
 const PostForm = () => {
 	const {
@@ -32,9 +32,9 @@ const PostForm = () => {
 		(data) => {
 			const formData = new FormData();
 			imagePaths.forEach((d) => {
-				formData.append("image", d);
+				formData.append('image', d);
 			});
-			formData.append("content", data.content);
+			formData.append('content', data.content);
 			return dispatch(addPostRequestAction(formData));
 			// dispatch(addPostRequestAction({ text: data.content, images: data.images, }));
 		},
@@ -62,7 +62,7 @@ const PostForm = () => {
 		const imageFormData = new FormData();
 		// e.target.files는 유사배열, 배열모양을 띄는 객체
 		[].forEach.call(e.target.files, (d) => {
-			imageFormData.append("image", d);
+			imageFormData.append('image', d);
 		});
 
 		dispatch(uploadImagesRequestAction(imageFormData));
@@ -72,12 +72,12 @@ const PostForm = () => {
 		dispatch(removeImageAction(index));
 	});
 	return (
-		<Form style={{ margin: "10px 0 20px" }} encType='multipart/form-data' onFinish={handleSubmit(onSubmit)}>
+		<Form style={{ margin: '10px 0 20px' }} encType='multipart/form-data' onFinish={handleSubmit(onSubmit)}>
 			<Controller
 				name='content'
 				control={control}
 				rules={{
-					required: "내용을 적어주세요.",
+					required: '내용을 적어주세요.',
 				}}
 				render={({ field }) => (
 					<>
@@ -90,14 +90,14 @@ const PostForm = () => {
 				<input type='file' name='image' multiple ref={imageInput} onChange={onChangeImages} />
 
 				<Button onClick={onClickImageUpload}>이미지 업로드</Button>
-				<Button type='primary' style={{ float: "right" }} htmlType='submit'>
+				<Button type='primary' style={{ float: 'right' }} htmlType='submit'>
 					작성하기
 				</Button>
 			</div>
 			<div>
 				{imagePaths.map((v, i) => (
-					<div key={v} style={{ display: "inline-block" }}>
-						<img src={`${backUrl}/${v}`} style={{ width: "200px" }} />
+					<div key={v} style={{ display: 'inline-block' }}>
+						<img src={`${backUrl}/${v}`} style={{ width: '200px' }} />
 						<div>
 							<Button onClick={onRemoveImage(i)}>제거</Button>
 						</div>

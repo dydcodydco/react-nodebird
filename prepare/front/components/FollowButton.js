@@ -1,8 +1,8 @@
-import PropTypes from "prop-types";
-import { Button } from "antd";
-import { useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { unFollowRequestAction, followRequestAction } from "../reducers/user";
+import PropTypes from 'prop-types';
+import { Button } from 'antd';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { unFollowRequestAction, followRequestAction } from '../reducers/user';
 
 const FollowButton = ({ post }) => {
 	const { me, followLoading, unFollowLoading } = useSelector((state) => state.user);
@@ -24,7 +24,7 @@ const FollowButton = ({ post }) => {
 	}
 	return (
 		<Button loading={followLoading || unFollowLoading} onClick={onClickButton}>
-			{isFollowing ? "언팔로우" : "팔로우"}
+			{isFollowing ? '언팔로우' : '팔로우'}
 		</Button>
 	);
 };

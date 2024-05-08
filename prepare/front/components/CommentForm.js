@@ -1,9 +1,9 @@
-import PropTypes from "prop-types";
-import { Form, Input, Button } from "antd";
-import { useDispatch, useSelector } from "react-redux";
-import { useForm, Controller } from "react-hook-form";
-import { useCallback, useEffect } from "react";
-import { addCommentRequestAction } from "../reducers/post";
+import PropTypes from 'prop-types';
+import { Form, Input, Button } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { useForm, Controller } from 'react-hook-form';
+import { useCallback, useEffect } from 'react';
+import { addCommentRequestAction } from '../reducers/post';
 
 const CommentForm = ({ post }) => {
 	const {
@@ -33,7 +33,7 @@ const CommentForm = ({ post }) => {
 					name='contentText'
 					control={control}
 					rules={{
-						required: "댓글을 입력해주세요.",
+						required: '댓글을 입력해주세요.',
 					}}
 					render={({ field }) => (
 						<>
@@ -42,7 +42,7 @@ const CommentForm = ({ post }) => {
 						</>
 					)}
 				/>
-				<Button type='primary' htmlType='submit' loading={addCommentLoading} style={{ position: "absolute", right: 0, bottom: -40, zIndex: 1 }}>
+				<Button type='primary' htmlType='submit' loading={addCommentLoading} style={{ position: 'absolute', right: 0, bottom: -40, zIndex: 1 }}>
 					댓글달기
 				</Button>
 			</Form.Item>

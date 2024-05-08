@@ -1,5 +1,5 @@
-import { all, fork, delay, put, takeLatest, call } from "redux-saga/effects";
-import axios from "axios";
+import { all, fork, delay, put, takeLatest, call } from 'redux-saga/effects';
+import axios from 'axios';
 import {
 	loadFollowersRequestAction,
 	loadFollowersSuccessAction,
@@ -31,10 +31,10 @@ import {
 	removeFollowerRequestAction,
 	removeFollowerSuccessAction,
 	removeFollowerFailureAction,
-} from "../reducers/user";
+} from '../reducers/user';
 
 function changeNicknameAPI(data) {
-	return axios.patch("/user/nickname", { nickname: data });
+	return axios.patch('/user/nickname', { nickname: data });
 }
 function* changeNickname(action) {
 	try {
@@ -46,7 +46,7 @@ function* changeNickname(action) {
 }
 
 function loadMyInfoAPI() {
-	return axios.get("/user");
+	return axios.get('/user');
 }
 function* loadMyInfo() {
 	try {
@@ -58,7 +58,7 @@ function* loadMyInfo() {
 }
 
 function loginAPI(data) {
-	return axios.post("/user/login", data);
+	return axios.post('/user/login', data);
 }
 function* login(action) {
 	try {
@@ -71,7 +71,7 @@ function* login(action) {
 }
 
 function logoutAPI() {
-	return axios.post("/user/logout");
+	return axios.post('/user/logout');
 }
 function* logout() {
 	try {
@@ -83,7 +83,7 @@ function* logout() {
 }
 
 function signUpAPI(data) {
-	return axios.post("/user", data);
+	return axios.post('/user', data);
 }
 function* signup(action) {
 	try {

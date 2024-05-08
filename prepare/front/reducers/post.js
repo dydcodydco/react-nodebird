@@ -1,11 +1,11 @@
-import { HYDRATE } from "next-redux-wrapper";
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import shortId from "shortid";
-import produce from "immer";
-import _ from "lodash";
-import axios from "axios";
+import { HYDRATE } from 'next-redux-wrapper';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import shortId from 'shortid';
+import produce from 'immer';
+import _ from 'lodash';
+import axios from 'axios';
 // import { fakerKO as faker } from "@faker-js/faker";
-import { faker } from "@faker-js/faker";
+import { faker } from '@faker-js/faker';
 
 // 리듀서란? 이전 상태를 state로 받고, action을 통해 다음 상태로 만들어내는 함수(불변성 지키는게 포인트)
 // immer의 produce사용하면 불변성을 지키지 않아도 immer가 자동으로 해준다.
@@ -90,8 +90,8 @@ const dummyPost = ({ id, content }) => {
 		id,
 		content,
 		User: {
-			id: "1",
-			nickname: "WlaWla",
+			id: '1',
+			nickname: 'WlaWla',
 		},
 		Images: [],
 		Comments: [],
@@ -102,8 +102,8 @@ const dummyComment = (content) => ({
 	id: shortId.generate(),
 	content: content,
 	User: {
-		id: "1",
-		nickname: "WlaWla",
+		id: '1',
+		nickname: 'WlaWla',
 	},
 });
 const setQuerystring = (payload) => {
@@ -118,37 +118,37 @@ const setQuerystring = (payload) => {
 	return new URLSearchParams(queryObj).toString();
 };
 
-export const loadPost = createAsyncThunk("post/loadPost", async (id) => {
+export const loadPost = createAsyncThunk('post/loadPost', async (id) => {
 	const response = await axios.get(`/post/${id}`);
 	return response.data;
 });
 
 const loadPostsThrottle = async (payload) => {
 	const queryStr = setQuerystring(payload);
-	const url = `/posts${queryStr ? "?" + queryStr : ""}`;
+	const url = `/posts${queryStr ? '?' + queryStr : ''}`;
 	const response = await axios.get(url);
 	return response;
 };
-export const loadPosts = createAsyncThunk("post/loadPosts", _.throttle(loadPostsThrottle, 5000));
+export const loadPosts = createAsyncThunk('post/loadPosts', _.throttle(loadPostsThrottle, 5000));
 
 const loadUserPostsThrottle = async (payload) => {
 	const queryStr = setQuerystring(payload);
-	const url = `/user/${payload.id}/posts${queryStr ? "?" + queryStr : ""}`;
+	const url = `/user/${payload.id}/posts${queryStr ? '?' + queryStr : ''}`;
 	const response = await axios.get(url);
 	return response;
 };
-export const loadUserPosts = createAsyncThunk("post/loadUserPosts", _.throttle(loadUserPostsThrottle, 5000));
+export const loadUserPosts = createAsyncThunk('post/loadUserPosts', _.throttle(loadUserPostsThrottle, 5000));
 
 const loadHashtagPostsThrottle = async (payload) => {
 	const queryStr = setQuerystring(payload);
-	const url = `/hashtag/${encodeURIComponent(payload.tag)}${queryStr ? "?" + queryStr : ""}`;
+	const url = `/hashtag/${encodeURIComponent(payload.tag)}${queryStr ? '?' + queryStr : ''}`;
 	const response = await axios.get(url);
 	return response;
 };
-export const loadHashtagPosts = createAsyncThunk("post/loadHashtagPosts", _.throttle(loadHashtagPostsThrottle, 5000));
+export const loadHashtagPosts = createAsyncThunk('post/loadHashtagPosts', _.throttle(loadHashtagPostsThrottle, 5000));
 
 const postSlice = createSlice({
-	name: "post",
+	name: 'post',
 	initialState,
 	reducers: {
 		retweetRequestAction: (state, action) => {
@@ -317,13 +317,13 @@ const postSlice = createSlice({
 				state.loadPostsError = action.error;
 			})
 			.addCase(loadHashtagPosts.pending, (state, action) => {
-				console.log("-----------------------------------------------------요청 ", state.loadPostsLoading);
+				console.log('-----------------------------------------------------요청 ', state.loadPostsLoading);
 				state.loadPostsLoading = true;
 				state.loadPostsDone = false;
 				state.loadPostsError = null;
 			})
 			.addCase(loadHashtagPosts.fulfilled, (state, action) => {
-				console.log("-----------------------------------------------------성공 ", state.loadPostsLoading);
+				console.log('-----------------------------------------------------성공 ', state.loadPostsLoading);
 				state.loadPostsLoading = false;
 				state.loadPostsDone = true;
 				// console.log(action.payload);

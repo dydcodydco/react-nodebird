@@ -1,8 +1,8 @@
-import PropTypes from "prop-types";
-import { useState } from "react";
-import Slick from "react-slick";
-import { Overlay, Global, SlickWrapper, Header, CloseBtn, ImageWrapper, Indicator } from "./styles";
-import { backUrl } from "../../config/config";
+import PropTypes from 'prop-types';
+import { useState } from 'react';
+import Slick from 'react-slick';
+import { Overlay, Global, SlickWrapper, Header, CloseBtn, ImageWrapper, Indicator } from './styles';
+import { backUrl } from '../../config/config';
 
 // 컴포넌트가 복잡해지면 폴더만들고 그 안에 index.js 만드는 경우가 더 많아진다.
 const ImagesZoom = ({ images, onClose }) => {

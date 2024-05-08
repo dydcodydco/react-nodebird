@@ -1,16 +1,16 @@
-import { Button, Card, List } from "antd";
-import PropTypes from "prop-types";
-import { useCallback, useMemo } from "react";
-import { StopOutlined } from "@ant-design/icons";
-import { useDispatch } from "react-redux";
-import { unFollowRequestAction, removeFollowerRequestAction } from "../reducers/user";
+import { Button, Card, List } from 'antd';
+import PropTypes from 'prop-types';
+import { useCallback, useMemo } from 'react';
+import { StopOutlined } from '@ant-design/icons';
+import { useDispatch } from 'react-redux';
+import { unFollowRequestAction, removeFollowerRequestAction } from '../reducers/user';
 
 const FollowList = ({ header, data, onClickMore, loading }) => {
 	const dispatch = useDispatch();
 
 	const style = useMemo(
 		() => ({
-			marginBottom: "20px",
+			marginBottom: '20px',
 		}),
 		[]
 	);
@@ -20,7 +20,7 @@ const FollowList = ({ header, data, onClickMore, loading }) => {
 
 	const onCancel = useCallback(
 		(id) => () => {
-			if (header === "팔로잉") {
+			if (header === '팔로잉') {
 				dispatch(unFollowRequestAction(id));
 			} else {
 				dispatch(removeFollowerRequestAction(id));
@@ -35,7 +35,7 @@ const FollowList = ({ header, data, onClickMore, loading }) => {
 			size='small'
 			header={<div>{header}</div>}
 			loadMore={
-				<div style={{ textAlign: "center", margin: "10px 0" }}>
+				<div style={{ textAlign: 'center', margin: '10px 0' }}>
 					<Button onClick={onClickMore} loading={loading}>
 						더 보기
 					</Button>

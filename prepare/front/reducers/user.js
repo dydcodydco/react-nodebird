@@ -1,6 +1,6 @@
-import { HYDRATE } from "next-redux-wrapper";
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import { HYDRATE } from 'next-redux-wrapper';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
 
 const initialState = {
 	loadUserLoading: false, // 유저 정보 가져오기 시도중
@@ -43,11 +43,11 @@ const initialState = {
 const dummyUser = (payload) => {
 	return {
 		...payload,
-		nickname: "zzimzzim",
-		id: "1",
-		Posts: [{ id: "1" }],
-		Followings: [{ nickname: "더미1" }, { nickname: "더미2" }, { nickname: "더미3" }],
-		Followers: [{ nickname: "더미1" }, { nickname: "더미2" }, { nickname: "더미3" }],
+		nickname: 'zzimzzim',
+		id: '1',
+		Posts: [{ id: '1' }],
+		Followings: [{ nickname: '더미1' }, { nickname: '더미2' }, { nickname: '더미3' }],
+		Followers: [{ nickname: '더미1' }, { nickname: '더미2' }, { nickname: '더미3' }],
 	};
 };
 
@@ -55,23 +55,23 @@ const dummyUser = (payload) => {
 // 	const response = await axios.post("/user/login", data);
 // 	return response.data;
 // });
-export const loadMyInfo = createAsyncThunk("user/loadMyInfo", async () => {
-	const response = await axios.get("/user");
+export const loadMyInfo = createAsyncThunk('user/loadMyInfo', async () => {
+	const response = await axios.get('/user');
 	// console.log("--------------------loadMyInfo ", response);
 	// console.log("=>(user.js:65) response", response.data);
 	return response.data || null;
 });
-export const logout = createAsyncThunk("user/logout", async () => {
-	const response = await axios.post("/user/logout");
+export const logout = createAsyncThunk('user/logout', async () => {
+	const response = await axios.post('/user/logout');
 	return response.data;
 });
-export const loadUser = createAsyncThunk("user/loadUser", async (data) => {
+export const loadUser = createAsyncThunk('user/loadUser', async (data) => {
 	const response = await axios.get(`/user/${data}`);
 	return response.data;
 });
 
 const userSlice = createSlice({
-	name: "user",
+	name: 'user',
 	initialState,
 	reducers: {
 		removeFollowerRequestAction: (state) => {
@@ -228,19 +228,19 @@ const userSlice = createSlice({
 				...action.payload.user,
 			}))
 			.addCase(loadMyInfo.pending, (draft) => {
-				console.log("pending");
+				console.log('pending');
 				draft.loadMyInfoLoading = true;
 				draft.loadMyInfoError = null;
 				draft.loadMyInfoDone = false;
 			})
 			.addCase(loadMyInfo.fulfilled, (draft, action) => {
-				console.log("payload", action.payload);
+				console.log('payload', action.payload);
 				draft.loadMyInfoLoading = false;
 				draft.me = action.payload || null;
 				draft.loadMyInfoDone = true;
 			})
 			.addCase(loadMyInfo.rejected, (draft, action) => {
-				console.log("rejected");
+				console.log('rejected');
 				draft.loadMyInfoLoading = false;
 				draft.loadMyInfoError = action.error;
 			})

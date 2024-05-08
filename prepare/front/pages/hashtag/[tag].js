@@ -1,13 +1,13 @@
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import axios from "axios";
-import { useRouter } from "next/router";
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import axios from 'axios';
+import { useRouter } from 'next/router';
 
-import { loadMyInfo } from "../../reducers/user";
-import AppLayout from "../../components/AppLayout";
-import PostCard from "../../components/PostCard";
-import { loadHashtagPosts } from "../../reducers/post";
-import wrapper from "../../store/configurStore";
+import { loadMyInfo } from '../../reducers/user';
+import AppLayout from '../../components/AppLayout';
+import PostCard from '../../components/PostCard';
+import { loadHashtagPosts } from '../../reducers/post';
+import wrapper from '../../store/configurStore';
 
 // 프론트, 브라우저 같이 실행
 const Home = () => {
@@ -26,9 +26,9 @@ const Home = () => {
 			}
 		};
 
-		window.addEventListener("scroll", onScroll);
+		window.addEventListener('scroll', onScroll);
 		return () => {
-			window.removeEventListener("scroll", onScroll);
+			window.removeEventListener('scroll', onScroll);
 		};
 	}, [hasMorePosts, loadPostsLoading, mainPosts.length, tag]);
 
@@ -48,8 +48,8 @@ const Home = () => {
 // 이 부분이 실행된 결과를 HYDRATE로 보내준다.
 export const getServerSideProps = wrapper.getServerSideProps((store) => async ({ req, params }) => {
 	console.log(req.headers);
-	const cookie = req ? req.headers.cookie : "";
-	axios.defaults.headers.Cookie = "";
+	const cookie = req ? req.headers.cookie : '';
+	axios.defaults.headers.Cookie = '';
 	// 쿠키가 브라우저에 있는경우만 넣어서 실행
 	// (주의, 아래 조건이 없다면 다른 사람으로 로그인 될 수도 있음)
 	if (req && cookie) {

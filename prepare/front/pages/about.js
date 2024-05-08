@@ -1,10 +1,10 @@
-import Head from "next/head";
-import { useSelector } from "react-redux";
-import { loadUser } from "../reducers/user";
+import Head from 'next/head';
+import { useSelector } from 'react-redux';
+import { loadUser } from '../reducers/user';
 
-import AppLayout from "../components/AppLayout";
-import wrapper from "../store/configurStore";
-import { Card, Avatar } from "antd";
+import AppLayout from '../components/AppLayout';
+import wrapper from '../store/configurStore';
+import { Card, Avatar } from 'antd';
 
 const About = () => {
 	const { userInfo } = useSelector((state) => state.user);
@@ -46,9 +46,9 @@ const About = () => {
 };
 
 export const getStaticProps = wrapper.getStaticProps((store) => async ({ req }) => {
-	console.log("getStaticProps start--------------------------");
+	console.log('getStaticProps start--------------------------');
 	await store.dispatch(loadUser(8));
-	console.log("getStaticProps end--------------------------");
+	console.log('getStaticProps end--------------------------');
 });
 
 export default About;
