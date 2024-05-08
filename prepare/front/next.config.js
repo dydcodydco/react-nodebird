@@ -1,10 +1,10 @@
-const withBundleAnalyzer = require("@next/bundle-analyzer")({
-	enabled: process.env.ANALYZE === "true",
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+	enabled: process.env.ANALYZE === 'true',
 });
 
-module.exports = withBundleAnalyzer({
+module.exports = {
 	images: {
-		domains: ["react-nodebird.s3.ap-northeast-2.amazonaws.com", "react-nodebird-s3.s3.amazonaws.com"],
+		domains: ['react-nodebird.s3.ap-northeast-2.amazonaws.com', 'react-nodebird-s3.s3.amazonaws.com'],
 	},
 	compress: true,
 	compiler: {
@@ -14,12 +14,12 @@ module.exports = withBundleAnalyzer({
 		},
 	},
 	webpack(config, { webpack }) {
-		const prod = process.env.NODE_ENV === "production";
+		const prod = process.env.NODE_ENV === 'production';
 		return {
 			...config,
-			mode: prod ? "production" : "development",
-			devtool: prod ? "hidden-source-map" : "inline-source-map",
+			mode: prod ? 'production' : 'development',
+			devtool: prod ? 'hidden-source-map' : 'inline-source-map',
 			plugins: [...config.plugins],
 		};
 	},
-});
+};
