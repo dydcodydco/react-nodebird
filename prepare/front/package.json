@@ -40,6 +40,7 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.24.5",
     "@faker-js/faker": "^8.4.1",
+    "@next/eslint-plugin-next": "^14.2.3",
     "babel-eslint": "^10.1.0",
     "eslint": "^8.57.0",
     "eslint-config-airbnb": "^19.0.4",
