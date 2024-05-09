@@ -7,7 +7,7 @@
     "dev": "next dev",
     "build": "cross-env ANALYZE=true NODE_ENV=production next build",
     "start": "cross-env NODE_ENV=production next start -p 80",
-	  "format-prettier": "prettier --write .",
+    "format-prettier": "prettier --write .",
     "format-eslint": "eslint --fix ."
   },
   "author": "",
@@ -43,6 +43,7 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^8.57.0",
     "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-next": "^14.2.3",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jsx-a11y": "^6.8.0",
     "eslint-plugin-react": "^7.34.1",
