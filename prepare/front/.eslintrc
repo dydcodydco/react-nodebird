@@ -16,7 +16,7 @@
 		"node": true,
 		"es6": true
 	},
-	"extends": ["airbnb"],
+	"extends": ["airbnb", "next/babel", "next/core-web-vitals"],
 	"plugins": ["import", "react-hooks", "jsx-a11y"],
 	"rules": {
 		"jsx-a11y/label-has-associated-control": "off",
