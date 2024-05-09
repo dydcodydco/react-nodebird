@@ -9,7 +9,7 @@ axios.defaults.baseURL = backUrl;
 axios.defaults.withCredentials = true; // 도메인다른 백엔드 서버와 쿠키 주고받을 수 있다.
 
 export default function* rootSaga() {
-	yield all([fork(userSaga), fork(postSaga)]);
+  yield all([fork(userSaga), fork(postSaga)]);
 }
 
 // LOG_IN_REQUEST 이벤트가 발생 -> login함수를 실행할때 데이터를 인자로 넣고 실행

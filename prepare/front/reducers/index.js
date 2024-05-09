@@ -8,8 +8,8 @@ axios.defaults.baseURL = backUrl;
 axios.defaults.withCredentials = true;
 
 const rootReducer = combineReducers({
-	user,
-	post,
+  user,
+  post,
 });
 
 export default rootReducer;
