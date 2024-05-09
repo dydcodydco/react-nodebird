@@ -1,18 +1,18 @@
-import { useRouter } from 'next/router';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
 
-import wrapper from '../../store/configurStore';
 import AppLayout from '../../components/AppLayout';
 import PostCard from '../../components/PostCard';
-import { loadMyInfo } from '../../reducers/user';
 import { loadPost } from '../../reducers/post';
+import { loadMyInfo } from '../../reducers/user';
+import wrapper from '../../store/configurStore';
 
 const Post = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { singlePost } = useSelector(state => state.post);
+  const { singlePost } = useSelector((state) => state.post);
 
   return (
     <AppLayout>
@@ -23,14 +23,14 @@ const Post = () => {
               {singlePost?.User.nickname}
               님의 글
             </title>
-            <meta name='description' content={singlePost.content} />
+            <meta name="description" content={singlePost.content} />
             <meta
-              property='og:title'
+              property="og:title"
               content={`${singlePost.User.nickname}님의 게시글`}
             />
-            <meta property='og:description' content={singlePost.content} />
+            <meta property="og:description" content={singlePost.content} />
             <meta
-              property='og:image'
+              property="og:image"
               content={
                 singlePost.Images[0]
                   ? singlePost.Images[0].src
@@ -38,7 +38,7 @@ const Post = () => {
               }
             />
             <meta
-              property='og:url'
+              property="og:url"
               content={`https://nodebird.com/post/${id}`}
             />
           </Head>
@@ -52,7 +52,7 @@ const Post = () => {
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(
-  store =>
+  (store) =>
     async ({ req, params }) => {
       const cookie = req ? req.headers.cookie : '';
       axios.defaults.headers.Cookie = '';
@@ -64,7 +64,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
 
       await store.dispatch(loadMyInfo());
       await store.dispatch(loadPost(params.id));
-    }
+    },
 );
 
 export default Post;

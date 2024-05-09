@@ -1,16 +1,17 @@
-import PropTypes from 'prop-types';
 import { Button } from 'antd';
+import PropTypes from 'prop-types';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { unFollowRequestAction, followRequestAction } from '../reducers/user';
 
 const FollowButton = ({ post }) => {
   const { me, followLoading, unFollowLoading } = useSelector(
-    state => state.user
+    (state) => state.user,
   );
   const dispatch = useDispatch();
 
-  const isFollowing = me?.Followings.find(v => v.id === post.User.id);
+  const isFollowing = me?.Followings.find((v) => v.id === post.User.id);
   // const isFollowing = me && me.Followings.find((v) => v.id === post.User.id);
 
   const onClickButton = useCallback(() => {

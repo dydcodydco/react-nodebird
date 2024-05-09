@@ -1,7 +1,8 @@
-import { combineReducers } from 'redux';
-import user from './user';
-import post from './post';
 import axios from 'axios';
+import { combineReducers } from 'redux';
+
+import post from './post';
+import user from './user';
 import { backUrl } from '../config/config';
 
 axios.defaults.baseURL = backUrl;

@@ -1,18 +1,20 @@
-import { useDispatch, useSelector } from 'react-redux';
-import AppLayout from '../components/AppLayout';
-import PostForm from '../components/PostForm';
-import PostCard from '../components/PostCard';
+import axios from 'axios';
 import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import AppLayout from '../components/AppLayout';
+import PostCard from '../components/PostCard';
+import PostForm from '../components/PostForm';
 import { loadPosts, loadPostsError } from '../reducers/post';
 import { loadMyInfo } from '../reducers/user';
 import wrapper from '../store/configurStore';
-import axios from 'axios';
+
 
 // 프론트, 브라우저 같이 실행
 const Home = () => {
-  const { me } = useSelector(state => state.user);
+  const { me } = useSelector((state) => state.user);
   const { mainPosts, hasMorePosts, loadPostsLoading, retweetError } =
-    useSelector(state => state.post);
+    useSelector((state) => state.post);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -56,7 +58,7 @@ const Home = () => {
       {/* 순서가 바뀌거나 삭제될 수 있는 리스트들에 key값으로 index를 쓰면 안됀다. */}
       {/* 반복문이 있고 바뀌지 않는 리스트일 경우에만 사용해도 된다. */}
       {mainPosts && mainPosts[0]
-        ? mainPosts.map(post => <PostCard key={post.id} post={post} />)
+        ? mainPosts.map((post) => <PostCard key={post.id} post={post} />)
         : null}
     </AppLayout>
   );
@@ -67,7 +69,7 @@ const Home = () => {
 // 화면을 그리기전에 서버에서 먼저 실행하는 함수
 // 이 부분이 실행된 결과를 HYDRATE로 보내준다.
 export const getServerSideProps = wrapper.getServerSideProps(
-  store =>
+  (store) =>
     async ({ req }) => {
       console.log('getServerSideProps start--------------------------');
       console.log(req.headers);
@@ -87,7 +89,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
       // store.dispatch(END);
       // await store.sagaTask.toPromise(); // 사가 작업 완료 대기
       // console.log("state--------------------------------", store.getState());
-    }
+    },
 );
 
 // export const getServerSideProps = wrapper.getServerSideProps((store) => async ({ req }) => {

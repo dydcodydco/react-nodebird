@@ -1,15 +1,16 @@
 import { Form, Input, Button, Checkbox } from 'antd';
+import axios from 'axios';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { useCallback, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import axios from 'axios';
-import wrapper from '../store/configurStore';
+import { useDispatch, useSelector } from 'react-redux';
+import styled from 'styled-components';
 
 import AppLayout from '../components/AppLayout';
-import styled from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
 import { signupRequestAction, loadMyInfo } from '../reducers/user';
-import { useRouter } from 'next/router';
+import wrapper from '../store/configurStore';
+
 
 const ButtonWrapper = styled.div`
   margin-top: 10px;
@@ -26,7 +27,7 @@ const Signup = () => {
     formState: { errors },
   } = useForm();
   const { signUpLoading, signUpDone, signUpError, me } = useSelector(
-    state => state.user
+    (state) => state.user,
   );
   const dispatch = useDispatch();
   const router = useRouter();
@@ -52,7 +53,7 @@ const Signup = () => {
     }
   }, [signUpError]);
 
-  const onSubmit = useCallback(data => {
+  const onSubmit = useCallback((data) => {
     console.log(data);
     dispatch(signupRequestAction(data));
   }, []);
@@ -64,10 +65,10 @@ const Signup = () => {
         </Head>
         <Form onFinish={handleSubmit(onSubmit)}>
           <div>
-            <label htmlFor='email'>아이디</label>
+            <label htmlFor="email">아이디</label>
             <br />
             <Controller
-              name='email'
+              name="email"
               control={control}
               rules={{
                 required: '이메일를 입력해주세요.',
@@ -80,9 +81,9 @@ const Signup = () => {
                 <>
                   <Input
                     {...field}
-                    id='email'
-                    type='email'
-                    placeholder='이메일'
+                    id="email"
+                    type="email"
+                    placeholder="이메일"
                   />
                   {errors.email && (
                     <ErrorMessage>{errors.email.message}</ErrorMessage>
@@ -93,10 +94,10 @@ const Signup = () => {
           </div>
 
           <div>
-            <label htmlFor='nickname'>닉네임</label>
+            <label htmlFor="nickname">닉네임</label>
             <br />
             <Controller
-              name='nickname'
+              name="nickname"
               control={control}
               rules={{
                 required: '닉네임를 입력해주세요.',
@@ -107,7 +108,7 @@ const Signup = () => {
               }}
               render={({ field }) => (
                 <>
-                  <Input {...field} id='nickname' placeholder='닉네임' />
+                  <Input {...field} id="nickname" placeholder="닉네임" />
                   {errors.nickname && (
                     <ErrorMessage>{errors.nickname.message}</ErrorMessage>
                   )}
@@ -117,10 +118,10 @@ const Signup = () => {
           </div>
 
           <div>
-            <label htmlFor='signPassword'>비밀번호</label>
+            <label htmlFor="signPassword">비밀번호</label>
             <br />
             <Controller
-              name='password'
+              name="password"
               control={control}
               rules={{
                 required: '비밀번호를 입력해주세요.',
@@ -132,9 +133,9 @@ const Signup = () => {
               render={({ field }) => (
                 <>
                   <Input.Password
-                    id='signPassword'
+                    id="signPassword"
                     {...field}
-                    placeholder='비밀번호'
+                    placeholder="비밀번호"
                   />
                   {errors.password && (
                     <ErrorMessage>{errors.password.message}</ErrorMessage>
@@ -145,10 +146,10 @@ const Signup = () => {
           </div>
 
           <div>
-            <label htmlFor='passwordCheck'>비밀번호 확인</label>
+            <label htmlFor="passwordCheck">비밀번호 확인</label>
             <br />
             <Controller
-              name='passwordCheck'
+              name="passwordCheck"
               control={control}
               rules={{
                 required: '비밀번호를 확인해주세요.',
@@ -163,9 +164,9 @@ const Signup = () => {
                 return (
                   <>
                     <Input.Password
-                      id='passwordCheck'
+                      id="passwordCheck"
                       {...field}
-                      placeholder='비밀번호'
+                      placeholder="비밀번호"
                     />
                     {errors.passwordCheck && (
                       <ErrorMessage>
@@ -180,7 +181,7 @@ const Signup = () => {
 
           <div>
             <Controller
-              name='term'
+              name="term"
               control={control}
               rules={{
                 required: { value: true, message: '약관에 동의하셔야 합니다.' },
@@ -195,7 +196,7 @@ const Signup = () => {
           </div>
 
           <ButtonWrapper>
-            <Button htmlType='submit' type='primary' loading={signUpLoading}>
+            <Button htmlType="submit" type="primary" loading={signUpLoading}>
               가입하기
             </Button>
           </ButtonWrapper>
@@ -206,7 +207,7 @@ const Signup = () => {
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(
-  store =>
+  (store) =>
     async ({ req }) => {
       console.log('getServerSideProps start--------------------------');
       console.log(req.headers);
@@ -217,6 +218,6 @@ export const getServerSideProps = wrapper.getServerSideProps(
       }
       await store.dispatch(loadMyInfo());
       console.log('getServerSideProps end--------------------------');
-    }
+    },
 );
 export default Signup;

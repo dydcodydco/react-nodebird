@@ -1,8 +1,9 @@
+import { StopOutlined } from '@ant-design/icons';
 import { Button, Card, List } from 'antd';
 import PropTypes from 'prop-types';
 import { useCallback, useMemo } from 'react';
-import { StopOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
+
 import {
   unFollowRequestAction,
   removeFollowerRequestAction,
@@ -15,27 +16,27 @@ const FollowList = ({ header, data, onClickMore, loading }) => {
     () => ({
       marginBottom: '20px',
     }),
-    []
+    [],
   );
   const listGrid = useMemo(() => {
     return { gutter: 4, xs: 1, sm: 2, md: 2, lg: 3 };
   }, []);
 
   const onCancel = useCallback(
-    id => () => {
+    (id) => () => {
       if (header === '팔로잉') {
         dispatch(unFollowRequestAction(id));
       } else {
         dispatch(removeFollowerRequestAction(id));
       }
     },
-    []
+    [],
   );
   return (
     <List
       style={style}
       grid={listGrid}
-      size='small'
+      size="small"
       header={<div>{header}</div>}
       loadMore={
         <div style={{ textAlign: 'center', margin: '10px 0' }}>
@@ -46,10 +47,10 @@ const FollowList = ({ header, data, onClickMore, loading }) => {
       }
       bordered
       dataSource={data}
-      renderItem={item => (
+      renderItem={(item) => (
         <List.Item style={{ marginTop: 20 }}>
           <Card
-            actions={[<StopOutlined key='stop' onClick={onCancel(item.id)} />]}
+            actions={[<StopOutlined key="stop" onClick={onCancel(item.id)} />]}
           >
             <Card.Meta description={item.nickname} />
           </Card>

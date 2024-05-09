@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Avatar, Card } from 'antd';
+import axios from 'axios';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import axios from 'axios';
-import wrapper from '../../store/configurStore';
+import AppLayout from '../../components/AppLayout';
+import PostCard from '../../components/PostCard';
 import { loadUserPosts } from '../../reducers/post';
 import { loadMyInfo, loadUser } from '../../reducers/user';
-import PostCard from '../../components/PostCard';
-import AppLayout from '../../components/AppLayout';
+import wrapper from '../../store/configurStore';
 
 function User(props) {
   console.log('user props', props);
@@ -17,10 +17,10 @@ function User(props) {
   const router = useRouter();
   const { id } = router.query;
   const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector(
-    state => state.post
+    (state) => state.post,
   );
-  const userInfo = useSelector(state => state.user.userInfo);
-  const me = useSelector(state => state.user.me);
+  const userInfo = useSelector((state) => state.user.userInfo);
+  const me = useSelector((state) => state.user.me);
 
   useEffect(() => {
     const onScroll = () => {
@@ -33,7 +33,7 @@ function User(props) {
             loadUserPosts({
               lastId: mainPosts[mainPosts.length - 1]?.id,
               id,
-            })
+            }),
           );
         }
       }
@@ -53,39 +53,39 @@ function User(props) {
             님의 글
           </title>
           <meta
-            name='description'
+            name="description"
             content={`${userInfo.nickname}님의 게시글`}
           />
           <meta
-            property='og:title'
+            property="og:title"
             content={`${userInfo.nickname}님의 게시글`}
           />
           <meta
-            property='og:description'
+            property="og:description"
             content={`${userInfo.nickname}님의 게시글`}
           />
           <meta
-            property='og:image'
-            content='https://nodebird.com/favicon.ico'
+            property="og:image"
+            content="https://nodebird.com/favicon.ico"
           />
-          <meta property='og:url' content={`https://nodebird.com/user/${id}`} />
+          <meta property="og:url" content={`https://nodebird.com/user/${id}`} />
         </Head>
       )}
       {userInfo && userInfo.id !== me?.id ? (
         <Card
           style={{ marginBottom: 20 }}
           actions={[
-            <div key='twit'>
+            <div key="twit">
               짹짹
               <br />
               {userInfo.Posts}
             </div>,
-            <div key='following'>
+            <div key="following">
               팔로잉
               <br />
               {userInfo.Followings}
             </div>,
-            <div key='follower'>
+            <div key="follower">
               팔로워
               <br />
               {userInfo.Followers}
@@ -98,7 +98,7 @@ function User(props) {
           />
         </Card>
       ) : null}
-      {mainPosts.map(c => (
+      {mainPosts.map((c) => (
         <PostCard key={c.id} post={c} />
       ))}
     </AppLayout>
@@ -107,7 +107,7 @@ function User(props) {
 
 // SSR (프론트 서버에서 실행)
 export const getServerSideProps = wrapper.getServerSideProps(
-  store =>
+  (store) =>
     async ({ req, params }) => {
       const cookie = req ? req.headers.cookie : '';
       axios.defaults.headers.Cookie = '';
@@ -123,7 +123,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
       return {
         props: {},
       };
-    }
+    },
 );
 
 export default User;

@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
 import Link from 'next/link';
+import PropTypes from 'prop-types';
 
 // postData = 글 내용 #해시태그 #익스프레스
 const PostCardContent = ({ postData }) => {

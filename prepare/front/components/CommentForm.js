@@ -1,8 +1,9 @@
-import PropTypes from 'prop-types';
 import { Form, Input, Button } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
-import { useForm, Controller } from 'react-hook-form';
+import PropTypes from 'prop-types';
 import { useCallback, useEffect } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+
 import { addCommentRequestAction } from '../reducers/post';
 
 const CommentForm = ({ post }) => {
@@ -13,9 +14,9 @@ const CommentForm = ({ post }) => {
     formState: { errors },
   } = useForm();
   const { addCommentDone, addCommentLoading } = useSelector(
-    state => state.post
+    (state) => state.post,
   );
-  const id = useSelector(state => state.user.me?.id);
+  const id = useSelector((state) => state.user.me?.id);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -23,36 +24,36 @@ const CommentForm = ({ post }) => {
   }, [addCommentDone]);
 
   const onSubmit = useCallback(
-    data => {
+    (data) => {
       dispatch(
         addCommentRequestAction({
           postId: post.id,
           userId: id,
           content: data.contentText,
-        })
+        }),
       );
     },
-    [id]
+    [id],
   );
   return (
     <Form onFinish={handleSubmit(onSubmit)}>
       <Form.Item>
         <Controller
-          name='contentText'
+          name="contentText"
           control={control}
           rules={{
             required: '댓글을 입력해주세요.',
           }}
           render={({ field }) => (
             <>
-              <Input.TextArea {...field} placeholder='댓글을 입력해주세요.' />
+              <Input.TextArea {...field} placeholder="댓글을 입력해주세요." />
               {errors.contentText && <p>{errors.contentText.message}</p>}
             </>
           )}
         />
         <Button
-          type='primary'
-          htmlType='submit'
+          type="primary"
+          htmlType="submit"
           loading={addCommentLoading}
           style={{ position: 'absolute', right: 0, bottom: -40, zIndex: 1 }}
         >

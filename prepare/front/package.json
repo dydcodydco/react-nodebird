@@ -7,7 +7,8 @@
     "dev": "next dev",
     "build": "cross-env ANALYZE=true NODE_ENV=production next build",
     "start": "cross-env NODE_ENV=production next start -p 80",
-	"format": "prettier --write ."
+	  "format-prettier": "prettier --write .",
+    "format-eslint": "eslint --fix ."
   },
   "author": "",
   "license": "MIT",

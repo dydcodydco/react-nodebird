@@ -1,3 +1,4 @@
+import axios from 'axios';
 import {
   all,
   fork,
@@ -7,7 +8,8 @@ import {
   call,
   throttle,
 } from 'redux-saga/effects';
-import axios from 'axios';
+import shortid from 'shortid';
+
 import {
   loadPostsRequestAction,
   loadPostsSuccessAction,
@@ -36,7 +38,7 @@ import {
   retweetFailureAction,
 } from '../reducers/post';
 import { addPostToMe, removePostOfMe } from '../reducers/user';
-import shortid from 'shortid';
+
 
 function retweetpi(data) {
   return axios.post(`/post/${data}/retweet`);

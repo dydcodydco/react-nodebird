@@ -1,13 +1,14 @@
 import { Button, Form, Input } from 'antd';
 import { useCallback, useEffect, useRef } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
+
+import { backUrl } from '../config/config';
 import {
   addPostRequestAction,
   uploadImagesRequestAction,
   removeImageAction,
 } from '../reducers/post';
-import { Controller, useForm } from 'react-hook-form';
-import { backUrl } from '../config/config';
 
 const PostForm = () => {
   const {
@@ -18,7 +19,7 @@ const PostForm = () => {
     formState: { errors },
   } = useForm();
   const { imagePaths, addPostDone, addPostError } = useSelector(
-    state => state.post
+    (state) => state.post,
   );
   const dispatch = useDispatch();
 
@@ -35,16 +36,16 @@ const PostForm = () => {
   }, [addPostError]);
 
   const onSubmit = useCallback(
-    data => {
+    (data) => {
       const formData = new FormData();
-      imagePaths.forEach(d => {
+      imagePaths.forEach((d) => {
         formData.append('image', d);
       });
       formData.append('content', data.content);
       return dispatch(addPostRequestAction(formData));
       // dispatch(addPostRequestAction({ text: data.content, images: data.images, }));
     },
-    [imagePaths]
+    [imagePaths],
   );
 
   const imageInput = useRef(null);
@@ -54,7 +55,7 @@ const PostForm = () => {
 
   // ref를 register에서 따로 꺼내기
   // const { ref: registerRef, ...rest } = register("image");
-  const onChangeImages = useCallback(e => {
+  const onChangeImages = useCallback((e) => {
     // 업로드한 파일 가져오기
     // const file = e.target.files?.[0];
     // if (file) {
@@ -67,24 +68,24 @@ const PostForm = () => {
     console.log(e.target.files);
     const imageFormData = new FormData();
     // e.target.files는 유사배열, 배열모양을 띄는 객체
-    [].forEach.call(e.target.files, d => {
+    [].forEach.call(e.target.files, (d) => {
       imageFormData.append('image', d);
     });
 
     dispatch(uploadImagesRequestAction(imageFormData));
   });
 
-  const onRemoveImage = useCallback(index => () => {
+  const onRemoveImage = useCallback((index) => () => {
     dispatch(removeImageAction(index));
   });
   return (
     <Form
       style={{ margin: '10px 0 20px' }}
-      encType='multipart/form-data'
+      encType="multipart/form-data"
       onFinish={handleSubmit(onSubmit)}
     >
       <Controller
-        name='content'
+        name="content"
         control={control}
         rules={{
           required: '내용을 적어주세요.',
@@ -94,7 +95,7 @@ const PostForm = () => {
             <Input.TextArea
               {...field}
               maxLength={140}
-              placeholder='어떤 신기한 일이 있었나요?'
+              placeholder="어떤 신기한 일이 있었나요?"
             />
             {errors.content && <p>{errors.content.message}</p>}
           </>
@@ -102,15 +103,15 @@ const PostForm = () => {
       />
       <div>
         <input
-          type='file'
-          name='image'
+          type="file"
+          name="image"
           multiple
           ref={imageInput}
           onChange={onChangeImages}
         />
 
         <Button onClick={onClickImageUpload}>이미지 업로드</Button>
-        <Button type='primary' style={{ float: 'right' }} htmlType='submit'>
+        <Button type="primary" style={{ float: 'right' }} htmlType="submit">
           작성하기
         </Button>
       </div>

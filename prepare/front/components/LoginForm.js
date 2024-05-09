@@ -1,9 +1,9 @@
 import { Form, Button, Input } from 'antd';
 import Link from 'next/link';
-import styled from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
 import { useCallback, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+import styled from 'styled-components';
 
 import { loginRequestAction } from '../reducers/user';
 
@@ -20,7 +20,7 @@ const LoginForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { logInLoading, logInError } = useSelector(state => state.user);
+  const { logInLoading, logInError } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (logInError) {
@@ -29,19 +29,19 @@ const LoginForm = () => {
   }, [logInError]);
 
   const dispatch = useDispatch();
-  const onFinish = useCallback(data => {
+  const onFinish = useCallback((data) => {
     dispatch(
-      loginRequestAction({ email: data.email, password: data.password })
+      loginRequestAction({ email: data.email, password: data.password }),
     );
   }, []);
 
   return (
     <FormWrapper onFinish={handleSubmit(onFinish)}>
       <div>
-        <label htmlFor='email'>이메일</label>
+        <label htmlFor="email">이메일</label>
         <br />
         <Controller
-          name='email'
+          name="email"
           control={control}
           rules={{
             required: '이메일를 입력해주세요.',
@@ -49,17 +49,17 @@ const LoginForm = () => {
           }}
           render={({ field }) => (
             <>
-              <Input {...field} id='email' type='email' placeholder='이메일' />
+              <Input {...field} id="email" type="email" placeholder="이메일" />
               {errors.email && <p>{errors.email.message}</p>}
             </>
           )}
         />
       </div>
       <div>
-        <label htmlFor='password'>비밀번호</label>
+        <label htmlFor="password">비밀번호</label>
         <br />
         <Controller
-          name='password'
+          name="password"
           control={control}
           rules={{
             required: '비밀번호를 입력해주세요.',
@@ -70,17 +70,17 @@ const LoginForm = () => {
           }}
           render={({ field }) => (
             <>
-              <Input {...field} id='password' placeholder='비밀번호' />
+              <Input {...field} id="password" placeholder="비밀번호" />
               {errors.password && <p>{errors.password.message}</p>}
             </>
           )}
         />
       </div>
       <ButtonWrapper>
-        <Button htmlType='submit' type='primary' loading={logInLoading}>
+        <Button htmlType="submit" type="primary" loading={logInLoading}>
           로그인
         </Button>
-        <Link href='/signup'>
+        <Link href="/signup">
           <Button>회원가입</Button>
         </Link>
       </ButtonWrapper>

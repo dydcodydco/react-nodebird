@@ -1,12 +1,12 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { loadMyInfo } from '../../reducers/user';
 import AppLayout from '../../components/AppLayout';
 import PostCard from '../../components/PostCard';
 import { loadHashtagPosts } from '../../reducers/post';
+import { loadMyInfo } from '../../reducers/user';
 import wrapper from '../../store/configurStore';
 
 // 프론트, 브라우저 같이 실행
@@ -15,7 +15,7 @@ const Home = () => {
   const router = useRouter();
   const { tag } = router.query;
   const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector(
-    state => state.post
+    (state) => state.post,
   );
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const Home = () => {
   return (
     <AppLayout>
       {loadPostsLoading && <div>로딩중 입니다.</div>}
-      {mainPosts.map(post => (
+      {mainPosts.map((post) => (
         <PostCard key={post.id} post={post} />
       ))}
     </AppLayout>
@@ -52,7 +52,7 @@ const Home = () => {
 // 화면을 그리기전에 서버에서 먼저 실행하는 함수
 // 이 부분이 실행된 결과를 HYDRATE로 보내준다.
 export const getServerSideProps = wrapper.getServerSideProps(
-  store =>
+  (store) =>
     async ({ req, params }) => {
       console.log(req.headers);
       const cookie = req ? req.headers.cookie : '';
@@ -64,7 +64,7 @@ export const getServerSideProps = wrapper.getServerSideProps(
       }
       await store.dispatch(loadHashtagPosts({ tag: params.tag }));
       await store.dispatch(loadMyInfo());
-    }
+    },
 );
 
 export default Home;

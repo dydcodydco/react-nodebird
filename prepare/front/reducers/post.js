@@ -1,18 +1,18 @@
-import { HYDRATE } from 'next-redux-wrapper';
+import { faker } from '@faker-js/faker';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import shortId from 'shortid';
+import axios from 'axios';
 import produce from 'immer';
 import _ from 'lodash';
-import axios from 'axios';
+import { HYDRATE } from 'next-redux-wrapper';
+import shortId from 'shortid';
 // import { fakerKO as faker } from "@faker-js/faker";
-import { faker } from '@faker-js/faker';
 
 // 리듀서란? 이전 상태를 state로 받고, action을 통해 다음 상태로 만들어내는 함수(불변성 지키는게 포인트)
 // immer의 produce사용하면 불변성을 지키지 않아도 immer가 자동으로 해준다.
 const reducer = (state = initialState, action) => {
   // state가 draft로 바뀐다. 그리고 우리는 draft를 사용한다.
   // 이 draft를 변형시키면 immer가 알아서 불변성을 지켜 다음 상태로 업데이트 해준다.
-  return produce(state, draft => {});
+  return produce(state, (draft) => {});
 };
 
 export const initialState = {
@@ -78,7 +78,7 @@ const createDummyPost = () => {
   };
 };
 // 여러 게시글 생성
-export const generateDummyPosts = number =>
+export const generateDummyPosts = (number) =>
   faker.helpers.multiple(createDummyPost, {
     count: number,
   });
@@ -98,7 +98,7 @@ const dummyPost = ({ id, content }) => {
   };
 };
 
-const dummyComment = content => ({
+const dummyComment = (content) => ({
   id: shortId.generate(),
   content: content,
   User: {
@@ -106,7 +106,7 @@ const dummyComment = content => ({
     nickname: 'WlaWla',
   },
 });
-const setQuerystring = payload => {
+const setQuerystring = (payload) => {
   let queryObj = {};
   if (payload?.lastId) {
     queryObj.lastId = payload.lastId;
@@ -118,12 +118,12 @@ const setQuerystring = payload => {
   return new URLSearchParams(queryObj).toString();
 };
 
-export const loadPost = createAsyncThunk('post/loadPost', async id => {
+export const loadPost = createAsyncThunk('post/loadPost', async (id) => {
   const response = await axios.get(`/post/${id}`);
   return response.data;
 });
 
-const loadPostsThrottle = async payload => {
+const loadPostsThrottle = async (payload) => {
   const queryStr = setQuerystring(payload);
   const url = `/posts${queryStr ? '?' + queryStr : ''}`;
   const response = await axios.get(url);
@@ -131,10 +131,10 @@ const loadPostsThrottle = async payload => {
 };
 export const loadPosts = createAsyncThunk(
   'post/loadPosts',
-  _.throttle(loadPostsThrottle, 5000)
+  _.throttle(loadPostsThrottle, 5000),
 );
 
-const loadUserPostsThrottle = async payload => {
+const loadUserPostsThrottle = async (payload) => {
   const queryStr = setQuerystring(payload);
   const url = `/user/${payload.id}/posts${queryStr ? '?' + queryStr : ''}`;
   const response = await axios.get(url);
@@ -142,10 +142,10 @@ const loadUserPostsThrottle = async payload => {
 };
 export const loadUserPosts = createAsyncThunk(
   'post/loadUserPosts',
-  _.throttle(loadUserPostsThrottle, 5000)
+  _.throttle(loadUserPostsThrottle, 5000),
 );
 
-const loadHashtagPostsThrottle = async payload => {
+const loadHashtagPostsThrottle = async (payload) => {
   const queryStr = setQuerystring(payload);
   const url = `/hashtag/${encodeURIComponent(payload.tag)}${queryStr ? '?' + queryStr : ''}`;
   const response = await axios.get(url);
@@ -153,7 +153,7 @@ const loadHashtagPostsThrottle = async payload => {
 };
 export const loadHashtagPosts = createAsyncThunk(
   'post/loadHashtagPosts',
-  _.throttle(loadHashtagPostsThrottle, 5000)
+  _.throttle(loadHashtagPostsThrottle, 5000),
 );
 
 const postSlice = createSlice({
@@ -176,7 +176,7 @@ const postSlice = createSlice({
     },
     removeImageAction: (state, action) => {
       state.imagePaths = state.imagePaths.filter(
-        (d, i) => i !== action.payload
+        (d, i) => i !== action.payload,
       );
     },
     uploadImagesRequestAction: (state, action) => {
@@ -199,7 +199,7 @@ const postSlice = createSlice({
       state.likePostError = null;
     },
     likePostSuccessAction: (state, action) => {
-      const post = state.mainPosts.find(v => v.id === action.payload.PostId);
+      const post = state.mainPosts.find((v) => v.id === action.payload.PostId);
       post.Likers.push({ id: action.payload.UserId });
       state.likePostLoading = false;
       state.likePostDone = true;
@@ -214,8 +214,8 @@ const postSlice = createSlice({
       state.unLikePostError = null;
     },
     unLikePostSuccessAction: (state, action) => {
-      const post = state.mainPosts.find(d => d.id === action.payload.PostId);
-      post.Likers = post.Likers.filter(d => d.id !== action.payload.UserId);
+      const post = state.mainPosts.find((d) => d.id === action.payload.PostId);
+      post.Likers = post.Likers.filter((d) => d.id !== action.payload.UserId);
       state.unLikePostLoading = false;
       state.unLikePostDone = true;
     },
@@ -264,7 +264,7 @@ const postSlice = createSlice({
     removePostSuccessAction: (state, action) => {
       state.removePostLoading = false;
       state.removePostDone = true;
-      state.mainPosts = state.mainPosts.filter(d => d.id !== action.payload);
+      state.mainPosts = state.mainPosts.filter((d) => d.id !== action.payload);
     },
     removePostFailureAction: (state, action) => {
       state.removePostLoading = false;
@@ -277,7 +277,7 @@ const postSlice = createSlice({
     },
     addCommentSuccessAction: (state, action) => {
       const { content, PostId } = action.payload;
-      const post = state.mainPosts.find(d => d.id === PostId);
+      const post = state.mainPosts.find((d) => d.id === PostId);
       post.Comments.unshift(action.payload);
       state.addCommentLoading = false;
       state.addCommentDone = true;
@@ -287,7 +287,7 @@ const postSlice = createSlice({
       state.addCommentError = action.payload;
     },
   },
-  extraReducers: builder =>
+  extraReducers: (builder) =>
     builder
       .addCase(HYDRATE, (state, action) => {
         // console.log("HYDRATE", action);
@@ -330,7 +330,7 @@ const postSlice = createSlice({
       .addCase(loadHashtagPosts.pending, (state, action) => {
         console.log(
           '-----------------------------------------------------요청 ',
-          state.loadPostsLoading
+          state.loadPostsLoading,
         );
         state.loadPostsLoading = true;
         state.loadPostsDone = false;
@@ -339,7 +339,7 @@ const postSlice = createSlice({
       .addCase(loadHashtagPosts.fulfilled, (state, action) => {
         console.log(
           '-----------------------------------------------------성공 ',
-          state.loadPostsLoading
+          state.loadPostsLoading,
         );
         state.loadPostsLoading = false;
         state.loadPostsDone = true;
@@ -367,7 +367,7 @@ const postSlice = createSlice({
         state.loadPostsLoading = false;
         state.loadPostsError = action.error;
       })
-      .addDefaultCase(state => state),
+      .addDefaultCase((state) => state),
 });
 
 export const {

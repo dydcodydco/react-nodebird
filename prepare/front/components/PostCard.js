@@ -1,4 +1,3 @@
-import { Card, Popover, Button, Avatar, List } from 'antd';
 import {
   RetweetOutlined,
   HeartOutlined,
@@ -6,22 +5,23 @@ import {
   MessageOutlined,
   EllipsisOutlined,
 } from '@ant-design/icons';
+import { Card, Popover, Button, Avatar, List } from 'antd';
+import dayjs from 'dayjs';
+import Link from 'next/link';
+import PropTypes from 'prop-types';
 import { useState, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
-import Link from 'next/link';
-import dayjs from 'dayjs';
 
+import CommentForm from './CommentForm';
+import Followbutton from './FollowButton';
+import PostCardContent from './PostCardContent';
+import PostImages from './PostImages';
 import {
   removePostRequestAction,
   likePostRequestAction,
   unLikePostRequestAction,
   retweetRequestAction,
 } from '../reducers/post';
-import PostImages from './PostImages';
-import CommentForm from './CommentForm';
-import PostCardContent from './PostCardContent';
-import Followbutton from './FollowButton';
 
 dayjs.locale('ko');
 
@@ -29,12 +29,12 @@ const PostCard = ({ post }) => {
   // const { me: {id} } = useSelector((state) => state.user);
   // const id = me && me.id;
   // const id = me?.id; // 옵셔널 체이닝 연산자
-  const { removePostLoading } = useSelector(state => state.post);
+  const { removePostLoading } = useSelector((state) => state.post);
   const dispatch = useDispatch();
   const [commentFormOpend, setCommentFormOpend] = useState(false);
 
-  const id = useSelector(state => state.user.me?.id);
-  const liked = post.Likers.find(d => d.id === id);
+  const id = useSelector((state) => state.user.me?.id);
+  const liked = post.Likers.find((d) => d.id === id);
 
   const onLike = useCallback(() => {
     if (!id) {
@@ -49,7 +49,7 @@ const PostCard = ({ post }) => {
     dispatch(unLikePostRequestAction(post.id));
   }, [id]);
   const onToggleComment = useCallback(() => {
-    setCommentFormOpend(prev => !prev);
+    setCommentFormOpend((prev) => !prev);
   }, []);
   const onRemovePost = useCallback(() => {
     if (!id) {
@@ -69,29 +69,29 @@ const PostCard = ({ post }) => {
         cover={post.Images[0] && <PostImages images={post.Images} />}
         actions={[
           // 배열안에 들어가는 것들은 다 key를 넣어줘야 한다.
-          <RetweetOutlined key='retweet' onClick={onRetweet} />,
+          <RetweetOutlined key="retweet" onClick={onRetweet} />,
           liked ? (
             <HeartTwoTone
-              key='heart'
-              twoToneColor={'#eb2f96'}
+              key="heart"
+              twoToneColor="#eb2f96"
               onClick={onUnLike}
             />
           ) : (
-            <HeartOutlined key='heart' onClick={onLike} />
+            <HeartOutlined key="heart" onClick={onLike} />
           ),
-          <MessageOutlined key={'comment'} onClick={onToggleComment} />,
+          <MessageOutlined key="comment" onClick={onToggleComment} />,
           <Popover
-            key={'more'}
+            key="more"
             content={
               <Button.Group>
                 {id && post.User?.id === id ? (
                   <>
-                    <Button type='primary' key='modify'>
+                    <Button type="primary" key="modify">
                       수정
                     </Button>
                     <Button
-                      type='danger'
-                      key={'delete'}
+                      type="danger"
+                      key="delete"
                       onClick={onRemovePost}
                       loading={removePostLoading}
                     >
@@ -99,7 +99,7 @@ const PostCard = ({ post }) => {
                     </Button>
                   </>
                 ) : (
-                  <Button type='dashed' key={'report'}>
+                  <Button type="dashed" key="report">
                     신고
                   </Button>
                 )}
@@ -158,9 +158,9 @@ const PostCard = ({ post }) => {
           <CommentForm post={post} />
           <List
             header={`${post.Comments.length}개의 댓글`}
-            itemLayout='horizontal'
+            itemLayout="horizontal"
             dataSource={post.Comments}
-            renderItem={item => (
+            renderItem={(item) => (
               <List.Item key={item.id}>
                 <List.Item.Meta
                   title={item.User.nickname}

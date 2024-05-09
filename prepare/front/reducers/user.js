@@ -1,6 +1,6 @@
-import { HYDRATE } from 'next-redux-wrapper';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { HYDRATE } from 'next-redux-wrapper';
 
 const initialState = {
   loadUserLoading: false, // 유저 정보 가져오기 시도중
@@ -40,7 +40,7 @@ const initialState = {
   userInfo: null,
 };
 
-const dummyUser = payload => {
+const dummyUser = (payload) => {
   return {
     ...payload,
     nickname: 'zzimzzim',
@@ -73,7 +73,7 @@ export const logout = createAsyncThunk('user/logout', async () => {
   const response = await axios.post('/user/logout');
   return response.data;
 });
-export const loadUser = createAsyncThunk('user/loadUser', async data => {
+export const loadUser = createAsyncThunk('user/loadUser', async (data) => {
   const response = await axios.get(`/user/${data}`);
   return response.data;
 });
@@ -82,7 +82,7 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    removeFollowerRequestAction: state => {
+    removeFollowerRequestAction: (state) => {
       state.removeFollowerLoading = true;
       state.removeFollowerError = null;
       state.removeFollowerDone = false;
@@ -91,14 +91,14 @@ const userSlice = createSlice({
       state.removeFollowerLoading = false;
       state.removeFollowerDone = true;
       state.me.Followers = state.me.Followers.filter(
-        d => d.id !== action.payload.UserId
+        (d) => d.id !== action.payload.UserId,
       );
     },
     removeFollowerFailureAction: (state, action) => {
       state.removeFollowerLoading = false;
       state.removeFollowerError = action.payload;
     },
-    loadFollowersRequestAction: state => {
+    loadFollowersRequestAction: (state) => {
       state.loadFollowersLoading = false;
       state.loadFollowersDone = false;
       state.loadFollowersError = null;
@@ -112,7 +112,7 @@ const userSlice = createSlice({
       state.loadFollowersLoading = false;
       state.loadFollowersError = action.payload;
     },
-    loadFollowingsRequestAction: state => {
+    loadFollowingsRequestAction: (state) => {
       state.loadFollowingsLoading = false;
       state.loadFollowingsDone = false;
       state.loadFollowingsError = null;
@@ -140,7 +140,7 @@ const userSlice = createSlice({
     // 	state.loadMyInfoLoading = false;
     // 	state.loadMyInfoError = action.payload;
     // },
-    followRequestAction: state => {
+    followRequestAction: (state) => {
       state.followLoading = true;
       state.followError = null;
       state.followDone = false;
@@ -154,7 +154,7 @@ const userSlice = createSlice({
       state.followLoading = false;
       state.followError = action.payload;
     },
-    unFollowRequestAction: state => {
+    unFollowRequestAction: (state) => {
       state.unFollowLoading = true;
       state.unFollowError = null;
       state.unFollowDone = false;
@@ -163,14 +163,14 @@ const userSlice = createSlice({
       state.unFollowLoading = false;
       state.unFollowDone = true;
       state.me.Followings = state.me.Followings.filter(
-        d => d.id !== action.payload.UserId
+        (d) => d.id !== action.payload.UserId,
       );
     },
     unFollowFailureAction: (state, action) => {
       state.unFollowLoading = false;
       state.unFollowError = action.payload;
     },
-    loginRequestAction: state => {
+    loginRequestAction: (state) => {
       state.logInLoading = true;
       state.logInError = null;
       state.logInDone = false;
@@ -184,12 +184,12 @@ const userSlice = createSlice({
       state.logInLoading = false;
       state.logInError = action.payload;
     },
-    logoutRequestAction: state => {
+    logoutRequestAction: (state) => {
       state.logOutLoading = true;
       state.logOutDone = false;
       state.logOutError = null;
     },
-    logoutSuccessAction: state => {
+    logoutSuccessAction: (state) => {
       state.logOutLoading = false;
       state.logOutDone = true;
       state.me = null;
@@ -198,7 +198,7 @@ const userSlice = createSlice({
       state.logOutLoading = false;
       state.logInError = action.payload;
     },
-    signupRequestAction: state => {
+    signupRequestAction: (state) => {
       state.signUpLoading = true;
       state.signUpError = null;
       state.signUpDone = false;
@@ -212,7 +212,7 @@ const userSlice = createSlice({
       state.signUpLoading = false;
       state.signUpError = action.payload;
     },
-    changeNicknameRequestAction: state => {
+    changeNicknameRequestAction: (state) => {
       state.changeNicknameLoading = true;
       state.changeNicknameError = null;
       state.changeNicknameDone = false;
@@ -230,16 +230,16 @@ const userSlice = createSlice({
       state.me.Posts.unshift({ id: action.payload });
     },
     removePostOfMe: (state, action) => {
-      state.me.Posts = state.me.Posts.filter(v => v.id !== action.payload);
+      state.me.Posts = state.me.Posts.filter((v) => v.id !== action.payload);
     },
   },
-  extraReducers: builder =>
+  extraReducers: (builder) =>
     builder
       .addCase(HYDRATE, (state, action) => ({
         ...state,
         ...action.payload.user,
       }))
-      .addCase(loadMyInfo.pending, draft => {
+      .addCase(loadMyInfo.pending, (draft) => {
         console.log('pending');
         draft.loadMyInfoLoading = true;
         draft.loadMyInfoError = null;
@@ -256,7 +256,7 @@ const userSlice = createSlice({
         draft.loadMyInfoLoading = false;
         draft.loadMyInfoError = action.error;
       })
-      .addCase(loadUser.pending, draft => {
+      .addCase(loadUser.pending, (draft) => {
         draft.loadUserLoading = true;
         draft.loadUserError = null;
         draft.loadUserDone = false;
@@ -298,7 +298,7 @@ const userSlice = createSlice({
       // 	draft.logOutLoading = false;
       // 	draft.logOutError = action.error;
       // })
-      .addDefaultCase(state => state),
+      .addDefaultCase((state) => state),
 }); // 최신 방식
 // 기존에는 불변성 유지를 위해서 개발자가 새객체로 리턴해줘야했는데
 // redux toolkit에서는 immer라이브러리가 처리해줌.

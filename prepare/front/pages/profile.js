@@ -1,38 +1,38 @@
-import Head from 'next/head';
-import { useDispatch, useSelector } from 'react-redux';
-import { useCallback, useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 import axios from 'axios';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import useSWR from 'swr';
 
+import AppLayout from '../components/AppLayout';
+import FollowList from '../components/FollowList';
+import NicknameEditForm from '../components/NicknameEditForm';
+import { backUrl } from '../config/config';
 import {
   loadFollowersRequestAction,
   loadFollowingsRequestAction,
   loadMyInfo,
 } from '../reducers/user';
-import AppLayout from '../components/AppLayout';
-import NicknameEditForm from '../components/NicknameEditForm';
-import FollowList from '../components/FollowList';
 import wrapper from '../store/configurStore';
-import { backUrl } from '../config/config';
 
-const fetcher = url =>
-  axios.get(url, { widthCredentials: true }).then(result => result.data);
+const fetcher = (url) =>
+  axios.get(url, { widthCredentials: true }).then((result) => result.data);
 
 const Profile = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { me } = useSelector(state => state.user);
+  const { me } = useSelector((state) => state.user);
   const [followersLimit, setFollowersLimit] = useState(3);
   const [followingsimit, setFollowingsLimit] = useState(3);
 
   const { data: followersData, error: followerError } = useSWR(
     `${backUrl}/user/followers?limit=${followersLimit}`,
-    fetcher
+    fetcher,
   );
   const { data: followingsData, error: followingError } = useSWR(
     `${backUrl}/user/followings?limit=${followingsimit}`,
-    fetcher
+    fetcher,
   );
 
   useEffect(() => {
@@ -47,10 +47,10 @@ const Profile = () => {
   }, [me && me.id]);
 
   const loadMoreFollowings = useCallback(() => {
-    setFollowingsLimit(prev => prev + 3);
+    setFollowingsLimit((prev) => prev + 3);
   }, []);
   const loadMoreFolloweers = useCallback(() => {
-    setFollowersLimit(prev => prev + 3);
+    setFollowersLimit((prev) => prev + 3);
   }, []);
 
   if (!me) {
@@ -70,13 +70,13 @@ const Profile = () => {
       <AppLayout>
         <NicknameEditForm />
         <FollowList
-          header='팔로워'
+          header="팔로워"
           data={followersData}
           onClickMore={loadMoreFolloweers}
           loading={!followersData && !followerError}
         />
         <FollowList
-          header='팔로잉'
+          header="팔로잉"
           data={followingsData}
           onClickMore={loadMoreFollowings}
           loading={!followingsData && !followingError}
@@ -87,7 +87,7 @@ const Profile = () => {
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(
-  store =>
+  (store) =>
     async ({ req }) => {
       console.log('getServerSideProps start--------------------------');
       console.log(req.headers);
@@ -98,6 +98,6 @@ export const getServerSideProps = wrapper.getServerSideProps(
       }
       await store.dispatch(loadMyInfo());
       console.log('getServerSideProps end--------------------------');
-    }
+    },
 );
 export default Profile;

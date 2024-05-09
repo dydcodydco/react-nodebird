@@ -2,6 +2,7 @@ import { Form, Input } from 'antd';
 import { useCallback, useMemo } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
+
 import { changeNicknameRequestAction } from '../reducers/user';
 
 const NicknameEditForm = () => {
@@ -14,17 +15,17 @@ const NicknameEditForm = () => {
   const dispatch = useDispatch();
   const style = useMemo(
     () => ({ marginTop: '20px', border: '1px solid #9d9d9d', padding: '30px' }),
-    []
+    [],
   );
 
-  const onSubmit = useCallback(data => {
+  const onSubmit = useCallback((data) => {
     dispatch(changeNicknameRequestAction(data));
     reset();
   }, []);
   return (
     <Form style={style} onFinish={handleSubmit(onSubmit)}>
       <Controller
-        name='nickname'
+        name="nickname"
         control={control}
         rules={{
           required: '변경할 닉네임을 입력해주세요.',
@@ -35,10 +36,10 @@ const NicknameEditForm = () => {
             <>
               <Input.Search
                 {...field}
-                addonBefore='닉네임'
+                addonBefore="닉네임"
                 onSearch={onSubmit}
-                enterButton='수정'
-                placeholder='변경할 닉네임 입력해주세요.'
+                enterButton="수정"
+                placeholder="변경할 닉네임 입력해주세요."
               />
               {errors.nickname && <p>{errors.nickname.message}</p>}
             </>

@@ -1,5 +1,5 @@
-import styled, { createGlobalStyle } from 'styled-components';
 import { CloseOutlined } from '@ant-design/icons';
+import styled, { createGlobalStyle } from 'styled-components';
 
 // 해당문법은 자바스크립트 문법
 // 함수 호출 방법은 func(), func`` 이렇게 호출도 가능하다.

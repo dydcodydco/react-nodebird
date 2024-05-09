@@ -1,5 +1,6 @@
-import { all, fork, delay, put, takeLatest, call } from 'redux-saga/effects';
 import axios from 'axios';
+import { all, fork, delay, put, takeLatest, call } from 'redux-saga/effects';
+
 import {
   loadFollowersRequestAction,
   loadFollowersSuccessAction,
