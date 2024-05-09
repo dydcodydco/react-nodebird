@@ -1,31 +1,24 @@
 {
-	"parser": "@babel/eslint-parser", // 바벨이 해석해서 최신문법으로 해도 에러나지 않게
+	"parser": "@babel/eslint-parser",
 	"parserOptions": {
-		"ecmaVersion": "latest", // 최신버전 문법으로 사용하겠다.
-		"sourceType": "module", // import export 모듈로 사용하겠다. script소스가 아니라.
+		"ecmaVersion": 2020,
+		"sourceType": "module",
 		"ecmaFeatures": {
-			// 특수한 기능
-			"jsx": true // jsx를 사용한다.
+			"jsx": true
 		},
-		"requireConfigFile": false,
 		"babelOptions": {
 			"presets": ["next/babel"]
-		}
+		},
+		"requireConfigFile": false
 	},
 	"env": {
-		// 환경 // 돌아가게 하려는 관련
 		"browser": true,
 		"node": true,
 		"es6": true
 	},
-	"extends": [
-		"airbnb" // 얘네는 강한 규제
-		//"eslint:recommended", 얘네는 좀 약함
-		//"plugin:react/recommended"
-	], // 남들이 만들어 놓은 규칙 따른 다는 의미, 기본규칙들
-	"plugins": ["import", "react-hooks", "jsx-a11y"], // react는 위에서 썼으니까 빼도 됨
+	"extends": ["airbnb"],
+	"plugins": ["import", "react-hooks", "jsx-a11y"],
 	"rules": {
-		"react/react-in-jsx-scope": "off",
 		"jsx-a11y/label-has-associated-control": "off",
 		"jsx-a11y/anchor-is-valid": "off",
 		"no-console": "off",
@@ -37,42 +30,7 @@
 		"object-curly-newline": "off",
 		"linebreak-style": "off",
 		"no-param-reassign": "off",
-		"max-len": "off"
+		"max-len": "off",
+		"react/react-in-jsx-scope": "off"
 	}
 }
-
-// {
-// 	"parser": "@babel/eslint-parser",
-// 	"parserOptions": {
-// 		"ecmaVersion": 2020,
-// 		"sourceType": "module",
-// 		"ecmaFeatures": {
-// 			"jsx": true
-// 		},
-// 		"babelOptions": {
-// 			"presets": ["next/babel"]
-// 		},
-// 		"requireConfigFile": false
-// 	},
-// 	"env": {
-// 		"browser": true,
-// 		"node": true,
-// 		"es6": true
-// 	},
-// 	"extends": ["airbnb"],
-// 	"plugins": ["import", "react-hooks", "jsx-a11y"],
-// 	"rules": {
-// 		"jsx-a11y/label-has-associated-control": "off",
-// 		"jsx-a11y/anchor-is-valid": "off",
-// 		"no-console": "off",
-// 		"no-underscore-dangle": "off",
-// 		"react/forbid-prop-types": "off",
-// 		"react/jsx-filename-extension": "off",
-// 		"react/jsx-one-expression-per-line": "off",
-// 		"react/jsx-props-no-spreading": "off",
-// 		"object-curly-newline": "off",
-// 		"linebreak-style": "off",
-// 		"no-param-reassign": "off",
-// 		"max-len": "off"
-// 	}
-// }
