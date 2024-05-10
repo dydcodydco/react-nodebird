@@ -41,6 +41,11 @@ app.use(
 	cors({
 		origin: ['http://localhost:3000', 'http://zzimzzim.com'], // true or * // access-control-allow-origin가 true된다. --> 다른 도메인끼리 api 요청
 		credentials: true, // access-control-allow-credential가 true된다. --> 다른 도메인끼리 쿠키 전달
+		cookie: {
+			httpOnly: true,
+			secure: false,
+			domain: process.env.NODE_ENV === 'production' && '.zzimzzim.com'
+		}
 	})
 );
 // __dirname -> 현재 폴더, 이 폴더 안에 uploads폴더 경로를 합쳐준다. // 운영체제 차이때문에 이렇게 경로를 설정해줌
