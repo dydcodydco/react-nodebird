@@ -57,9 +57,7 @@ const Home = () => {
 
       {/* 순서가 바뀌거나 삭제될 수 있는 리스트들에 key값으로 index를 쓰면 안됀다. */}
       {/* 반복문이 있고 바뀌지 않는 리스트일 경우에만 사용해도 된다. */}
-      {mainPosts && mainPosts[0]
-        ? mainPosts.map((post) => <PostCard key={post.id} post={post} />)
-        : null}
+      {mainPosts.map((post) => <PostCard key={post.id} post={post} />)}
     </AppLayout>
   );
 };
