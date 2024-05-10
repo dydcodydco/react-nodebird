@@ -58,8 +58,8 @@ export const getServerSideProps = wrapper.getServerSideProps(
       axios.defaults.headers.Cookie = '';
       // 쿠키가 브라우저에 있는경우만 넣어서 실행
       // (주의, 아래 조건이 없다면 다른 사람으로 로그인 될 수도 있음)
-      if (cookie) {
-        axios.defaults.Cookie = cookie;
+      if (req && cookie) {
+        axios.defaults.headers.Cookie = cookie;
       }
 
       await store.dispatch(loadMyInfo());
