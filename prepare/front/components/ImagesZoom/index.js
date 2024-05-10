@@ -11,7 +11,6 @@ import {
   ImageWrapper,
   Indicator,
 } from './styles';
-import { backUrl } from '../../config/config';
 
 // 컴포넌트가 복잡해지면 폴더만들고 그 안에 index.js 만드는 경우가 더 많아진다.
 const ImagesZoom = ({ images, onClose }) => {
@@ -36,7 +35,7 @@ const ImagesZoom = ({ images, onClose }) => {
           >
             {images.map((v) => (
               <ImageWrapper key={v.src}>
-                <img src={`${backUrl}/${v.src}`} alt={v.src} />
+                <img src={v.src} alt={v.src} />
               </ImageWrapper>
             ))}
           </Slick>

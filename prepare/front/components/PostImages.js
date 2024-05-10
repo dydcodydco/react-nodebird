@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { useCallback, useState } from 'react';
 
 import ImagesZoom from './ImagesZoom'; // 폴더를 호출하면 자동으로 index.js 찾음
-import { backUrl } from '../config/config';
 
 const PostImages = ({ images }) => {
   const [showImageZoom, setShowImageZoom] = useState(false);
@@ -22,7 +21,7 @@ const PostImages = ({ images }) => {
         {/* // 시각장애인을 위한 스크린리더에 정보 알려주기 (role, alt) */}
         <img
           role="presentation" // 스크린리더에서 굳이 클릭할필요를 안알려줘도 될때
-          src={`${backUrl}/${images[0].src}`}
+          src={images[0].src}
           alt={images[0].src}
           onClick={onZoom}
         />
@@ -36,14 +35,14 @@ const PostImages = ({ images }) => {
         {/* // 시각장애인을 위한 스크린리더에 정보 알려주기 (role, alt) */}
         <img
           role="presentation" // 스크린리더에서 굳이 클릭할필요를 안알려줘도 될때
-          src={`${backUrl}/${images[0].src}`}
+          src={images[0].src}
           alt={images[0].src}
           onClick={onZoom}
           style={{ width: '50%', display: 'inline-block' }}
         />
         <img
           role="presentation" // 스크린리더에서 굳이 클릭할필요를 안알려줘도 될때
-          src={`${backUrl}/${images[1].src}`}
+          src={images[0].src}
           alt={images[1].src}
           onClick={onZoom}
           style={{ width: '50%', display: 'inline-block' }}
@@ -57,7 +56,7 @@ const PostImages = ({ images }) => {
       <div>
         <img
           role="presentation" // 스크린리더에서 굳이 클릭할필요를 안알려줘도 될때
-          src={`${backUrl}/${images[0].src}`}
+          src={images[0].src}
           alt={images[0].src}
           onClick={onZoom}
           style={{ width: '50%' }}
