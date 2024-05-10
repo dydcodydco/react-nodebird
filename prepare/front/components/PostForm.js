@@ -3,7 +3,6 @@ import { useCallback, useEffect, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { backUrl } from '../config/config';
 import {
   addPostRequestAction,
   uploadImagesRequestAction,

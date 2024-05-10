@@ -32,18 +32,6 @@ const upload = multer({
 	limits: { fileSize: 20 * 1024 * 1024 }, // 20MB
 });
 
-multer.diskStorage({
-	destination(req, file, done) {
-		done(null, "uploads");
-	},
-	filename(req, file, done) {
-		// 이미지명.png
-		const ext = path.extname(file.originalname); // 확장자 추출 (.png)
-		const basename = path.basename(file.originalname, ext); // 이미지명 추출 (이미지명)
-		done(null, basename + "_" + new Date().getTime() + ext); // 이미지명123452322.png
-	},
-})
-
 // ==> POST /post 글 작성
 // multer은 파일인 경우 req.body.files(여러개)나 rec.body.file(한개)이 된다.
 // 파일이나 이미지가 아닌 텍스트들은 req.body 넣어준다.
