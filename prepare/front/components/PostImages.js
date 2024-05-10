@@ -22,8 +22,8 @@ const PostImages = ({ images }) => {
         {/* // 스크린리더에서 굳이 클릭할필요를 안알려줘도 될때 */}
         <img
           role="presentation"
-          src={images[0].src.replace(/\/original\//, '/thumb/')}
-          alt={images[0].src.replace(/\/original\//, '/thumb/')}
+          src={images[0].src}
+          alt={images[0].src}
           onClick={onZoom}
         />
         {showImageZoom && <ImagesZoom images={images} onClose={onClose} />}
@@ -37,15 +37,15 @@ const PostImages = ({ images }) => {
         {/* // 스크린리더에서 굳이 클릭할필요를 안알려줘도 될때 */}
         <img
           role="presentation" 
-          src={images[0].src.replace(/\/original\//, '/thumb/')}
-          alt={images[0].src.replace(/\/original\//, '/thumb/')}
+          src={images[0].src}
+          alt={images[0].src}
           onClick={onZoom}
           style={{ width: '50%', display: 'inline-block' }}
         />
         <img
           role="presentation"
-          src={images[1].src.replace(/\/original\//, '/thumb/')}
-          alt={images[1].src.replace(/\/original\//, '/thumb/')}
+          src={images[1].src}
+          alt={images[1].src}
           onClick={onZoom}
           style={{ width: '50%', display: 'inline-block' }}
         />
