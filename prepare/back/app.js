@@ -39,7 +39,7 @@ if (process.env.NOD_ENV === 'production') {
 // app.use(cors()) -> 모든 요청에 다 res.setHeader("Access-Control-Allow-Origin", "*") 설정 넣어주는 것
 app.use(
 	cors({
-		origin: ['http://localhost:3000', 'nodebird.com', 'http://52.78.1.207'], // true or * // access-control-allow-origin가 true된다. --> 다른 도메인끼리 api 요청
+		origin: ['http://localhost:3000', 'http://zzimzzim.com'], // true or * // access-control-allow-origin가 true된다. --> 다른 도메인끼리 api 요청
 		credentials: true, // access-control-allow-credential가 true된다. --> 다른 도메인끼리 쿠키 전달
 	})
 );

@@ -1,1 +1,1 @@
-export const backUrl = 'http://15.164.220.13';
+export const backUrl = 'http://api.zzimzzim.com';
