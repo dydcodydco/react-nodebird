@@ -17,7 +17,8 @@ exports.handler = async (event, context, callback) => {
   console.log(Bucket, Key);
   const filename = Key.split('/')[Key.split('/').length - 1];
   const ext = Key.split('.')[Key.split('.').length - 1].toLowerCase();
-  const requiredFormat = ext === 'jpg' ? 'jpeg' : 'ext';
+  const requiredFormat = ext === 'jpg' ? 'jpeg' : ext;
+  console.log('filename------------------------------------------', filename, 'ext', ext);
 
   // 람다가 끝날 땐 callback 함수써서 끝내주면 된다.
   try {
@@ -35,6 +36,7 @@ exports.handler = async (event, context, callback) => {
       Key: `thumb/${filename}`,
       Body: resizedImage
     }).promise();
+    console.log('put', resizedImage.length);
     return callback(null, `thumb/${filename}`);
   } catch (error) {
     console.error(error);
