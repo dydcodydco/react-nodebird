@@ -4,6 +4,8 @@ const { isLoggedIn } = require("./middlewares");
 const path = require("path");
 const multer = require("multer");
 const fs = require("fs"); // file system
+const multerS3 = require('multer-s3');
+const AWS = require('aws-sdk');
 
 const router = express.Router();
 
@@ -14,20 +16,33 @@ try {
 	fs.mkdirSync("uploads");
 }
 
+AWS.config.update({
+	accessKeyId: process.env.S3_ACCESS_KEY_ID,
+	scretAccessKey: process.env.S3_ACCESS_KEY_ID,
+	region: 'ap-northeast-2'
+});
 const upload = multer({
-	storage: multer.diskStorage({
-		destination(req, file, done) {
-			done(null, "uploads");
-		},
-		filename(req, file, done) {
-			// 이미지명.png
-			const ext = path.extname(file.originalname); // 확장자 추출 (.png)
-			const basename = path.basename(file.originalname, ext); // 이미지명 추출 (이미지명)
-			done(null, basename + "_" + new Date().getTime() + ext); // 이미지명123452322.png
-		},
+	storage: multerS3({
+		s3: new AWS.S3(),
+		bucket: 'zzimzzim-s3',
+		key(req, file, cb) {
+			cb(null, `original/${Date.now()}_${path.basename(file.originalname)}`)
+		}
 	}),
 	limits: { fileSize: 20 * 1024 * 1024 }, // 20MB
 });
+
+multer.diskStorage({
+	destination(req, file, done) {
+		done(null, "uploads");
+	},
+	filename(req, file, done) {
+		// 이미지명.png
+		const ext = path.extname(file.originalname); // 확장자 추출 (.png)
+		const basename = path.basename(file.originalname, ext); // 이미지명 추출 (이미지명)
+		done(null, basename + "_" + new Date().getTime() + ext); // 이미지명123452322.png
+	},
+})
 
 // ==> POST /post 글 작성
 // multer은 파일인 경우 req.body.files(여러개)나 rec.body.file(한개)이 된다.
@@ -179,7 +194,7 @@ router.delete("/:postId", isLoggedIn, async (req, res, next) => {
 router.post("/images", isLoggedIn, upload.array("image"), (req, res, next) => {
 	try {
 		console.log(req.files);
-		res.json(req.files.map((v) => v.filename));
+		res.json(req.files.map((v) => v.location));
 	} catch (error) {
 		console.error(error);
 		next(error);
