@@ -1,5 +1,4 @@
 const express = require("express");
-const { Post, Comment, Image, User, Hashtag } = require("../models");
 const { isLoggedIn } = require("./middlewares");
 const path = require("path");
 const multer = require("multer");
@@ -7,6 +6,7 @@ const fs = require("fs"); // file system
 const multerS3 = require('multer-s3');
 const AWS = require('aws-sdk');
 
+const { Post, Comment, Image, User, Hashtag } = require("../models");
 const router = express.Router();
 
 try {
@@ -31,6 +31,19 @@ const upload = multer({
 	}),
 	limits: { fileSize: 20 * 1024 * 1024 }, // 20MB
 });
+// POST /post/images
+// 이미지 한장이면 upload.single / 없으면 upload.none / 파일 태그가 두개씩 있을때 fields
+// upload에서 이미지를 처리하고 처리된 이미지를 다음 콜백함수에서 req.files로 받는다.
+router.post("/images", isLoggedIn, upload.array("image"), (req, res, next) => {
+	try {
+		console.log(req.files);
+		res.json(req.files.map((v) => v.location));
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
+});
+
 
 // ==> POST /post 글 작성
 // multer은 파일인 경우 req.body.files(여러개)나 rec.body.file(한개)이 된다.
@@ -170,19 +183,6 @@ router.delete("/:postId", isLoggedIn, async (req, res, next) => {
 			},
 		});
 		res.status(200).json({ PostId: parseInt(req.params.postId, 10) });
-	} catch (error) {
-		console.error(error);
-		next(error);
-	}
-});
-
-// POST /post/images
-// 이미지 한장이면 upload.single / 없으면 upload.none / 파일 태그가 두개씩 있을때 fields
-// upload에서 이미지를 처리하고 처리된 이미지를 다음 콜백함수에서 req.files로 받는다.
-router.post("/images", isLoggedIn, upload.array("image"), (req, res, next) => {
-	try {
-		console.log(req.files);
-		res.json(req.files.map((v) => v.location));
 	} catch (error) {
 		console.error(error);
 		next(error);
